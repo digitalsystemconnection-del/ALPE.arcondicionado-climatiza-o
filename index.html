@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -24,7 +24,6 @@
 <!-- Project Styles -->
 <link rel="stylesheet" href="assets/css/style.css" />
 <script>
-  // Definição antecipada do safeStorage para evitar erros em scripts inline
   window.safeStorage = window.safeStorage || {
     get: (key) => {
       try { return localStorage.getItem(key); } 
@@ -37,7 +36,6 @@
   };
 </script>
 <style>
-/* Base styles from user input */
 :root {
   --cor-principal: #0066cc;
   --cor-secundaria: #001529;
@@ -76,9 +74,6 @@
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 <style>
-/* PADRONIZAÇÃO DE TAMANHO DOS BANNERS */
-
-/* Carrossel */
 .carousel {
   position: relative;
   overflow: hidden;
@@ -98,7 +93,7 @@
   height: 100%;
   flex-shrink: 0;
   object-fit: cover;
-  object-position: center center !important; /* Centralizado para evitar esconder a direita */
+  object-position: center center !important;
 }
 .carousel-arrow {
   position: absolute;
@@ -142,7 +137,6 @@
   border-radius: 5px;
 }
 
-/* Ajuste de altura responsiva para o Carrossel e Vídeo */
 @media (max-width: 768px) {
   .carousel { height: 200px; }
   .video-banner { height: 200px; }
@@ -158,338 +152,6 @@
 }
 .video-content { object-fit: cover; object-position: center center; height: 100%; width: 100%; }
 </style>
-<style> /* ESTILOS DO NOVO BANNER DA CALCULADORA */
-:root {
-  --banner-blue-dark: #001529;
-  --banner-blue-mid: #003366;
-  --banner-blue-bright: #007bff;
-  --banner-shadow: 0 28px 70px rgba(0, 21, 41, 0.18);
-  --banner-radius: 28px;
-  /* ALTERE AQUI A IMAGEM DA CALCULADORA */
-  --banner-image: url('images/banner/banner-calculadora-btu.png');
-}
-
-.banner-btu-wrapper {
-  width: 100%;
-  max-width: 1240px;
-  margin: 20px auto 60px;
-  padding: 0 20px;
-}
-
-/* GRID DE BANNERS DUPLOS */
-.banners-grid {
-  display: grid;
-  grid-template-columns: 1fr; /* Um abaixo do outro */
-  gap: 30px;
-}
-
-.banner-btu {
-  position: relative;
-  min-height: 480px;
-  border-radius: var(--banner-radius) !important;
-  overflow: hidden;
-  box-shadow: var(--banner-shadow);
-  isolation: isolate;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(100deg, var(--banner-blue-dark) 0%, var(--banner-blue-mid) 38%, var(--banner-blue-bright) 54%, rgba(255,255,255,0) 54.2%), var(--banner-image) center center / cover no-repeat;
-  text-align: left;
-}
-
-.banner-btu::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(0,21,41,0.76) 0%, rgba(0,51,102,0.58) 28%, rgba(0,123,255,0.24) 48%, rgba(255,255,255,0) 62%);
-  z-index: 0;
-  pointer-events: none;
-}
-
-.banner-btu .content {
-  position: relative;
-  z-index: 2;
-  padding: 30px 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  max-width: 100%;
-}
-
-.banner-btu .tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  width: fit-content;
-  margin-bottom: 16px;
-  padding: 4px 10px;
-  color: rgba(255,255,255,0.92);
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 999px;
-  backdrop-filter: blur(12px);
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  font-size: .68rem;
-  font-weight: 700;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.banner-btu .tag::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: linear-gradient(180deg, #84f4ff, #007bff);
-  box-shadow: 0 0 0 4px rgba(132,244,255,0.12);
-}
-
-.banner-btu h2 {
-  margin: 0;
-  font-family: 'Sora', sans-serif;
-  font-size: clamp(2.5rem, 5vw, 3.8rem);
-  line-height: .93;
-  letter-spacing: -.05em;
-  text-transform: uppercase;
-  color: #fff !important;
-  max-width: 12ch;
-}
-
-.banner-btu h2 .accent {
-  display: block;
-  color: #00d4ff;
-}
-
-.banner-btu .lead {
-  margin: 8px 0 0;
-  color: rgba(255,255,255,0.86);
-  font-size: clamp(1rem, 1.5vw, 1.4rem);
-  line-height: 1.15;
-  max-width: 50ch; /* Aumentado para aproveitar a largura total */
-}
-
-.banner-btu .btn-banner {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  margin-top: 18px;
-  padding: 6px 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.4);
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.78rem;
-  font-weight: 800;
-  background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(10px);
-  transition: all 0.25s ease;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.banner-btu .btn-banner:hover {
-  transform: translateY(-2px);
-  background: rgba(255,255,255,0.1);
-  border-color: rgba(255,255,255,0.58);
-  box-shadow: 0 14px 30px rgba(0,0,0,0.16);
-}
-
-.banner-btu .floating-badge {
-  position: absolute;
-  right: 22px;
-  bottom: 22px;
-  z-index: 3;
-  padding: 6px 12px;
-  background: rgba(255,255,255,0.18);
-  border: 1px solid rgba(255,255,255,0.26);
-  border-radius: 12px;
-  backdrop-filter: blur(14px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
-  color: #fff;
-}
-
-.banner-btu .floating-badge small { font-size: 0.65rem; display: block; line-height: 1.2; opacity: 0.9; }
-.banner-btu .floating-badge strong { font-size: 0.75rem; display: block; line-height: 1.2; }
-
-/* Estilos do Novo Banner de Contato */
-.contact-banner {
-  position: relative;
-  display: block;
-  border-radius: var(--banner-radius) !important;
-  overflow: hidden;
-  min-height: 540px;
-  background: linear-gradient(135deg, var(--banner-blue-dark) 0%, var(--banner-blue-mid) 100%);
-  box-shadow: var(--banner-shadow);
-  isolation: isolate;
-  text-decoration: none;
-  transition: transform 0.3s ease;
-}
-.contact-banner:hover { transform: translateY(-5px); }
-
-.contact-banner::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  /* ALTERE AQUI A IMAGEM DO FALE CONOSCO */
-  background: url('images/banner/banner-fale-conosco.png') center center / cover no-repeat;
-  opacity: 0.15;
-  z-index: -1;
-}
-
-.banner-inner-contact {
-  position: relative;
-  z-index: 2;
-  padding: 30px 40px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  text-align: left;
-}
-
-.contact-banner h2 {
-  font-family: 'Sora', sans-serif;
-  font-size: clamp(2.5rem, 5vw, 3.8rem);
-  line-height: .93;
-  color: #fff !important;
-  margin: 0 0 20px;
-  text-transform: uppercase;
-  letter-spacing: -.05em;
-}
-
-.banner-points {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Isso já cuida da responsividade naturalmente */
-  gap: 15px;
-  width: 100%;
-  align-items: stretch;
-  grid-auto-rows: 1fr;
-  margin: 12px 0; 
-}
-
-.banner-point {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: flex-start;
-  padding: 12px 18px;
-  background: rgba(0, 21, 41, 0.7); /* Azul profundo semi-transparente para contraste total do texto */
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 20px;
-  backdrop-filter: blur(14px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-  color: #fff;
-  transition: transform 0.25s ease;
-}
-.banner-point:hover { transform: translateY(-3px); }
-.banner-point i {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.16);
-  color: #00d4ff;
-  font-size: 1.15rem;
-  margin-top: 0;
-}
-
-.banner-point small, .cta-box-banner small { 
-  display: block; text-transform: uppercase; letter-spacing: .16em; font-size: .65rem; font-weight: 800; color: #fff; margin-bottom: 5px; 
-  font-family: 'Sora', sans-serif;
-}
-.banner-point p, .cta-box-banner p { 
-  margin: 0; color: #fff; line-height: 1.2; font-size: 0.85rem; 
-  flex-grow: 1;
-}
-
-.btn-contact-white {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  margin-top: 10px; /* Adicionado para um pequeno espaçamento */
-  padding: 6px 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.4);
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.78rem;
-  font-weight: 800;
-  font-family: 'Montserrat', sans-serif;
-  background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(10px);
-  transition: all 0.25s ease;
-}
-.btn-contact-white:hover {
-  transform: translateY(-2px);
-  background: rgba(255,255,255,0.1);
-  border-color: rgba(255,255,255,0.58);
-  box-shadow: 0 14px 30px rgba(0,0,0,0.16);
-}
-
-@media (max-width: 980px) {
-  .banner-points { grid-template-columns: 1fr 1fr; }
-  .banner-btu {
-    background: linear-gradient(180deg, var(--banner-blue-dark) 0%, var(--banner-blue-mid) 42%, rgba(0,123,255,0.3) 64%, rgba(255,255,255,0) 100%), var(--banner-image) center center / cover no-repeat;
-  }
-  
-  :root {
-    --banner-standard-height: 380px;
-  }
-}
-@media (max-width: 650px) {
-  .banner-points { grid-template-columns: 1fr; }
-
-  :root {
-    --banner-standard-height: 320px;
-  }
-}
-
-</style>
-
-<style>
-/* Estilos do Novo Rodapé (Restaurado) */
-footer.footer { background: #f8f9fa !important; color: #333 !important; padding: 60px 5% 20px !important; text-align: left !important; border-top: 1px solid #eee !important; }
-.footer-content { display: flex; flex-wrap: wrap; gap: 40px; max-width: 1200px; margin: 0 auto; justify-content: space-between; }
-.footer-brand { flex: 1.5; min-width: 280px; }
-.footer-logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; margin-bottom: 20px; }
-.footer-description { color: #666; font-size: 14px; margin-bottom: 25px; line-height: 1.6; }
-.footer-social { display: flex; gap: 15px; }
-.social-link { width: 38px; height: 38px; background: rgba(0,0,0,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; text-decoration: none; transition: 0.3s; font-size: 18px; }
-.social-link:hover { transform: translateY(-5px); color: white; }
-.social-link img { width: 24px; height: 24px; object-fit: contain; }
-
-.social-link.whatsapp { color: #25D366; background: rgba(37, 211, 102, 0.1); }
-.social-link.phone { color: #007bff; background: rgba(0, 123, 255, 0.1); }
-.social-link.instagram { color: #E1306C; background: rgba(225, 48, 108, 0.1); }
-.social-link.facebook { color: #1877F2; background: rgba(24, 119, 242, 0.1); }
-.social-link.linkedin { color: #0A66C2; background: rgba(10, 102, 194, 0.1); }
-
-.social-link.whatsapp:hover { background: #25D366; color: white; }
-.social-link.phone:hover { background: #007bff; color: white; }
-.social-link.instagram:hover { background: #E1306C; color: white; }
-.social-link.facebook:hover { background: #1877F2; color: white; }
-.social-link.linkedin:hover { background: #0A66C2; color: white; }
-
-.footer-column { flex: 1; min-width: 150px; }
-.footer-column h3 { font-size: 16px; margin-bottom: 20px; color: #333; border-bottom: 2px solid var(--cor-principal); display: inline-block; padding-bottom: 5px; }
-.footer-links { list-style: none; padding: 0; margin: 0; }
-.footer-links li { margin-bottom: 12px; }
-.footer-links a { color: #666; text-decoration: none; font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
-.footer-links a:hover { color: var(--cor-principal); padding-left: 5px; }
-.footer-links i { color: var(--cor-principal); font-size: 14px; }
-.footer-bottom { border-top: 1px solid #eee; margin-top: 50px; padding-top: 20px; text-align: center; color: #999; font-size: 13px; }
-
-@media (max-width: 768px) {
-    .footer { padding: 40px 5% 20px; text-align: center; }
-    .footer-content { flex-direction: column; gap: 30px; align-items: center; }
-    .footer-logo, .footer-social { justify-content: center; }
-    .footer-column h3 { text-align: center; }
-    .footer-bottom { margin-top: 30px; }
-}
-</style>
 
 </head>
 <body class="light">
@@ -498,33 +160,42 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 <div class="top-bar">
     <div class="top-bar-container">
         <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá%20ALPE,%20visitei%20o%20site%20e%20gostaria%20de%20falar%20com%20um%20especialista." target="_blank" class="top-item">
+<<<<<<< HEAD
             <img src="images/Icone/fale_conosco.png" alt="Chat">
             <div><strong>FALE CONOSCO</strong></div>
         </a>
         <a href="tel:21980220417" class="top-item">
             <img src="images/Icone/televendas.png" alt="Telefone">
             <div><strong>TELEVENDAS</strong></div>
+=======
+            <img src="images/icone/fale_conosco.png" alt="Chat">
+            <div><strong>Fale Conosco</strong></div>
+        </a>
+        <a href="tel:21980220417" class="top-item">
+            <img src="images/icone/televendas.png" alt="Telefone">
+            <div><strong>Televendas</strong></div>
+>>>>>>> fd8bf8ca364b18618851a283d5f523c9b62673f4
         </a>
         <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá%20ALPE,%20visitei%20o%20site%20e%20gostaria%20de%20comprar." target="_blank" class="top-item">
-            <img src="images/Icone/whatsapp-logo-.png" alt="WhatsApp">
+            <img src="images/icone/whatsapp-logo-.png" alt="WhatsApp">
             <div><strong>Compre pelo WhatsApp</strong></div>
         </a>
         <a href="rastreio.html" class="top-item">
-            <img src="images/Icone/entrega.png" alt="Entrega">
+            <img src="images/icone/entrega.png" alt="Entrega">
             <div>
                 <strong>Entrega em todo o Brasil</strong>
                 <span>verifique as modalidades</span>
             </div>
         </a>
         <a href="#formas-pagamento" class="top-item btn-link-pagamento">
-            <img src="images/Icone/Cartao_parc.png" alt="Cartão">
+            <img src="images/icone/cartao_parc.png" alt="Cartão">
             <div>
                 <strong>Parcele em até 8x</strong>
                 <span>sem juros</span>
             </div>
         </a>
         <a href="#formas-pagamento" class="top-item btn-link-pagamento">
-            <img src="images/Icone/Pix.png" alt="Pix">
+            <img src="images/icone/pix.png" alt="Pix">
             <div>
                 <strong>5% OFF no PIX</strong>
                 <span>pagamento à vista</span>
@@ -610,56 +281,12 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
       <div class="container">
         <h2>Soluções para Todos os Projetos</h2>
         <div class="sistemas-grid">
-          <div class="sistema-card" data-link="sistemas/split-hi-wall.html" onclick="navegarParaSistema(this)"><img src="images/Produtos/Split_LG/split-inverter-lg-hi-wall-dual-compact-9000-btus-frio-220v.png" class="sistema-img"><h3>Split Hi-Wall</h3><p>O modelo mais popular para residências.</p></div>
-          <div class="sistema-card" data-link="sistemas/multi-split.html" onclick="navegarParaSistema(this)"><img src="images/Produtos/Multi_Split/Multi-split-Fujitsu.webp" class="sistema-img"><h3>Multi-Split</h3><p>Climatize até 5 ambientes com uma unidade externa.</p></div>
-          <div class="sistema-card" data-link="sistemas/mini-vrf.html" onclick="navegarParaSistema(this)"><img src="images/Produtos/Mini_Vrf/Vrv_Daikin_Fit.webp" class="sistema-img"><h3>Mini VRF</h3><p>Alta capacidade para residências de alto padrão.</p></div>
-          <div class="sistema-card" data-link="sistemas/vrf.html" onclick="navegarParaSistema(this)"><img src="images/Produtos/VRF/V8-Series-VRF.webp" class="sistema-img"><h3>VRF</h3><p>A solução definitiva para grandes edifícios.</p></div>
-          <div class="sistema-card" data-link="sistemas/cassette.html" onclick="navegarParaSistema(this)"><img src="images/Produtos/Cassete/Cassete_Electrolux.jpg" class="sistema-img"><h3>Cassete</h3><p>Ideal para ambientes amplos e com forro rebaixado.</p></div>
-          <div class="sistema-card" data-link="sistemas/piso-teto.html" onclick="navegarParaSistema(this)"><img src="images/Produtos/Piso_teto/piso-teto.Fujitsu.webp" class="sistema-img"><h3>Piso Teto</h3><p>Versatilidade e alta potência para comércios.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- BOTÃO ESPECIALISTA -->
-    <section class="section-loja" style="padding-top: 0;">
-      <div class="container">
-        <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá%20ALPE,%20gostaria%20de%20falar%20com%20um%20especialista%20sobre%20meu%20projeto." class="cta-header btn-especialista">FALAR COM UM ESPECIALISTA</a>
-      </div>
-    </section>
-
-    <!-- DESTAQUE FUJITSU -->
-    <section class="section-loja section-destaque">
-      <div class="container">
-        <div class="destaque-container">
-          <img src="https://th.bing.com/th/id/R.54c9925b7a82d0e227879aa2a23a9b37?rik=%2fQqHuepk686i7Q&riu=http%3a%2f%2fairforcedair.com.au%2fwp-content%2fuploads%2f2023%2f03%2fFUJITSU-AIRSTAGE-logo-horizontal-full-colour.png&ehk=xjV1dTYiwlUiXyGWInrDTd7mX5BE%2b6o1kF0X4g7UKL4%3d&risl=&pid=ImgRaw&r=0" alt="Destaque Fujitsu" class="destaque-img">
-          <div class="destaque-grid">
-            <div class="card-destaque card-destaque-premium">
-              <div class="card-destaque-body">
-                <h3 class="card-destaque-title premium">LINHA PREMIUM</h3>
-                <p class="card-destaque-desc">A máxima eficiência energética com recursos de inteligência.</p>
-                <hr class="card-destaque-hr">
-                <ul class="card-destaque-list">
-                  <li><img src="https://img.icons8.com/ios-filled/50/d30029/star--v1.png" class="icon-inline" alt="Star"> <strong>Sensor de Presença</strong> Humana</li>
-                  <li><img src="https://img.icons8.com/ios-filled/50/d30029/star--v1.png" class="icon-inline" alt="Star"> <strong>Extrema Economia</strong> (Selo A)</li>
-                  <li><img src="https://img.icons8.com/ios-filled/50/d30029/star--v1.png" class="icon-inline" alt="Star"> Funcionamento <strong>Super Silencioso</strong></li>
-                </ul>
-                <a href="marcas.index/fujitsu.html#premium" class="cta-header btn-destaque premium">QUERO PREMIUM</a>
-              </div>
-            </div>
-            <div class="card-destaque card-destaque-essencial">
-              <div class="card-destaque-body">
-                <h3 class="card-destaque-title essencial">LINHA ESSENCIAL</h3>
-                <p class="card-destaque-desc">O conforto ideal com a durabilidade lendária da Fujitsu.</p>
-                <hr class="card-destaque-hr">
-                <ul class="card-destaque-list">
-                  <li><img src="https://img.icons8.com/ios-filled/50/00918E/checkmark--v1.png" class="icon-inline" alt="Check"> <strong>Alta Durabilidade</strong> e Robustez</li>
-                  <li><img src="https://img.icons8.com/ios-filled/50/00918E/checkmark--v1.png" class="icon-inline" alt="Check"> Proteção contra <strong>Corrosão</strong></li>
-                  <li><img src="https://img.icons8.com/ios-filled/50/00918E/checkmark--v1.png" class="icon-inline" alt="Check"> Melhor <strong>Custo-Benefício</strong></li>
-                </ul>
-                <a href="marcas.index/fujitsu.html#essencial" class="cta-header btn-destaque essencial">QUERO ESSENCIAL</a>
-              </div>
-            </div>
-          </div>
+          <div class="sistema-card" data-link="sistemas/split-hi-wall.html" onclick="navegarParaSistema(this)"><img src="images/produtos/split_lg/split-inverter-lg-hi-wall-dual-compact-9000-btus-frio-220v.png" class="sistema-img"><h3>Split Hi-Wall</h3><p>O modelo mais popular para residências.</p></div>
+          <div class="sistema-card" data-link="sistemas/multi-split.html" onclick="navegarParaSistema(this)"><img src="images/produtos/multi_split/multi-split-fujitsu.webp" class="sistema-img"><h3>Multi-Split</h3><p>Climatize até 5 ambientes com uma unidade externa.</p></div>
+          <div class="sistema-card" data-link="sistemas/mini-vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/mini_vrf/vrv_daikin_fit.webp" class="sistema-img"><h3>Mini VRF</h3><p>Alta capacidade para residências de alto padrão.</p></div>
+          <div class="sistema-card" data-link="sistemas/vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/vrf/v8-series-vrf.webp" class="sistema-img"><h3>VRF</h3><p>A solução definitiva para grandes edifícios.</p></div>
+          <div class="sistema-card" data-link="sistemas/cassette.html" onclick="navegarParaSistema(this)"><img src="images/produtos/cassete/cassete_electrolux.jpg" class="sistema-img"><h3>Cassete</h3><p>Ideal para ambientes amplos e com forro rebaixado.</p></div>
+          <div class="sistema-card" data-link="sistemas/piso-teto.html" onclick="navegarParaSistema(this)"><img src="images/produtos/piso_teto/piso-teto.fujitsu.webp" class="sistema-img"><h3>Piso Teto</h3><p>Versatilidade e alta potência para comércios.</p></div>
         </div>
       </div>
     </section>
@@ -670,158 +297,16 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
         <h2>Venda e Serviço. A Solução Completa de Conforto com a ALPE.</h2>
         <div class="servicos-grid">
           <div class="servico-card">
-            <h3><img src="images/Icone/Instalacao_certificada.png" class="icon-service" alt="Tools"> Instalação Certificada</h3>
+            <h3><img src="images/icone/instalacao_certificada.png" class="icon-service" alt="Tools"> Instalação Certificada</h3>
             <p>Compre e instale com a ALPE e garanta que seu equipamento funcione com a máxima eficiência e segurança, mantendo a garantia de fábrica.</p>
             <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá,%20gostaria%20de%20um%20orçamento%20para%20instalação." class="cta-header">SOLICITE SEU ORÇAMENTO</a>
           </div>
           <div class="servico-card">
-            <h3><img src="images/Icone/Manutencao_preventiva.png" class="icon-service" alt="Clean"> Manutenção Preventiva</h3>
+            <h3><img src="images/icone/manutencao_preventiva.png" class="icon-service" alt="Clean"> Manutenção Preventiva</h3>
             <p>Planos de Manutenção Preventiva (PMOC) para empresas e limpeza especializada para residências. Ar mais limpo e contas mais leves.</p>
             <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá,%20gostaria%20de%20conhecer%20os%20planos%20de%20manutenção%20(PMOC)." class="cta-header">CONHEÇA NOSSOS PLANOS</a>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- RASTREAMENTO DE PEDIDO -->
-    <section class="section" id="rastreio" style="background-color: #f8f9fa; border-top: 1px solid #eee;">
-      <div class="container">
-        <h2>Acompanhe seu Pedido</h2>
-        <p>Escolha a forma mais conveniente para verificar o status da sua compra ou instalação.</p>
-        <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin-top:25px;">
-          <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Quero%20acompanhar%20meu%20pedido" target="_blank" class="btn-pill">
-            <span class="checkbox"></span> Acompanhar pelo WhatsApp
-          </a>
-          <a href="rastreio.html" class="btn-pill blue">
-            <span class="checkbox"></span> Acompanhar no Dashboard
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- PRODUTOS (ESTÁTICO COM DATA-ID) -->
-    <section id="produtos" class="section-loja">
-      <div class="container">
-        <h2 style="margin-bottom:20px;">OS MAIS VENDIDOS DA ALPE</h2>
-        <div class="catalogo-grid" id="catalogo-produtos">
-          
-          <div class="produto-card">
-            <img src="images/Produtos/Split_Samsung/Samsung-12000.webp" alt="Ar Condicionado Samsung Inverter 12.000 BTU">
-            <div class="produto-info">
-              <h4>Samsung Inverter 12.000 BTU</h4>
-              <div class="preco">R$ 2.999,00</div>
-              <a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a>
-            </div>
-          </div>
-
-          <div class="produto-card">
-            <img src="images/Produtos/Split_LG/split-inverter-lg-hi-wall-dual-compact-9000-btus-frio-220v.png" alt="Ar Condicionado LG Dual Inverter 9.000 BTU">
-            <div class="produto-info">
-              <h4>LG Dual Inverter 9.000 BTU</h4>
-              <div class="preco">R$ 2.450,00</div>
-              <a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a>
-            </div>
-          </div>
-
-          <div class="produto-card">
-            <img src="images/Produtos/Cassete/k7-4-vias-daikin-sky-air.webp" alt="Ar Condicionado Daikin Cassete 36.000 BTU">
-            <div class="produto-info">
-              <h4>Daikin Cassete 36.000 BTU</h4>
-              <div class="preco">R$ 8.990,00</div>
-              <a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a>
-            </div>
-          </div>
-
-          <div class="produto-card">
-            <img src="images/Produtos/Split_Hisense/ar-condicionado-split-inverter-hi-wall-wi-fi-hisense-12000-btus-frio-220v.jpg" alt="Ar Condicionado Hisense Inverter 12.000 BTU">
-            <div class="produto-info">
-              <h4>Hisense Inverter 12.000 BTU</h4>
-              <div class="preco">R$ 2.050,48</div>
-              <a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a>
-            </div>
-          </div>
-
-          <div class="produto-card"><img src="images/produtos/split_elgin/ar-condicionado-elgin-inverter-eco-ii-wi-fi-12000-btus-frio-220v-r-32.webp" alt="Ar Condicionado Elgin Inverter 12.000 BTU"><div class="produto-info"><h4>Elgin Inverter 12.000 BTU</h4><div class="preco">R$ 2.155,60</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          
-          <div class="produto-card"><img src="images/Produtos/Split_Electrolux/Electrolux-9000.png" alt="Ar Condicionado Electrolux Inverter 9.000 BTU"><div class="produto-info"><h4>Electrolux Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          
-          <div class="produto-card"><img src="images/Produtos/Split_Fujitsu/fujitsu-9000-premium.jpg" alt="Ar Condicionado Fujitsu Inverter 9.000 BTU"><div class="produto-info"><h4>Fujitsu Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          
-          <div class="produto-card"><img src="images/Produtos/Split_Hitachi/Hitachi-9000.webp" alt="Ar Condicionado Hitachi Inverter 9.000 BTU"><div class="produto-info"><h4>Hitachi Inverter 9.000 BTU</h4><div class="preco">R$ 2.496,79</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          
-          <div class="produto-card"><img src="images/Produtos/Split_Philco/Philco_Split_12000.webp" alt="Ar Condicionado Philco Inverter 12.000 BTU"><div class="produto-info"><h4>Philco Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-
-          <div class="produto-card"><img src="images/Produtos/Split_Philco/Philco_Split_12000.webp" alt="Ar Condicionado Philco Inverter 12.000 BTU"><div class="produto-info"><h4>Philco Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          
-          <div class="produto-card"><img src="images/Produtos/Split_Gree/split-inverter-gree-g-top-auto-9000-btuh-frio-r-32-220v-9000-frio-63.webp" alt="Ar Condicionado Gree Inverter 9.000 BTU"><div class="produto-info"><h4>Gree Inverter 9.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-
-          <div class="produto-card"><img src="images/Produtos/Split_Philco/Philco_Split_12000.webp" alt="Ar Condicionado Philco Inverter 12.000 BTU"><div class="produto-info"><h4>Philco Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CALCULADORA -->
-    <section class="banner-btu-wrapper">
-      <div class="banners-grid">
-        
-        <!-- BANNER CALCULADORA -->
-        <div class="banner-btu" id="calculadora" aria-labelledby="titulo-btu">
-          <div class="content">
-            <div class="tag">Simule antes de escolher</div>
-
-            <h2 id="titulo-btu">
-              Calculadora
-              <span class="accent">de BTU</span>
-            </h2>
-
-            <p class="lead">
-              Descubra <strong>o modelo ideal</strong> com rapidez, segurança e precisão técnica.
-            </p>
-
-            <a href="calculadora-btu.html" class="btn-banner">
-              Calcule agora
-            </a>
-          </div>
-
-          <div class="floating-badge">
-            <small>ALPE Ar Condicionado</small>
-            <strong>Precisão técnica</strong>
-          </div>
-        </div>
-
-        <!-- BANNER CONTATO (NOVO) -->
-        <a href="fale-conosco.html" class="contact-banner reveal" style="text-decoration: none;">
-          <div class="banner-inner-contact">
-            <div class="banner-copy">
-              <div class="tag" style="color: #fff;">Suporte e Vendas Especializadas</div>
-              <h2>Fale Conosco !</h2>
-              <p class="lead" style="margin-top: 0; max-width: 85ch; color: #fff;">
-                Tem alguma dúvida ou quer um orçamento personalizado? Envie uma mensagem e nossa equipe retornará com atenção, clareza e agilidade para entender sua necessidade.
-              </p>
-            </div>
-
-            <div class="banner-points">
-              <div class="banner-point">
-                <small>Resposta rápida</small>
-                <p>Receba retorno com prioridade para dúvidas e solicitações comerciais.</p>
-              </div>
-              <div class="banner-point">
-                <small>Orçamento sob medida</small>
-                <p>Conte o que precisa e receba uma proposta alinhada ao seu projeto.</p>
-              </div>
-              <div class="banner-point">
-                <small>Atendimento limpo</small>
-                <p>Interface clara, objetiva e fácil de usar em qualquer dispositivo.</p>
-              </div>
-              <div class="banner-point cta-box-banner">
-                <small>Canal direto</small>
-                <p>Clique para acessar a página de contato e enviar sua solicitação.</p>
-                <div class="btn-contact-white">Abrir página de contato</div>
-              </div>
-            </div>
-          </div>
-        </a>
-
       </div>
     </section>
 
@@ -833,29 +318,23 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
         <img src="images/logo-pagamento/boleto.webp" alt="boleto" class="img-pagamento">
         <img src="images/logo-pagamento/mastercard.webp" alt="Mastercard" class="img-pagamento">
         <img src="images/logo-pagamento/visa.webp" alt="Visa" class="img-pagamento">
-        <img src="images/logo-pagamento/dinner-club.webp" alt="Diners Club" class="img-pagamento">
-        <img src="images/logo-pagamento/elo.webp" alt="Elo" class="img-pagamento">
-        <img src="images/logo-pagamento/hipercard.webp" alt="Hipercard" class="img-pagamento">
-        <img src="images/logo-pagamento/america-express.webp" alt="America Express" class="img-pagamento">
       </div>
     </section>
 
   </div>
 
-  <!-- Seção Carrinho Padronizada (Estilo Card) -->
-  <div id="page-carrinho" class="page" style="background-color: #f4f7f6; padding: 60px 0; min-height: 80vh;">
-    <div class="container" style="max-width: 600px;">
-      <div style="background: white; padding: 35px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.08);">
-        <h2 style="text-align: center; margin-bottom: 25px; font-size: 28px; color: var(--cor-secundaria);">Seu Carrinho</h2>
-        <div id="carrinho-lista" class="carrinho-lista-container" style="box-shadow: none; border: none; margin: 0;"></div>
-        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 30px;">
-          <button id="btn-finalizar" class="cta-header" style="width: 100%; padding: 18px; font-size: 18px; text-align: center; border: none; cursor: pointer;">Finalizar Pedido</button>
-          <a href="#" id="btn-continuar-comprando" style="text-align: center; color: #666; text-decoration: none; font-size: 14px; font-weight: 500;">
-            <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Continuar Comprando
-          </a>
+  <!-- Seção Carrinho -->
+  <div id="page-carrinho" class="page">
+    <section class="section-loja">
+      <div class="container">
+        <h2>Seu Carrinho</h2>
+        <div id="carrinho-lista" class="carrinho-lista-container"></div>
+        <div style="text-align: center; margin-top: 30px;">
+          <a href="#" class="cta-header" style="margin-right: 10px;">Finalizar Compra</a>
+          <a href="#" id="btn-continuar-comprando" class="cta-header" style="background: #666;">Continuar Comprando</a>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 
 </main>
@@ -872,73 +351,21 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
                 Revenda autorizada especializada em soluções de climatização residencial e comercial. 
                 Qualidade e atendimento premium em todo Brasil.
             </p>
-            <div class="footer-social">
-                <a href="#" class="social-link tictoc" title="Tictoc" target="_blank">
-                    <img src="images/logo-pagamento/tic-toc-logo.webp" alt="Tictoc">
-                </a>
-                <a href="#" class="social-link youtube" title="Youtube" target="_blank">
-                    <img src="images/logo-pagamento/youtube-logo.webp" alt="Youtube">
-                </a>
-                <a href="#" class="social-link instagran" title="Instagran" target="_blank">
-                    <img src="images/logo-pagamento/instagran-logo.webp" alt="Instagran">
-                </a>
-                <a href="#" class="social-link facebook" title="Facebook" target="_blank">
-                    <img src="images/logo-pagamento/face-logo.webp" alt="Facebook">
-                </a>
-                <a href="#" class="social-link linkedin" title="LinkedIn" target="_blank">
-                    <img src="images/logo-pagamento/linkedin-logo.webp" alt="LinkedIn">
-                </a>
-            </div>
-        </div>
-
-        <div class="footer-column">
-            <h3>Produtos</h3>
-            <ul class="footer-links">
-                <li><a href="index.html#residencial">Split Hi-Wall</a></li>
-                <li><a href="index.html#comercial">Cassete</a></li>
-                <li><a href="index.html#multi-split">Multi Split</a></li>
-                <li><a href="index.html#vrf">Sistema VRF</a></li>
-                <li><a href="#">Acessórios</a></li>
-            </ul>
-        </div>
-
-        <div class="footer-column">
-            <h3>Empresa</h3>
-            <ul class="footer-links">
-                <li><a href="sobre-nos/sobre-nos.html">Sobre Nós</a></li>
-                <li><a href="#">Depoimentos</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">Trabalhe Conosco</a></li>
-                <li><a href="#">Certificações</a></li>
-            </ul>
-        </div>
-
-        <div class="footer-column">
-            <h3>Atendimento</h3>
-            <ul class="footer-links">
-                <li><a href="https://api.whatsapp.com/send?phone=5521980220417">
-                    <i class="fab fa-whatsapp"></i> (21) 98022-0417
-                </a></li>
-                <li><a href="#">Segunda a Sexta: 8h às 18h</a></li>
-                <li><a href="#">Sábado: 8h às 12h</a></li>
-                <li><a href="#">alpe.arcondicionado@hotmail.com</a></li>
-                <li><a href="#">Política de Privacidade</a></li>
-            </ul>
         </div>
     </div>
 
     <div class="footer-bottom">
-        <p>&copy; 2024 ALPE.ar condicionado & climatização. Todos os direitos reservados. CNPJ: 50.332.559/0001-97</p>
+        <p>&copy; 2024 ALPE.ar condicionado & climatização. Todos os direitos reservados.</p>
     </div>
 </footer>
 
 <!-- BOTÕES FLUTUANTES -->
 <a href="https://api.whatsapp.com/send?phone=5521980220417" class="whatsapp-square" target="_blank" rel="noopener noreferrer">
-  <img src="./images/Icone/whatsapp-logo-.png" alt="WhatsApp" style="width: 20px; height: 20px; object-fit: contain;">
+  <img src="./images/icone/whatsapp-logo-.png" alt="WhatsApp" style="width: 20px; height: 20px; object-fit: contain;">
   <span>Fale Conosco</span>
 </a>
 
-<!-- SCRIPT PRINCIPAL (Gerencia Carrinho, Menu e Marcas) -->
+<!-- SCRIPT PRINCIPAL -->
 <script src="assets/js/main.js"></script>
 
 <!-- SCRIPT DO CARROSSEL -->
@@ -987,52 +414,6 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 </script>
 
 <script>
-  function carregarPrecosDinamicos() {
-    const precosSalvos = JSON.parse(safeStorage.get('alpe_precos_vitrine'));
-    if (!precosSalvos) return;
-    document.querySelectorAll('.produto-card .btn-add-cart').forEach(btn => {
-      const id = btn.getAttribute('data-id');
-      if (precosSalvos[id]) {
-        const precoFormatado = precosSalvos[id].toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        const precoElemento = btn.closest('.produto-info').querySelector('.preco');
-        if (precoElemento) {
-          precoElemento.textContent = precoFormatado;
-        }
-      }
-    });
-  }
-  document.addEventListener('DOMContentLoaded', carregarPrecosDinamicos);
-</script>
-
-<!-- WIDGET ASSISTENTE IA -->
-<button class="assistente-toggle" id="toggleAssistente">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <path d="M20 2H4a2 2 0 0 0-2 2v14l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
-  </svg>
-  <span>Assistente IA</span>
-</button>
-
-<div class="assistente" id="janelaAssistente">
-  <div class="cabecalho-chat">
-    <span>ALPE AI - Especialista</span>
-    <button class="fechar-chat" id="fecharAssistente">&times;</button>
-  </div>
-  <div class="corpo-chat" id="corpoChat">
-    <div class="msg-chat msg-ia">
-      Olá! Sou o assistente virtual da ALPE. Como posso ajudar você hoje com climatização ou seu pedido?
-    </div>
-  </div>
-  <div class="rodape-chat">
-    <input type="text" class="entrada-chat" id="inputChat" placeholder="Digite sua dúvida...">
-    <button class="botao-enviar" id="enviarMsg">Enviar</button>
-  </div>
-</div>
-
-<!-- Script do Assistente IA Unificado -->
-<script src="assets/js/ai-assistant.js"></script>
-
-<script>
-    // Smooth scroll para âncoras
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
@@ -1044,46 +425,6 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
                 });
             }
         });
-    });
-
-    // Busca simples (Otimizado com verificação de existência)
-    const searchInput = document.querySelector('.search-bar input');
-    const searchButton = document.querySelector('.search-bar button');
-    
-    const handleSearch = () => {
-        const query = searchInput ? searchInput.value.trim() : "";
-        if (query) {
-            window.location.href = `https://api.whatsapp.com/send?phone=5521980220417&text=Olá, gostaria de saber sobre: ${encodeURIComponent(query)}`;
-        }
-    };
-    
-    if (searchButton && searchInput) {
-        searchButton.addEventListener('click', handleSearch);
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSearch();
-        });
-    }
-
-    // Animação ao scroll para produtos
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-
-    document.querySelectorAll('.produto-card, .sistema-card, .feature-card').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'all 0.6s ease';
-        observer.observe(el);
     });
 </script>
 
