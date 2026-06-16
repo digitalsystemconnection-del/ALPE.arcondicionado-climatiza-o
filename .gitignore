@@ -10,5 +10,6 @@ api/uploads/
 npm-debug.log*
 .DS_Store
 
+# Variáveis de ambiente (Senhas e chaves)
 .env
 api/.env
