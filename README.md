@@ -27,7 +27,7 @@ site-pasta/
 ├── images/
 │   ├── banner/             # Banners do carrossel
 │   ├── produtos/           # Imagens dos produtos
-│   ├── logo marcas/        # Logos das marcas
+│   ├── logo-marcas/        # Logos das marcas
 │   └── icone/              # Ícones diversos
 ├── marcas.index/           # Páginas específicas das marcas
 └── sobre-nos/              # Página institucional
