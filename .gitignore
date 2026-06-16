@@ -9,3 +9,6 @@ api/uploads/
 # Logs e arquivos de sistema
 npm-debug.log*
 .DS_Store
+
+.env
+api/.env
