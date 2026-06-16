@@ -1,0 +1,11 @@
+# Dependências
+node_modules/
+api/node_modules/
+
+# Banco de dados local e uploads
+api/precos_db.json
+api/uploads/
+
+# Logs e arquivos de sistema
+npm-debug.log*
+.DS_Store

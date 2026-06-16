@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fujitsu Airstage Premium 18.000 BTU - ALPE</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Roboto', sans-serif; background: #f8f9fa; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    
+    /* Padronização do Logotipo */
+    .checkout-logo-img {
+        height: 70px;
+        object-fit: contain;
+    }
+    @media (max-width: 768px) {
+        .checkout-logo-img { height: 45px; }
+    }
+
+    .produto-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-top: 30px;
+    }
+    .imagens {
+        text-align: center;
+    }
+    .imagem-principal {
+        width: 100%;
+        max-width: 480px;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        margin-bottom: 15px;
+    }
+    .thumbnails img {
+        width: 80px;
+        margin: 5px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    .info h1 { font-size: 24px; margin-bottom: 10px; }
+    .preco-antigo { text-decoration: line-through; color: #999; font-size: 18px; }
+    .preco-promocional { font-size: 32px; font-weight: 700; color: #0066cc; }
+    .btn-comprar {
+        background: #0066cc;
+        color: white;
+        border: none;
+        padding: 16px 40px;
+        font-size: 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 20px;
+    }
+    .btn-comprar:hover { background: #0055aa; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Ar Condicionado Split High Wall Inverter Fujitsu Airstage Premium 18.000 BTU/h Frio R-32 220V</h1>
+    
+    <div style="margin:10px 0;">
+        <span style="background:#d32f2f; color:white; padding:4px 10px; border-radius:4px; font-size:14px;">Linha Premium</span>
+        ★★★★★ <small>(5 avaliações)</small>
+    </div>
+
+    <div class="produto-grid">
+
+        <!-- Imagens -->
+        <div class="imagens">
+            <img id="imagem-principal" src="https://via.placeholder.com/500x400/0066cc/ffffff?text=FUJITSU+18.000+BTU" class="imagem-principal" alt="Fujitsu">
+            <div class="thumbnails">
+                <img src="https://via.placeholder.com/100x100/0066cc/fff?text=1" onclick="trocarImagem(this.src)">
+                <img src="https://via.placeholder.com/100x100/0066cc/fff?text=2" onclick="trocarImagem(this.src)">
+                <img src="https://via.placeholder.com/100x100/0066cc/fff?text=3" onclick="trocarImagem(this.src)">
+            </div>
+        </div>
+
+        <!-- Informações -->
+        <div>
+            <p><strong>Código:</strong> <span id="prod-codigo">ASBG18CMBA</span> | <strong>Modelo:</strong> <span id="prod-modelo">ASBG18CMBA</span></p>
+            
+            <div style="margin:20px 0;">
+                <span class="preco-antigo">R$ 6.099,00</span><br>
+                <span class="preco-promocional">R$ 5.385,55</span>
+                <small style="color:#28a745;">via Pix ou Boleto</small>
+            </div>
+
+            <p>ou R$ 5.669,00 em até 10x de R$ 566,90 sem juros</p>
+
+            <div style="margin:25px 0;">
+                <strong id="prod-specs">18.000 BTUs / Frio</strong>
+            </div>
+
+            <button onclick="irParaCheckout()" class="btn-comprar">
+                Comprar
+            </button>
+
+            <div style="margin-top:30px;">
+                <strong>Calcular frete e prazo</strong><br><br>
+                <input type="text" placeholder="Seu CEP aqui" style="padding:12px; width:60%; border:1px solid #ddd; border-radius:8px;">
+                <button onclick="calcularFrete()" style="padding:12px 20px; background:#0066cc; color:white; border:none; border-radius:8px;">Calcular</button>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align:center; margin-top:40px; padding-bottom: 40px;">
+        <a href="venda.html" class="back-link">
+            <span class="material-icons" style="font-size: 18px;">arrow_back</span> Voltar à loja
+        </a>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const cart = JSON.parse(localStorage.getItem('alpe_cart')) || [];
+    if (cart.length === 0) return;
+
+    const produto = cart[cart.length - 1];
+    const nome = produto.nome || produto.name;
+    const precoNum = typeof produto.preco === 'number' ? produto.preco : 
+                    parseFloat(String(produto.preco || produto.price).replace(/[^0-9,]/g, '').replace(',', '.'));
+
+    document.querySelector('h1').innerText = nome;
+    document.getElementById('imagem-principal').src = produto.imagem || produto.image;
+    
+    // Extração de dados técnicos baseados no nome
+    const btuMatch = nome.match(/\d+\.?\d*\s*BTU/i);
+    const btuStr = btuMatch ? btuMatch[0] : "Sob consulta";
+    const marca = nome.split(' ')[0];
+    const codigoSimulado = (marca.substring(0,3) + btuStr.replace(/\D/g,'')).toUpperCase();
+
+    if(document.getElementById('prod-codigo')) document.getElementById('prod-codigo').innerText = codigoSimulado;
+    if(document.getElementById('prod-modelo')) document.getElementById('prod-modelo').innerText = codigoSimulado;
+    if(document.getElementById('prod-specs')) document.getElementById('prod-specs').innerText = btuStr + " / Inverter";
+
+    const precoPromo = document.querySelector('.preco-promocional');
+    const precoAntigo = document.querySelector('.preco-antigo');
+    const infoParcela = document.querySelector('.produto-grid p:not([strong])');
+
+    precoPromo.innerText = (precoNum * 0.95).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' via Pix ou Boleto';
+    precoAntigo.innerText = (precoNum * 1.1).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    infoParcela.innerText = `ou ${precoNum.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} em até 10x de ${(precoNum/10).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} sem juros`;
+});
+
+function trocarImagem(src) {
+    document.getElementById('imagem-principal').src = src;
+}
+
+function irParaCheckout() {
+    window.location.href = "checkout.html";
+    alert("✅ Frete calculado!\n\nEntrega em até 7 dias úteis - R$ 0,00 (Grátis)");
+}
+</script>
+
+</body>
+</html>

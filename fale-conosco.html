@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fale Conosco | ALPE Ar Condicionado</title>
+  <meta name="description" content="Informações de contato e formulário para envio de mensagem." />
+  <link rel="icon" href="images/logo-marcas/logo-transparente.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root{
+      --bg:#f7f7f6;
+      --surface:#ffffff;
+      --text:#333;
+      --muted:#666;
+      --accent:#0066cc;
+      --accent-dark:#001529;
+      --line:#e6e6e4;
+      --radius:22px;
+      --container:min(1200px, calc(100vw - 32px));
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Roboto", sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      line-height:1.5;
+    }
+
+    .container{width:var(--container);margin:0 auto;padding:40px 16px;}
+
+    header{
+      background: white;
+      padding: 0 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      height: 90px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      clip-path: inset(0 0 -210px 0);
+    }
+    .logo { position: relative; width: 250px; height: 90px; text-decoration: none; z-index: 110; }
+    .logo img { height: 300px; width: auto; position: absolute; top: 50%; left: 0; transform: translateY(-50%); display: block; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15)); }
+    
+    .nav-links a { color: var(--text); text-decoration: none; font-weight: 500; margin-left: 20px; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+
+    main{margin-top:30px;display:grid;grid-template-columns:1fr 520px;gap:32px;align-items:start}
+    @media (max-width:980px){ 
+      main{grid-template-columns:1fr} 
+      header { height: auto; min-height: 70px; padding: 8px 3%; flex-wrap: wrap; }
+      .logo { height: 70px; width: auto; }
+      .logo img { height: 100px; position: static; transform: none; }
+      .nav-links { display: none; }
+    }
+
+    .info-card{
+      background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    }
+
+    .info-card h2{margin:0 0 12px;font-size:2.2rem; font-family: 'Sora', sans-serif; letter-spacing: -0.04em;}
+    .info-card p{margin:0 0 24px;color:var(--muted); font-size: 1.1rem;}
+
+    .contact-list{display:grid;gap:16px;margin-top:10px}
+    .contact-item{display:flex;gap:18px;align-items:center;padding:20px 0;border-top:1px solid var(--line)}
+    .contact-item:first-child{border-top:0;padding-top:0}
+    .contact-icon{width:50px;height:50px;border-radius:12px;background:#f0f7ff;border:1px solid rgba(0,102,204,0.1);display:grid;place-items:center;font-size:1.2rem;color:var(--accent)}
+    .contact-item strong{display:block; font-size: 1.1rem; color: var(--accent-dark);}
+    .contact-item span{color:var(--muted);font-size:1rem}
+
+    .form-card{
+      background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:32px;
+      box-shadow: 0 15px 45px rgba(0,0,0,0.06);
+    }
+
+    .form-card h3{margin:0 0 8px;font-size:1.5rem; font-family: 'Sora', sans-serif;}
+    .form-card p{margin:0 0 20px;color:var(--muted); font-size: 0.95rem;}
+
+    form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    label{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700; display: block; margin-bottom: 6px;}
+    input,select,textarea{
+      width:100%;padding:14px;border-radius:12px;border:1px solid var(--line);background:#fafafa;color:var(--text);
+      outline:none;font-size:1rem; transition: all 0.3s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 4px rgba(0,102,204,0.05); }
+    textarea{grid-column:1/ -1;min-height:140px;resize:vertical}
+    .full{grid-column:1/ -1}
+
+    .form-footer{display:flex;flex-direction: column; gap:16px;grid-column:1/ -1; margin-top: 10px;}
+    .helper{color:var(--muted);font-size:.85rem; text-align: center;}
+    .btn{
+      background:var(--accent);color:#fff;padding:16px;border-radius:12px;border:none;font-weight:700;cursor:pointer;
+      font-size: 1.1rem; box-shadow:0 10px 20px rgba(0,102,204,0.15); transition: transform 0.2s, background 0.2s;
+    }
+    .btn:hover { background: var(--accent-dark); transform: translateY(-2px); }
+    .btn[disabled]{opacity:.6;cursor:not-allowed;box-shadow:none}
+
+    footer{margin-top:60px;padding:30px 0;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem; text-align: center;}
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">
+      <img src="images/logo-marcas/logo-transparente.png" alt="ALPE Ar Condicionado">
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Início</a>
+      <a href="venda.html">Produtos</a>
+      <a href="index.html#servicos">Serviços</a>
+      <a href="calculadora-btu.html">Calculadora BTU</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <main>
+      <section class="info-card">
+        <h2>Informações de contato</h2>
+        <p>Precisa de suporte técnico ou comercial? Nossa equipe especializada está pronta para ajudar você.</p>
+
+        <div class="contact-list">
+          <div class="contact-item">
+            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+            <div>
+              <strong>E-mail</strong>
+              <span>alpe.arcondicionado@hotmail.com</span>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+            <div>
+              <strong>Telefone & WhatsApp</strong>
+              <span>(21) 98022-0417</span>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div>
+              <strong>Atendimento</strong>
+              <span>Consultoria técnica em todo o Brasil.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="form-card">
+        <h3>Envie sua mensagem</h3>
+        <p>Preencha os dados abaixo e retornaremos com rapidez e clareza.</p>
+
+        <form id="contactForm">
+          <div><label for="nome">Nome</label><input id="nome" type="text" placeholder="Seu nome" required /></div>
+          <div><label for="telefone">WhatsApp</label><input id="telefone" type="tel" placeholder="(21) 00000-0000" required /></div>
+          <div class="full"><label for="email">E-mail</label><input id="email" type="email" placeholder="contato@exemplo.com" required /></div>
+
+          <div class="full">
+            <label for="assunto">Assunto</label>
+            <select id="assunto">
+              <option value="orcamento">Orçamento de Aparelho</option>
+              <option value="instalacao">Instalação / Manutenção</option>
+              <option value="duvida">Dúvida Técnica</option>
+              <option value="parceria">Parcerias</option>
+            </select>
+          </div>
+
+          <div class="full"><label for="mensagem">Mensagem</label><textarea id="mensagem" placeholder="Como podemos ajudar no seu projeto?" required></textarea></div>
+
+          <div class="form-footer">
+            <button class="btn" type="submit">Enviar mensagem agora</button>
+            <div class="helper">Sua solicitação será enviada diretamente para nossos especialistas.</div>
+          </div>
+        </form>
+      </aside>
+    </main>
+
+    <footer>
+      © 2024 ALPE Ar Condicionado & Climatização — Todos os direitos reservados.
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const btn = this.querySelector('button');
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+      setTimeout(() => {
+        btn.textContent = 'Mensagem enviada com sucesso!';
+        btn.style.background = '#28a745';
+        this.reset();
+      }, 1500);
+    });
+  </script>
+</body>
+</html>

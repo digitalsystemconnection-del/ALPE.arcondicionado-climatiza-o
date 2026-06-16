@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout ALPE Ar Condicionado</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0066cc;
+            --secondary: #001529;
+            --success: #28a745;
+            --danger: #dc3545;
+            --bg: #f8f9fa;
+            --border: #ddd;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Roboto', system-ui, sans-serif;
+            background: var(--bg);
+            padding: 30px 15px;
+            color: var(--secondary);
+            line-height: 1.5;
+        }
+        .container { max-width: 1300px; margin: 0 auto; }
+        
+        h1, h2, h3 { color: var(--secondary); margin-bottom: 20px; }
+        h1 { text-align: center; margin-bottom: 40px; }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover { background: #0052a3; transform: translateY(-1px); }
+        .btn-primary:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+        /* Efeito de Carregamento */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Layouts de Grid */
+        .checkout-wrapper { display: flex; gap: 30px; align-items: flex-start; }
+        .col-esquerda { flex: 2; }
+        .col-direita { flex: 1; }
+
+        .checkout-grid-step2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.2fr;
+            gap: 25px;
+        }
+
+        /* Componentes */
+        .opcao-pagamento {
+            border: 2px solid var(--border);
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .opcao-pagamento:hover { border-color: var(--primary); background: #f0f7ff; }
+        .opcao-pagamento.selected { border-color: var(--success); background: #f0fff4; }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .resumo-linha { display: flex; justify-content: space-between; margin: 12px 0; }
+        .back-link {
+            color: #666;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--primary); }
+
+        @media (max-width: 992px) {
+            .checkout-wrapper, .checkout-grid-step2 { flex-direction: column; grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="main-title">Carrinho de Compras</h1>
+
+    <!-- ==================== ETAPA 1: CARRINHO ==================== -->
+    <div id="step-1" class="checkout-wrapper">
+        <div class="col-esquerda">
+            <div class="card">
+                <h2>Seu carrinho</h2>
+                <div style="margin-bottom:20px; padding:15px; background:#f8f9fa; border-radius:10px;">
+                    <strong>Entrega 1 de 1</strong><br>
+                    <small>Vendido e entregue por: <strong>ALPE Ar Condicionado</strong></small>
+                </div>
+
+                <div style="display:flex; gap:20px; flex-wrap: wrap;">
+                    <img id="product-img-step1" src="" alt="Produto" style="width:130px; border-radius:10px; object-fit: contain;">
+                    <div style="flex:1; min-width: 250px;">
+                        <h3 id="product-title-step1" style="font-size: 18px; margin-bottom:10px;">Carregando produto...</h3>
+                        <p id="product-desc-step1" style="color:#555; font-size: 14px;"></p>
+                        <p style="color:var(--success); margin:10px 0; font-size: 14px;">✅ Em estoque. Envio imediato.</p>
+                        
+                        <div style="display:flex; align-items:center; justify-content: space-between; margin-top:15px;">
+                            <div>
+                                <span id="product-old-price-step1" style="text-decoration:line-through; color:#999; font-size: 14px;"></span><br>
+                                <strong id="product-price-step1" style="font-size:24px; color:var(--primary);">R$ 5.669,00</strong>
+                            </div>
+                            
+                            <div style="display:flex; align-items:center; gap:15px;">
+                                <div style="display:flex; align-items:center; gap:8px; border:1px solid #ddd; border-radius:8px; padding:4px 8px;">
+                                    <button onclick="alterarQtd(-1)" style="width:28px;height:28px;border:none;background:#f0f0f0;border-radius:6px;cursor:pointer;">−</button>
+                                    <span id="qtd" style="width:25px;text-align:center;font-weight:600;">1</span>
+                                    <button onclick="alterarQtd(1)" style="width:28px;height:28px;border:none;background:#f0f0f0;border-radius:6px;cursor:pointer;">+</button>
+                                </div>
+                                <button onclick="removerItem()" style="color:var(--danger); background:none; border:none; cursor:pointer; font-weight: 500;">Remover</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-direita">
+            <div class="card">
+                <h3>Calcular Frete</h3>
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    <input type="text" id="cep" placeholder="00000-000" maxlength="9" style="margin-bottom:0;">
+                    <button onclick="calcularFrete()" class="btn-primary" style="width: auto;">Calcular</button>
+                </div>
+                <a href="#" onclick="alert('Consulte no site dos Correios')" style="color:var(--primary); display:inline-block; margin-top:10px; font-size: 14px;">Não sei meu CEP</a>
+                <div id="resultado-frete" style="display:none; margin-top:15px; font-size: 14px;"></div>
+            </div>
+
+            <div class="card">
+                <h3>Aplicar código de cupom</h3>
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    <input type="text" id="cupom" placeholder="Digite o código" style="margin-bottom:0;">
+                    <button onclick="aplicarCupom()" class="btn-primary" style="width: auto; background: var(--success);">Aplicar</button>
+                </div>
+                <div id="resultado-frete" style="display:none; margin-top:15px; font-size: 14px;"></div>
+            </div>
+
+            <div class="card">
+                <h3>Resumo do Pedido</h3>
+                <div class="resumo-linha"><span>Subtotal</span><span id="subtotal">R$ 5.669,00</span></div>
+                <div class="resumo-linha"><span>Frete</span><span id="frete-valor" style="color:var(--success);">R$ 0,00</span></div>
+                <hr style="margin:15px 0; border:0; border-top:1px solid #eee;">
+                <div class="resumo-linha" style="font-size:22px; font-weight:700;">
+                    <span>Total</span>
+                    <span id="total">R$ 5.669,00</span>
+                </div>
+                <div id="desconto-pix-aviso" style="background:#e6f7e6; padding:15px; border-radius:10px; margin-top:15px; text-align:center; color:#166534; font-size: 14px;">
+                    <strong>R$ 5.385,55</strong> no PIX (5% OFF)
+                </div>
+                <button onclick="irParaPagamento()" class="btn-primary" style="margin-top:20px;">Finalizar Compra</button>
+                <div style="text-align:center; margin-top:20px;">
+                    <a href="venda.html" class="back-link">
+                        <span class="material-icons" style="font-size: 18px;">arrow_back</span> Voltar à loja
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ETAPA 2: IDENTIFICAÇÃO E PAGAMENTO ==================== -->
+    <div id="step-2" class="checkout-grid-step2" style="display:none;">
+        <!-- 1. Identificação -->
+        <div class="card">
+            <h2>1. Identificação</h2>
+            <div style="margin-bottom: 25px;">
+                <p style="font-weight: 500; color: #555; margin-bottom: 15px;">Dados pessoais</p>
+                
+                <input type="text" id="cliente-nome" placeholder="Nome completo" style="margin-bottom: 10px;">
+                <input type="email" id="cliente-email" placeholder="E-mail" style="margin-bottom: 10px;">
+                <input type="text" id="cliente-telefone" placeholder="Telefone/WhatsApp" style="margin-bottom: 10px;">
+            </div>
+            <div style="padding-top: 20px; border-top: 1px solid #eee;">
+                <p style="font-weight: 500; color: #555; margin-bottom: 15px;">Endereço de entrega</p>
+                
+                <input type="text" id="cliente-endereco" placeholder="Rua, número, complemento" style="margin-bottom: 10px;">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="cliente-bairro" placeholder="Bairro">
+                    <input type="text" id="cliente-cidade" placeholder="Cidade">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="cliente-estado" placeholder="Estado (UF)" maxlength="2">
+                    <input type="text" id="cliente-cep-entrega" placeholder="CEP" maxlength="9">
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Pagamento -->
+        <div class="card">
+            <h2>2. Pagamento</h2>
+            <div id="pagamento-opcoes">
+                <div class="opcao-pagamento" onclick="showPagamento('cartao')"><span class="material-icons">credit_card</span> Cartão de Crédito</div>
+                <div class="opcao-pagamento" onclick="showPagamento('pix')">
+                    <span class="material-icons">qr_code_2</span>
+                    <div>
+                        Pagamento com Pix à vista <br>
+                        <small style="color: var(--success); font-weight: bold;">5% de desconto</small>
+                    </div>
+                </div>
+                <div class="opcao-pagamento" onclick="showPagamento('boleto')">
+                    <span class="material-icons">description</span>
+                    <div>
+                        Pagamento com boleto bancário à vista <br>
+                        <small style="color: var(--success); font-weight: bold;">5% de desconto</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Cartão -->
+            <div id="form-cartao" style="display:none;">
+                <div style="margin-bottom:20px; font-weight: 600; color:var(--primary); cursor:pointer;" onclick="aplicarCupom()">Aplicar código de cupom</div>
+                <button onclick="resetPagamento()" class="back-link" style="margin-bottom:20px; text-decoration: underline;">Alterar forma de pagamento</button>
+                
+                <p style="margin-bottom:15px; color:#333; font-weight:700;">Pagamento com Cartão de Crédito</p>
+                
+                <select id="select-parcelas" onchange="atualizarParcelaDisplay()">
+                    <option value="">Escolha a quantidade de parcelas</option>
+                    <option value="1">1x à vista (sem juros)</option>
+                    <option value="2">2x sem juros</option>
+                    <option value="3">3x sem juros</option>
+                    <option value="4">4x sem juros</option>
+                    <option value="5">5x sem juros</option>
+                    <option value="6">6x sem juros</option>
+                    <option value="7">7x sem juros</option>
+                    <option value="8">8x sem juros</option>
+                    <option value="9">9x com juros</option>
+                    <option value="10">10x com juros</option>
+                </select>
+                
+                <div style="margin-bottom:20px;">
+                    <img src="https://loja.br.fujitsu-general.com/tema/lojafujitsu-checkout/img/rodape/pagamento/visa.svg" style="height:25px; margin-right:10px;" alt="Mastercard">
+                    <img src="https://loja.br.fujitsu-general.com/tema/lojafujitsu-checkout/img/rodape/pagamento/master.svg" style="height:25px; margin-right:10px;" alt="Visa">
+                    <img src="https://loja.br.fujitsu-general.com/tema/lojafujitsu-checkout/img/rodape/pagamento/elo.svg" style="height:25px;" alt="Elo">
+                    <img src="https://loja.br.fujitsu-general.com/tema/lojafujitsu-checkout/img/rodape/pagamento/amex.svg" style="height:25px;" alt="Elo">
+                    <img src="https://loja.br.fujitsu-general.com/tema/lojafujitsu-checkout/img/rodape/pagamento/hipercard.svg" style="height:25px;" alt="Elo">
+                </div>
+
+                <input type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="card-expiry" placeholder="MM/AA" maxlength="5" required>
+                    <input type="text" id="card-cvv" placeholder="CVV" maxlength="4" required>
+                </div>
+                <input type="text" id="card-name" placeholder="Nome como no cartão" required>
+                <button onclick="finalizarPedido()" class="btn-primary">Finalizar com Cartão</button>
+                <p style="text-align:center; font-size:12px; color:#666; margin-top:15px;">Essa compra está sendo feita no Brasil.</p>
+            </div>
+
+            <!-- Detalhes Pix/Boleto -->
+            <div id="info-pix-boleto" style="display:none;">
+                <div style="margin-bottom:20px; font-weight: 600; color:var(--primary); cursor:pointer;" onclick="aplicarCupom()">Aplicar código de cupom</div>
+                <button onclick="resetPagamento()" class="back-link" style="margin-bottom:20px; text-decoration: underline;">Alterar forma de pagamento</button>
+                
+                <p id="txt-pagamento-selected" style="font-weight: 700; font-size: 18px; margin-bottom: 10px;"></p>
+                <p id="valor-com-desconto" style="font-size: 20px; font-weight: 700; color: var(--success); margin-bottom: 20px;"></p>
+                <p style="color: var(--success); font-size: 14px; margin-bottom: 20px;">Desconto de 5% para pagamento via PIX ou Boleto já aplicado nesse valor.</p>
+                
+                <div id="instrucoes-pagamento">
+                    <ul style="margin-bottom: 25px; padding-left: 20px; color: #555; font-size: 14px;">
+                        <li style="margin-bottom: 8px;">O banco nos enviará automaticamente a confirmação do pagamento;</li>
+                        <li style="margin-bottom: 8px;">Não faça depósito ou transferência entre contas a não ser via Pix ou Boleto;</li>
+                    </ul>
+                </div>
+
+                <button onclick="finalizarPedido()" class="btn-primary">Finalizar Pedido</button>
+                <p style="text-align:center; font-size:12px; color:#666; margin-top:15px;">Essa compra está sendo feita no Brasil.</p>
+            </div>
+        </div>
+
+        <!-- Coluna Direita (Itens e Resumo) -->
+        <div style="display: flex; flex-direction: column; gap: 25px;">
+            <div class="card">
+                <h2>Itens do pedido</h2>
+                <div style="margin-bottom:20px; padding:15px; background:#f8f9fa; border-radius:10px;">
+                    <strong>Entrega 1 de 1</strong><br>
+                    <small>1 item • Vendido e entregue por <strong>ALPE Ar Condicionado</strong></small><br>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 15px;">
+                        <span style="font-size: 14px; color: #555;">Normal - ECONOMICA<br>7 dias úteis • <strong class="resumo-frete">R$ 0,00</strong></span>
+                        <a href="#" onclick="voltarParaCarrinho()" style="color: var(--primary); text-decoration: none; font-size: 14px;">Alterar</a>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <img class="product-img-step2" src="" style="width:80px; border-radius:8px; object-fit: contain;">
+                    <div style="flex:1;">
+                        <p id="product-title-step2" style="font-size: 14px; font-weight: bold; margin-bottom: 5px;"></p>
+                        <p style="font-size: 12px; color: #666;">Quantidade: <span class="resumo-qtd">1</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Resumo do pedido</h2>
+                <div class="resumo-linha"><span>Subtotal (<span class="resumo-qtd">1</span> produto)</span><span class="resumo-subtotal">R$ 5.669,00</span></div>
+                <div class="resumo-linha"><span>Frete</span><span class="resumo-frete" style="color:var(--success);">R$ 0,00</span></div>
+                <hr style="margin:15px 0; border:0; border-top:1px solid #eee;">
+                <div class="resumo-linha" style="font-size:22px; font-weight:700;">
+                    <span>Total</span>
+                    <span id="resumo-total-display-step2">R$ 5.669,00</span>
+                </div>
+                
+                <div style="background:#e6f7e6; padding:18px; border-radius:10px; margin-top:20px; text-align:center; color:#166534;">
+                    <strong id="resumo-total-pix-step2">R$ 5.385,55</strong><br>
+                    Valor com 5% de desconto no pagamento via PIX ou Boleto.
+                </div>
+                
+                <button onclick="finalizarPedido()" class="btn-primary" style="margin-top:25px;">Finalizar compra</button>
+                <div style="text-align:center; margin-top:20px;">
+                    <button onclick="voltarParaCarrinho()" class="back-link"><span class="material-icons">arrow_back</span> Voltar ao carrinho</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ETAPA 3: SUCESSO ==================== -->
+    <div id="step-3" style="display:none;">
+        <div class="card" style="text-align: center; border-top: 5px solid var(--success);">
+            <span class="material-icons" style="font-size: 64px; color: var(--success); margin-bottom: 20px;">check_circle</span>
+            <p style="font-size: 18px; color: #666;">Número do pedido</p>
+            <h2 style="font-size: 36px; margin-bottom: 10px;">#<span id="order-id">2058</span></h2>
+            <h2 style="color: var(--success);">Pedido realizado com sucesso!</h2>
+            <p id="instrucao-sucesso">Aguardamos a confirmação do pagamento para enviar seu produto.</p>
+        </div>
+
+        <div class="checkout-grid-step2">
+            <div class="card">
+                <h3>Pagamento</h3>
+                <div id="pix-sucesso" style="display:none; text-align: center;">
+                    <p style="margin-bottom: 15px;">Escaneie o QR Code abaixo:</p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ALPE-PIX-EXEMPLO" alt="Pix" style="border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
+                    <button class="btn-primary" style="background: var(--success); margin-top: 15px;">Copiar código Pix</button>
+                </div>
+                <div id="boleto-sucesso" style="display:none; text-align: center;">
+                    <a id="btn-imprimir-boleto" href="#" target="_blank" class="btn-primary" style="margin-bottom: 15px; text-decoration: none; display: flex; align-items: center; justify-content: center;">Imprimir Boleto</a>
+                    <input type="text" id="boleto-linha" value="" readonly style="font-family: monospace; text-align: center;">
+                </div>
+                <div id="cartao-sucesso" style="display:none;">
+                    <p>Seu pagamento está sendo processado pela operadora do cartão.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Entrega</h3>
+                <p><strong>Prazo estimado:</strong> 7 dias úteis</p>
+                <p style="font-size: 14px; color: #666; margin-top:10px;">Você receberá as atualizações de rastreio no seu e-mail.</p>
+            </div>
+
+            <div class="card">
+                <h3>Resumo Final</h3>
+                <div class="resumo-linha"><span>Total pago</span><span id="final-total" style="font-weight:700;"></span></div>
+                <div style="text-align:center; margin-top:20px;">
+                    <a href="venda.html" class="back-link">
+                        <span class="material-icons" style="font-size: 18px;">arrow_back</span> Voltar à loja
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const CONFIG = {
+        precoUnitario: 5669.00,
+        valorFreteSimulado: 141.26
+    };
+
+    let state = {
+        qtd: 1,
+        frete: 0,
+        metodoPagamento: 'pix',
+        produto: null
+    };
+
+    // --- Inicialização ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const cart = JSON.parse(localStorage.getItem('alpe_cart')) || [];
+        if (cart.length === 0) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        const produto = cart[0]; 
+        state.produto = produto;
+        
+        const precoLimpo = typeof produto.price === 'string' 
+            ? parseFloat(produto.price.replace(/[^0-9,]/g, '').replace(',', '.'))
+            : (produto.preco || produto.price || 0);
+        
+        CONFIG.precoUnitario = precoLimpo;
+
+        document.getElementById('product-title-step1').textContent = produto.name || produto.nome;
+        document.getElementById('product-img-step1').src = produto.image || produto.imagem;
+        
+        const descStep1 = document.getElementById('product-desc-step1');
+        if(descStep1) descStep1.textContent = (produto.name || produto.nome).includes('BTU') ? 'Unidade Evaporadora + Condensadora' : '';
+        
+        const titleStep2 = document.getElementById('product-title-step2');
+        if(titleStep2) titleStep2.textContent = produto.name || produto.nome;
+        
+        document.querySelectorAll('.product-img-step2').forEach(img => img.src = produto.image || produto.imagem);
+
+        loadStoredData();
+        atualizarValores();
+    });
+
+    function loadStoredData() {
+        const saved = JSON.parse(localStorage.getItem('alpe_customer_data')) || {};
+        if(saved.nome) document.getElementById('cliente-nome').value = saved.nome;
+        if(saved.email) document.getElementById('cliente-email').value = saved.email;
+        if(saved.telefone) document.getElementById('cliente-telefone').value = saved.telefone;
+        if(saved.endereco) document.getElementById('cliente-endereco').value = saved.endereco;
+        if(saved.bairro) document.getElementById('cliente-bairro').value = saved.bairro;
+        if(saved.cidade) document.getElementById('cliente-cidade').value = saved.cidade;
+        if(saved.estado) document.getElementById('cliente-estado').value = saved.estado;
+        if(saved.cep) document.getElementById('cliente-cep-entrega').value = saved.cep;
+    }
+
+    document.getElementById('cliente-cep-entrega')?.addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 5) value = value.slice(0, 5) + '-' + value.slice(5, 8);
+        e.target.value = value;
+    });
+
+    document.getElementById('cep').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 5) value = value.slice(0, 5) + '-' + value.slice(5, 8);
+        e.target.value = value;
+    });
+
+    // --- Carrinho ---
+    function alterarQtd(n) {
+        state.qtd = Math.max(1, state.qtd + n);
+        document.getElementById('qtd').textContent = state.qtd;
+        atualizarValores();
+    }
+
+    function removerItem() {
+        if(confirm("Deseja esvaziar seu carrinho?")) {
+            localStorage.removeItem('alpe_cart');
+            window.location.href = 'venda.html';
+        }
+    }
+
+    function calcularFrete() {
+        const cep = document.getElementById('cep').value;
+        if (cep.length < 9) {
+            alert("Informe um CEP válido.");
+            return;
+        }
+        state.frete = CONFIG.valorFreteSimulado;
+        
+        const res = document.getElementById('resultado-frete');
+        res.style.display = 'block';
+        res.innerHTML = `
+            <div style="border-top:1px solid #eee; padding-top:10px; margin-top:10px;">
+                <p><strong>Normal:</strong> R$ ${state.frete.toLocaleString('pt-BR')} (7 dias úteis)</p>
+            </div>
+        `;
+        atualizarValores();
+    }
+
+    function aplicarCupom() {
+        alert("🎉 Cupom aplicado com sucesso!");
+    }
+
+    function atualizarValores() {
+        const subtotal = state.qtd * CONFIG.precoUnitario;
+        const total = subtotal + state.frete;
+        const totalPix = total * 0.95;
+
+        const fmt = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        // Update Step 1
+        const elOldPrice = document.getElementById('product-old-price-step1');
+        if (elOldPrice) elOldPrice.textContent = fmt(CONFIG.precoUnitario * 1.1);
+        
+        const elUnitPrice = document.getElementById('product-price-step1');
+        if (elUnitPrice) elUnitPrice.textContent = fmt(CONFIG.precoUnitario);
+
+        document.getElementById('subtotal').textContent = fmt(subtotal);
+        document.getElementById('frete-valor').textContent = state.frete > 0 ? fmt(state.frete) : "Grátis";
+        document.getElementById('total').textContent = fmt(total);
+        document.getElementById('desconto-pix-aviso').innerHTML = `<strong>${fmt(totalPix)}</strong> no PIX (5% OFF)`;
+
+        // Update Step 2 Summary
+        document.querySelectorAll('.resumo-qtd').forEach(el => el.textContent = state.qtd);
+        document.querySelectorAll('.resumo-subtotal').forEach(el => el.textContent = fmt(subtotal));
+        document.querySelectorAll('.resumo-frete').forEach(el => el.textContent = fmt(state.frete));
+        document.querySelectorAll('.resumo-total').forEach(el => el.textContent = fmt(total));
+
+        // Update Step 2 specific total display
+        const totalDisplayStep2 = document.getElementById('resumo-total-display-step2');
+        if(totalDisplayStep2) totalDisplayStep2.innerHTML = `${fmt(total)} <span style="font-size: 16px; color: #666; font-weight: normal; margin-left: 10px;">${fmt(totalPix)}</span>`;
+
+        // Update Step 2 Summary Discount Box
+        const resumoPixStep2 = document.getElementById('resumo-total-pix-step2');
+        if(resumoPixStep2) resumoPixStep2.textContent = fmt(totalPix);
+        
+        // Global total for payment labels
+        const valPixLabel = document.getElementById('valor-com-desconto');
+        if(valPixLabel) valPixLabel.textContent = "Valor do pedido: " + fmt(totalPix);
+    }
+
+    // --- Navegação entre Etapas ---
+    function irParaPagamento() {
+        document.getElementById('step-1').style.display = 'none';
+        document.getElementById('step-2').style.display = 'grid';
+        document.getElementById('main-title').textContent = 'Finalizar Pedido';
+        window.scrollTo(0,0);
+    }
+
+    function voltarParaCarrinho() {
+        document.getElementById('step-1').style.display = 'flex';
+        document.getElementById('step-2').style.display = 'none';
+        document.getElementById('main-title').textContent = 'Carrinho de Compras';
+        window.scrollTo(0,0);
+    }
+
+    // --- Pagamento ---
+    function showPagamento(tipo) {
+        state.metodoPagamento = tipo;
+        document.getElementById('pagamento-opcoes').style.display = 'none';
+        
+        if(tipo === 'cartao') {
+            document.getElementById('form-cartao').style.display = 'block';
+            document.getElementById('info-pix-boleto').style.display = 'none';
+        } else {
+            document.getElementById('form-cartao').style.display = 'none';
+            document.getElementById('info-pix-boleto').style.display = 'block';
+            document.getElementById('txt-pagamento-selected').textContent = tipo === 'pix' ? 'Pagamento via Pix' : 'Pagamento via Boleto';
+        }
+        atualizarValores();
+    }
+
+    function resetPagamento() {
+        document.getElementById('pagamento-opcoes').style.display = 'block';
+        document.getElementById('form-cartao').style.display = 'none';
+        document.getElementById('info-pix-boleto').style.display = 'none';
+    }
+
+    function atualizarParcelaDisplay() {
+        const sel = document.getElementById('select-parcelas');
+        // Apenas visual para o teste
+    }
+
+    // --- Sucesso ---
+    async function finalizarPedido() {
+        const btn = document.activeElement && document.activeElement.classList.contains('btn-primary') 
+                    ? document.activeElement 
+                    : document.querySelector('#step-2 .btn-primary');
+        const originalText = btn.innerHTML;
+
+        // Captura dados de identificação
+        const customerData = {
+            nome: document.getElementById('cliente-nome').value,
+            email: document.getElementById('cliente-email').value,
+            telefone: document.getElementById('cliente-telefone').value,
+            endereco: document.getElementById('cliente-endereco').value,
+            bairro: document.getElementById('cliente-bairro').value,
+            cidade: document.getElementById('cliente-cidade').value,
+            estado: document.getElementById('cliente-estado').value,
+            cep: document.getElementById('cliente-cep-entrega').value
+        };
+
+        if(!customerData.nome || !customerData.email || !customerData.endereco) {
+            alert("Por favor, preencha os dados de identificação (Nome, E-mail e Endereço).");
+            window.scrollTo(0, document.getElementById('cliente-nome').offsetTop - 20);
+            return;
+        }
+
+        // Inicia estado de carregamento
+        btn.disabled = true;
+        btn.innerHTML = `Processando... <div class="spinner"></div>`;
+
+        // Salva para facilitar futuras compras
+        localStorage.setItem('alpe_customer_data', JSON.stringify(customerData));
+
+        // Validação extra para cartão (simulada)
+        if (state.metodoPagamento === 'cartao') {
+            const cardNum = document.getElementById('card-number').value;
+            if (cardNum.length < 13) {
+                alert("Por favor, insira um número de cartão válido para o teste.");
+                btn.disabled = false; btn.innerHTML = originalText;
+                return;
+            }
+        }
+
+        const subtotal = state.qtd * CONFIG.precoUnitario;
+        let totalFinal = (state.metodoPagamento === 'pix' || state.metodoPagamento === 'boleto') 
+            ? (subtotal + state.frete) * 0.95 
+            : (subtotal + state.frete);
+        totalFinal = parseFloat(totalFinal.toFixed(2));
+
+        // Chamada para a API ALPE (BTG)
+        let dadosPagamento = null;
+        if (state.metodoPagamento === 'pix' || state.metodoPagamento === 'boleto' || state.metodoPagamento === 'cartao') {
+            try {
+                const response = await fetch(`http://localhost:3002/api/pagamentos/${state.metodoPagamento}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        valor: totalFinal,
+                        clienteNome: customerData.nome,
+                        pedidoId: Date.now()
+                    })
+                });
+                const data = await response.json();
+                if (data.sucesso) {
+                    dadosPagamento = data;
+                    // Simula um pequeno delay para o cliente sentir o processamento do cartão
+                    if (state.metodoPagamento === 'cartao') {
+                        await new Promise(r => setTimeout(r, 1500));
+                    }
+                    if (state.metodoPagamento === 'pix') {
+                        document.querySelector('#pix-sucesso button').onclick = () => {
+                            navigator.clipboard.writeText(data.pix.pixCopiaECola);
+                            alert("Código PIX copiado!");
+                        };
+                    } else if (state.metodoPagamento === 'boleto') {
+                        document.getElementById('btn-imprimir-boleto').href = data.boleto.pdfUrl;
+                        document.getElementById('boleto-linha').value = data.boleto.linhaDigitavel;
+                    }
+                }
+            } catch (err) {
+                console.error("Erro ao processar pagamento via API:", err);
+            }
+        }
+
+        // Registra o pedido no "banco de dados"
+        const pedidoNovo = {
+            id: Math.floor(Math.random() * 9000) + 1000,
+            data: new Date().toISOString(),
+            cliente: customerData.nome,
+            email: customerData.email,
+            telefone: customerData.telefone,
+            endereco: `${customerData.endereco}, ${customerData.bairro}, ${customerData.cidade}-${customerData.estado}, CEP ${customerData.cep}`,
+            produto: state.produto.name || state.produto.nome, // Alinhado com dashboard
+            itens: state.produto.name || state.produto.nome,   // Mantido por compatibilidade
+            quantidade: state.qtd,                            // Alinhado com dashboard
+            qtd: state.qtd,                                   // Mantido por compatibilidade
+            total: totalFinal,
+            btgId: dadosPagamento?.pix?.txid || dadosPagamento?.boleto?.nossoNumero || dadosPagamento?.transacaoId || null,
+            metodoPagamento: state.metodoPagamento,
+            status: state.metodoPagamento === 'cartao' ? "Pago" : "Pendente",
+            instalacao: "Aguardando"                          // Necessário para o fluxo do Admin
+        };
+
+        const pedidosSalvos = JSON.parse(localStorage.getItem('alpe_pedidos')) || [];
+        pedidosSalvos.unshift(pedidoNovo);
+        localStorage.setItem('alpe_pedidos', JSON.stringify(pedidosSalvos));
+
+        // Limpa carrinho após sucesso
+        localStorage.removeItem('alpe_cart');
+
+        // UI Update
+        document.getElementById('step-2').style.display = 'none';
+        document.getElementById('step-3').style.display = 'block';
+        document.getElementById('main-title').style.display = 'none';
+
+        document.getElementById('final-total').textContent = totalFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        // Show specific payment details
+        document.getElementById('pix-sucesso').style.display = state.metodoPagamento === 'pix' ? 'block' : 'none';
+        document.getElementById('boleto-sucesso').style.display = state.metodoPagamento === 'boleto' ? 'block' : 'none';
+        document.getElementById('cartao-sucesso').style.display = state.metodoPagamento === 'cartao' ? 'block' : 'none';
+        
+        if(state.metodoPagamento === 'boleto') {
+            document.getElementById('instrucao-sucesso').textContent = 'Falta pouco! Pague o boleto para processarmos sua entrega.';
+            document.getElementById('order-id').textContent = pedidoNovo.id;
+        }
+
+        window.scrollTo(0,0);
+    }
+</script>
+</body>
+</html>
