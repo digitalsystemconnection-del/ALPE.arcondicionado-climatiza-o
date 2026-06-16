@@ -14,24 +14,16 @@
 <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body class="light">
+<!-- TOP BAR COM CONTATOS E PROMOÇÕES -->
 <div class="top-bar">
     <div class="top-bar-container">
         <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá%20ALPE,%20visitei%20o%20site%20e%20gostaria%20de%20falar%20com%20um%20especialista." target="_blank" class="top-item">
-<<<<<<< HEAD
-            <img src="images/Icone/fale_conosco.png" alt="Chat">
-            <div><strong>FALE CONOSCO</strong></div>
-        </a>
-        <a href="tel:21980220417" class="top-item">
-            <img src="images/Icone/televendas.png" alt="Telefone">
-            <div><strong>TELEVENDAS</strong></div>
-=======
             <img src="images/icone/fale_conosco.png" alt="Chat">
             <div><strong>Fale Conosco</strong></div>
         </a>
         <a href="tel:21980220417" class="top-item">
             <img src="images/icone/televendas.png" alt="Telefone">
             <div><strong>Televendas</strong></div>
->>>>>>> 32ae7cecdd3e60c2bf4125ab2bd04da87e4d1f89
         </a>
         <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá%20ALPE,%20visitei%20o%20site%20e%20gostaria%20de%20comprar." target="_blank" class="top-item">
             <img src="images/icone/whattsapp_transparente.jpeg" alt="WhatsApp">
@@ -60,6 +52,8 @@
         </a>
     </div>
 </div>
+
+<!-- HEADER/NAVEGAÇÃO -->
 <header>
   <a href="index.html" class="logo" id="nav-loja">
     <img src="images/logo-marcas/logo-transparente.png" alt="ALPE Ar Condicionado">
@@ -84,8 +78,50 @@
     <button class="mobile-menu-toggle"><i class="fas fa-bars"></i></button>
   </div>
 </header>
+
+<!-- CONTEÚDO PRINCIPAL -->
 <main>
   <div id="page-loja" class="page active">
+    
+    <!-- HERO BANNER COM CARROSSEL -->
+    <section class="section-hero">
+      <div class="carousel">
+        <div class="carousel-track" id="carouselTrack">
+          <img src="images/logo-marcas/logo-transparente.png" alt="Slide 1" class="carousel-slide">
+          <img src="images/logo-marcas/logo-transparente.png" alt="Slide 2" class="carousel-slide">
+          <img src="images/logo-marcas/logo-transparente.png" alt="Slide 3" class="carousel-slide">
+        </div>
+        <button class="carousel-arrow left" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+        <button class="carousel-arrow right" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+        <div class="carousel-dots">
+          <button class="active"></button>
+          <button></button>
+          <button></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO DE MARCAS -->
+    <section id="marcas" class="section-loja">
+      <div class="container">
+        <h2>Marcas Disponíveis</h2>
+        <div class="marcas-grid js-marcas-grid">
+          <!-- Preenchido dinamicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO DE PRODUTOS -->
+    <section id="produtos" class="section-loja">
+      <div class="container">
+        <h2>Produtos em Destaque</h2>
+        <div class="catalogo-grid" id="catalogo-grid">
+          <!-- Produtos carregados dinamicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO DE SERVIÇOS -->
     <section id="servicos" class="section-loja">
       <div class="container">
         <h2>Serviços Completos</h2>
@@ -101,6 +137,27 @@
         </div>
       </div>
     </section>
+
+    <!-- CALCULADORA BTU -->
+    <section id="calculadora" class="section-calculadora">
+      <div class="container">
+        <h2>Calcule Seu BTU Ideal</h2>
+        <form class="form-calculadora" id="btuForm">
+          <div class="field">
+            <label for="area">Área da Sala (m²):</label>
+            <input type="number" id="area" placeholder="Ex: 25" required>
+          </div>
+          <div class="field">
+            <label for="pessoas">Número de Pessoas:</label>
+            <input type="number" id="pessoas" placeholder="Ex: 3" value="1" required>
+          </div>
+          <button type="submit" class="cta-header">Calcular BTU</button>
+          <div id="btuResult" style="margin-top: 20px; text-align: center; font-size: 18px; font-weight: bold;"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- FORMAS DE PAGAMENTO -->
     <section id="formas-pagamento" class="section-pagamento">
       <h2 class="title-pagamento">Formas de Pagamento</h2>
       <div class="grid-pagamento">
@@ -110,8 +167,26 @@
         <img src="images/logo-pagamento/visa.webp" alt="Visa" class="img-pagamento">
       </div>
     </section>
+
   </div>
+
+  <!-- PÁGINA DO CARRINHO -->
+  <div id="page-carrinho" class="page">
+    <section class="section-loja">
+      <div class="container">
+        <h2>Seu Carrinho</h2>
+        <div class="carrinho-lista-container" id="carrinho-lista"></div>
+        <div style="text-align: center; margin-top: 30px;">
+          <a href="#" class="cta-header" style="margin-right: 10px;">Finalizar Compra</a>
+          <a href="#" id="btn-continuar-comprando" class="cta-header" style="background: #666;">Continuar Comprando</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
 </main>
+
+<!-- FOOTER -->
 <footer class="footer">
   <div class="footer-content">
     <div class="footer-brand">
@@ -125,10 +200,67 @@
     <p>&copy; 2024 ALPE.ar condicionado & climatização. Todos os direitos reservados.</p>
   </div>
 </footer>
+
+<!-- BOTÃO FLUTUANTE WHATSAPP -->
 <a href="https://api.whatsapp.com/send?phone=5521980220417" class="whatsapp-square" target="_blank" rel="noopener noreferrer">
   <img src="./images/icone/whattsapp_transparente.jpeg" alt="WhatsApp" style="width: 20px; height: 20px; object-fit: contain;">
   <span>Fale Conosco</span>
 </a>
+
+<!-- SCRIPTS -->
 <script src="assets/js/main.js"></script>
+<script>
+// Renderizar marcas e produtos dinamicamente
+document.addEventListener('DOMContentLoaded', () => {
+  // Marcas Grid
+  const marcasGrid = document.querySelector('.js-marcas-grid');
+  if (marcasGrid) {
+    const marcas = [
+      { nome: "Daikin", url: "marcas.index/daikin.html", logo: "images/logo-marcas/daikin.png" },
+      { nome: "Electrolux", url: "marcas.index/electrolux.html", logo: "images/logo-marcas/electrolux.png" },
+      { nome: "Elgin", url: "marcas.index/elgin.html", logo: "images/logo-marcas/elgin.png" },
+      { nome: "Fujitsu", url: "marcas.index/fujitsu.html", logo: "images/logo-marcas/fujitsu.png" },
+      { nome: "Gree", url: "marcas.index/gree.html", logo: "images/logo-marcas/gree.png" },
+      { nome: "Hisense", url: "marcas.index/hisense.html", logo: "images/logo-marcas/hisense.png" },
+      { nome: "Hitachi", url: "marcas.index/hitachi.html", logo: "images/logo-marcas/hitachi.png" },
+      { nome: "LG", url: "marcas.index/lg.html", logo: "images/logo-marcas/lg.png" },
+      { nome: "Midea", url: "marcas.index/midea.html", logo: "images/logo-marcas/midea.png" },
+      { nome: "Philco", url: "marcas.index/philco.html", logo: "images/logo-marcas/philco.png" },
+      { nome: "Samsung", url: "marcas.index/samsung.html", logo: "images/logo-marcas/samsung.png" },
+      { nome: "TCL", url: "marcas.index/tcl.html", logo: "images/logo-marcas/tcl.png" }
+    ];
+
+    marcasGrid.innerHTML = marcas.map(marca => `
+      <a href="${marca.url}" class="logo-marca" title="${marca.nome}">
+        <img src="${marca.logo}" alt="${marca.nome}" onerror="this.src='images/logo-marcas/logo-transparente.png'">
+      </a>
+    `).join('');
+  }
+
+  // Produtos Grid
+  const catalogoGrid = document.getElementById('catalogo-grid');
+  if (catalogoGrid) {
+    const produtos = [
+      { id: 1, nome: "Ar Condicionado Split Quente/Frio 12.000 BTU", preco: "R$ 1.500,00", imagem: "images/logo-marcas/logo-transparente.png" },
+      { id: 2, nome: "Ar Condicionado Split 18.000 BTU", preco: "R$ 2.200,00", imagem: "images/logo-marcas/logo-transparente.png" },
+      { id: 3, nome: "Ar Condicionado Inverter 22.000 BTU", preco: "R$ 3.500,00", imagem: "images/logo-marcas/logo-transparente.png" },
+      { id: 4, nome: "Ar Condicionado Cassete 24.000 BTU", preco: "R$ 4.200,00", imagem: "images/logo-marcas/logo-transparente.png" }
+    ];
+
+    catalogoGrid.innerHTML = produtos.map(p => `
+      <div class="produto-card">
+        <img src="${p.imagem}" alt="${p.nome}">
+        <div class="produto-info">
+          <h4>${p.nome}</h4>
+          <div class="preco">${p.preco}</div>
+          <button class="cta-card btn-add-cart" onclick="adicionarAoCarrinho(${p.id}, '${p.nome}', '${p.preco}', '${p.imagem}')">
+            <i class="fas fa-shopping-cart"></i> Adicionar
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+});
+</script>
 </body>
 </html>
