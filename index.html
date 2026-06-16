@@ -4,17 +4,159 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ALPE | Loja Oficial (v2.0)</title>
+
+<!-- Favicon -->
 <link rel="icon" href="images/logo-marcas/logo-transparente.png" type="image/png">
+
+<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,750&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<!-- Novas fontes para a calculadora -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" crossorigin="anonymous" />
+
+<!-- Chart.js for Graphs -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Project Styles -->
 <link rel="stylesheet" href="assets/css/style.css" />
+<script>
+  window.safeStorage = window.safeStorage || {
+    get: (key) => {
+      try { return localStorage.getItem(key); } 
+      catch (e) { return null; }
+    },
+    set: (key, value) => {
+      try { localStorage.setItem(key, value); } 
+      catch (e) { console.error('Erro no storage:', e); }
+    }
+  };
+</script>
+<style>
+:root {
+  --cor-principal: #0066cc;
+  --cor-secundaria: #001529;
+  --cor-fundo: #f8f9fa;
+  --cor-texto: #333;
+  --cor-whatsapp: #25d366;
+  --radius-xl: 26px;
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --radius-sm: 12px;
+  --gap: clamp(14px, 2.2vw, 22px);
+  --max: 1220px;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.2px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dropdown-content a {
+  color: var(--cor-texto);
+  padding: 10px 20px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  margin: 0;
+  font-weight: 400;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+.dropdown-content a:hover { background-color: #f8f9fa; color: var(--cor-principal); }
+.dropdown:hover .dropdown-content { display: block; animation: fadeIn 0.3s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+<style>
+.carousel {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 320px;
+  margin-bottom: 30px;
+  border-radius: 0;
+  background: #ffffff;
+}
+.carousel-track {
+  display: flex;
+  transition: transform 0.6s ease-in-out;
+  height: 100%;
+}
+.carousel-slide {
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+  object-fit: cover;
+  object-position: center center !important;
+}
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.carousel-arrow.left { left: 20px; }
+.carousel-arrow.right { right: 20px; }
+.carousel-dots {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+.carousel-dots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+}
+.carousel-dots button.active {
+  background: var(--cor-principal);
+  width: 25px;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .carousel { height: 200px; }
+  .video-banner { height: 200px; }
+  .carousel-slide, .video-content { object-position: center center !important; }
+}
+
+.video-banner {
+  width: 100%;
+  height: 320px;
+  margin-bottom: 30px;
+  overflow: hidden;
+  background: #000;
+}
+.video-content { object-fit: cover; object-position: center center; height: 100%; width: 100%; }
+</style>
+
 </head>
 <body class="light">
-<!-- TOP BAR COM CONTATOS E PROMOÇÕES -->
+
+<!-- BARRA SUPERIOR COMPLETA -->
 <div class="top-bar">
     <div class="top-bar-container">
         <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá%20ALPE,%20visitei%20o%20site%20e%20gostaria%20de%20falar%20com%20um%20especialista." target="_blank" class="top-item">
@@ -26,7 +168,7 @@
             <div><strong>Televendas</strong></div>
         </a>
         <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá%20ALPE,%20visitei%20o%20site%20e%20gostaria%20de%20comprar." target="_blank" class="top-item">
-            <img src="images/icone/whattsapp_transparente.jpeg" alt="WhatsApp">
+            <img src="images/icone/whatsapp-logo-.png" alt="WhatsApp">
             <div><strong>Compre pelo WhatsApp</strong></div>
         </a>
         <a href="rastreio.html" class="top-item">
@@ -53,15 +195,17 @@
     </div>
 </div>
 
-<!-- HEADER/NAVEGAÇÃO -->
+<!-- Cabeçalho Loja Completo -->
 <header>
   <a href="index.html" class="logo" id="nav-loja">
     <img src="images/logo-marcas/logo-transparente.png" alt="ALPE Ar Condicionado">
   </a>
+
   <nav id="main-nav">
     <div class="dropdown">
       <a href="#marcas" aria-haspopup="true">Marcas ▾</a>
-      <div class="dropdown-content js-dropdown-marcas"></div>
+      <div class="dropdown-content js-dropdown-marcas">
+      </div>
     </div>
     <a href="sobre-nos/sobre-nos.html">Sobre Nós</a>
     <a href="#servicos">Serviços</a>
@@ -69,6 +213,7 @@
     <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá%20ALPE,%20visitei%20o%20site%20e%20gostaria%20de%20falar%20com%20um%20especialista.">Contato</a>
     <a href="dashboard/index.html" style="color:var(--cor-principal); font-weight:bold;">Admin</a>
   </nav>
+
   <div class="header-actions">
     <a href="#" class="cart-link" id="nav-carrinho">
       <img src="https://img.icons8.com/ios-filled/50/000000/shopping-cart.png" alt="Carrinho" class="cart-icon">
@@ -79,90 +224,89 @@
   </div>
 </header>
 
-<!-- CONTEÚDO PRINCIPAL -->
+<!-- Conteúdo Principal -->
 <main>
+  <!-- Seção Loja -->
   <div id="page-loja" class="page active">
     
-    <!-- HERO BANNER COM CARROSSEL -->
-    <section class="section-hero">
-      <div class="carousel">
-        <div class="carousel-track" id="carouselTrack">
-          <img src="images/logo-marcas/logo-transparente.png" alt="Slide 1" class="carousel-slide">
-          <img src="images/logo-marcas/logo-transparente.png" alt="Slide 2" class="carousel-slide">
-          <img src="images/logo-marcas/logo-transparente.png" alt="Slide 3" class="carousel-slide">
-        </div>
-        <button class="carousel-arrow left" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
-        <button class="carousel-arrow right" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
-        <div class="carousel-dots">
-          <button class="active"></button>
-          <button></button>
-          <button></button>
+    <!-- CARROSSEL -->
+    <div class="carousel" id="mainCarousel">
+      <div class="carousel-track" id="carouselTrack">
+        <img class="carousel-slide" src="images/banner/banner-daikin-5anos.jpg" alt="Banner 1" style="background:#eee;">
+        <img class="carousel-slide" src="images/banner/banner_fujitsu-premium.png" alt="Banner 2" style="background:#ddd;">
+        <img class="carousel-slide" src="images/banner/banner-Elgin.png" alt="Banner 3" style="background:#ccc;">
+      </div>
+      <button class="carousel-arrow left" id="prevBtn" aria-label="Slide anterior">&#10094;</button>
+      <button class="carousel-arrow right" id="nextBtn" aria-label="Próximo slide">&#10095;</button>
+      <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+
+    <!-- VIDEO -->
+    <div class="video-banner">
+       <video autoplay muted loop playsinline class="video-content">
+          <source src="images/banner/video-daikin.mp4" type="video/mp4">
+       </video>
+    </div>
+
+    <!-- MARCAS COM LOGOS -->
+    <section class="section" id="marcas" style="background-color: white; color: #333; padding: 40px 0;">
+      <h2 style="text-align: center;">As Marcas que Movem o Mundo da Climatização</h2>
+      <div class="marcas-grid" style="max-width: 1000px; margin-left: auto; margin-right: auto;">
+        <a href="marcas.index/daikin.html" class="logo-marca"><img src="images/logo-marcas/Daikin-Logo.png" alt="Logo Daikin"></a>
+        <a href="marcas.index/lg.html" class="logo-marca"><img src="images/logo-marcas/LG-Logo.png" alt="Logo LG"></a>
+        <a href="marcas.index/samsung.html" class="logo-marca"><img src="images/logo-marcas/samsung-logo-4c.webp" alt="Logo Samsung"></a>
+        <a href="marcas.index/fujitsu.html" class="logo-marca"><img src="images/logo-marcas/Fujitsu_logo.png" alt="Logo Fujitsu"></a>
+        <a href="marcas.index/midea.html" class="logo-marca"><img src="images/logo-marcas/Midea_Logo.png" alt="Logo Midea"></a>
+        <a href="marcas.index/hitachi.html" class="logo-marca"><img src="images/logo-marcas/hitachi-logo.png" alt="Logo Hitachi"></a>
+        <a href="marcas.index/hisense.html" class="logo-marca"><img src="images/logo-marcas/Hisense-Logo.png" alt="Logo Hisense"></a>
+        <a href="marcas.index/electrolux.html" class="logo-marca"><img src="images/logo-marcas/Electrolux-logo.png" alt="Logo Electrolux"></a>
+        <a href="marcas.index/tcl.html" class="logo-marca"><img src="images/logo-marcas/TCL-Logo.png" alt="Logo TCL"></a>
+        <a href="marcas.index/philco.html" class="logo-marca"><img src="images/logo-marcas/Philco-logo.png" alt="Logo Philco"></a>
+        <a href="marcas.index/gree.html" class="logo-marca"><img src="images/logo-marcas/gree-logo-4c.png" alt="Logo Gree"></a>
+        <a href="marcas.index/elgin.html" class="logo-marca"><img src="images/logo-marcas/logo-elgin-blue.webp" alt="Logo Elgin"></a>
+      </div>
+    </section>
+
+    <!-- TIPOS DE SISTEMAS -->
+    <section class="section-loja" id="tipos">
+      <div class="container">
+        <h2>Soluções para Todos os Projetos</h2>
+        <div class="sistemas-grid">
+          <div class="sistema-card" data-link="sistemas/split-hi-wall.html" onclick="navegarParaSistema(this)"><img src="images/produtos/split_lg/split-inverter-lg-hi-wall-dual-compact-9000-btus-frio-220v.png" class="sistema-img"><h3>Split Hi-Wall</h3><p>O modelo mais popular para residências.</p></div>
+          <div class="sistema-card" data-link="sistemas/multi-split.html" onclick="navegarParaSistema(this)"><img src="images/produtos/multi_split/multi-split-fujitsu.webp" class="sistema-img"><h3>Multi-Split</h3><p>Climatize até 5 ambientes com uma unidade externa.</p></div>
+          <div class="sistema-card" data-link="sistemas/mini-vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/mini_vrf/vrv_daikin_fit.webp" class="sistema-img"><h3>Mini VRF</h3><p>Alta capacidade para residências de alto padrão.</p></div>
+          <div class="sistema-card" data-link="sistemas/vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/vrf/v8-series-vrf.webp" class="sistema-img"><h3>VRF</h3><p>A solução definitiva para grandes edifícios.</p></div>
+          <div class="sistema-card" data-link="sistemas/cassette.html" onclick="navegarParaSistema(this)"><img src="images/produtos/cassete/cassete_electrolux.jpg" class="sistema-img"><h3>Cassete</h3><p>Ideal para ambientes amplos e com forro rebaixado.</p></div>
+          <div class="sistema-card" data-link="sistemas/piso-teto.html" onclick="navegarParaSistema(this)"><img src="images/produtos/piso_teto/piso-teto.fujitsu.webp" class="sistema-img"><h3>Piso Teto</h3><p>Versatilidade e alta potência para comércios.</p></div>
         </div>
       </div>
     </section>
 
-    <!-- SEÇÃO DE MARCAS -->
-    <section id="marcas" class="section-loja">
+    <!-- SERVIÇOS -->
+    <section class="section-loja section-servicos" id="servicos">
       <div class="container">
-        <h2>Marcas Disponíveis</h2>
-        <div class="marcas-grid js-marcas-grid">
-          <!-- Preenchido dinamicamente -->
-        </div>
-      </div>
-    </section>
-
-    <!-- SEÇÃO DE PRODUTOS -->
-    <section id="produtos" class="section-loja">
-      <div class="container">
-        <h2>Produtos em Destaque</h2>
-        <div class="catalogo-grid" id="catalogo-grid">
-          <!-- Produtos carregados dinamicamente -->
-        </div>
-      </div>
-    </section>
-
-    <!-- SEÇÃO DE SERVIÇOS -->
-    <section id="servicos" class="section-loja">
-      <div class="container">
-        <h2>Serviços Completos</h2>
+        <h2>Venda e Serviço. A Solução Completa de Conforto com a ALPE.</h2>
         <div class="servicos-grid">
           <div class="servico-card">
-            <h3><img src="images/icone/instalacao_certificada.png" class="icon-service" alt="Instalação"> Instalação Certificada</h3>
-            <p>Compre e instale com a ALPE e garanta que seu equipamento funcione com a máxima eficiência e segurança.</p>
+            <h3><img src="images/icone/instalacao_certificada.png" class="icon-service" alt="Tools"> Instalação Certificada</h3>
+            <p>Compre e instale com a ALPE e garanta que seu equipamento funcione com a máxima eficiência e segurança, mantendo a garantia de fábrica.</p>
+            <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá,%20gostaria%20de%20um%20orçamento%20para%20instalação." class="cta-header">SOLICITE SEU ORÇAMENTO</a>
           </div>
           <div class="servico-card">
-            <h3><img src="images/icone/manutencao_preventiva.png" class="icon-service" alt="Manutenção"> Manutenção Preventiva</h3>
-            <p>Planos de Manutenção Preventiva (PMOC) para empresas e limpeza especializada para residências.</p>
+            <h3><img src="images/icone/manutencao_preventiva.png" class="icon-service" alt="Clean"> Manutenção Preventiva</h3>
+            <p>Planos de Manutenção Preventiva (PMOC) para empresas e limpeza especializada para residências. Ar mais limpo e contas mais leves.</p>
+            <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá,%20gostaria%20de%20conhecer%20os%20planos%20de%20manutenção%20(PMOC)." class="cta-header">CONHEÇA NOSSOS PLANOS</a>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- CALCULADORA BTU -->
-    <section id="calculadora" class="section-calculadora">
-      <div class="container">
-        <h2>Calcule Seu BTU Ideal</h2>
-        <form class="form-calculadora" id="btuForm">
-          <div class="field">
-            <label for="area">Área da Sala (m²):</label>
-            <input type="number" id="area" placeholder="Ex: 25" required>
-          </div>
-          <div class="field">
-            <label for="pessoas">Número de Pessoas:</label>
-            <input type="number" id="pessoas" placeholder="Ex: 3" value="1" required>
-          </div>
-          <button type="submit" class="cta-header">Calcular BTU</button>
-          <div id="btuResult" style="margin-top: 20px; text-align: center; font-size: 18px; font-weight: bold;"></div>
-        </form>
       </div>
     </section>
 
     <!-- FORMAS DE PAGAMENTO -->
-    <section id="formas-pagamento" class="section-pagamento">
+    <section class="section-pagamento" id="formas-pagamento">
       <h2 class="title-pagamento">Formas de Pagamento</h2>
       <div class="grid-pagamento">
         <img src="images/logo-pagamento/pix.webp" alt="Pix" class="img-pagamento">
-        <img src="images/logo-pagamento/boleto.webp" alt="Boleto" class="img-pagamento">
+        <img src="images/logo-pagamento/boleto.webp" alt="boleto" class="img-pagamento">
         <img src="images/logo-pagamento/mastercard.webp" alt="Mastercard" class="img-pagamento">
         <img src="images/logo-pagamento/visa.webp" alt="Visa" class="img-pagamento">
       </div>
@@ -170,12 +314,12 @@
 
   </div>
 
-  <!-- PÁGINA DO CARRINHO -->
+  <!-- Seção Carrinho -->
   <div id="page-carrinho" class="page">
     <section class="section-loja">
       <div class="container">
         <h2>Seu Carrinho</h2>
-        <div class="carrinho-lista-container" id="carrinho-lista"></div>
+        <div id="carrinho-lista" class="carrinho-lista-container"></div>
         <div style="text-align: center; margin-top: 30px;">
           <a href="#" class="cta-header" style="margin-right: 10px;">Finalizar Compra</a>
           <a href="#" id="btn-continuar-comprando" class="cta-header" style="background: #666;">Continuar Comprando</a>
@@ -186,81 +330,94 @@
 
 </main>
 
-<!-- FOOTER -->
+<!-- Footer -->
 <footer class="footer">
-  <div class="footer-content">
-    <div class="footer-brand">
-      <div class="footer-logo">
-        <img src="images/logo-marcas/logo-transparente.png" alt="ALPE" style="height: 40px; margin-right: 10px;">
-        <span>ALPE ar condicionado & climatização</span>
-      </div>
+    <div class="footer-content">
+        <div class="footer-brand">
+            <div class="footer-logo">
+                <img src="images/logo-marcas/logo-transparente.png" alt="ALPE" style="height: 40px; margin-right: 10px;">
+                <span>ALPE.ar condicionado & climatização</span>
+            </div>
+            <p class="footer-description">
+                Revenda autorizada especializada em soluções de climatização residencial e comercial. 
+                Qualidade e atendimento premium em todo Brasil.
+            </p>
+        </div>
     </div>
-  </div>
-  <div class="footer-bottom">
-    <p>&copy; 2024 ALPE.ar condicionado & climatização. Todos os direitos reservados.</p>
-  </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2024 ALPE.ar condicionado & climatização. Todos os direitos reservados.</p>
+    </div>
 </footer>
 
-<!-- BOTÃO FLUTUANTE WHATSAPP -->
+<!-- BOTÕES FLUTUANTES -->
 <a href="https://api.whatsapp.com/send?phone=5521980220417" class="whatsapp-square" target="_blank" rel="noopener noreferrer">
-  <img src="./images/icone/whattsapp_transparente.jpeg" alt="WhatsApp" style="width: 20px; height: 20px; object-fit: contain;">
+  <img src="./images/icone/whatsapp-logo-.png" alt="WhatsApp" style="width: 20px; height: 20px; object-fit: contain;">
   <span>Fale Conosco</span>
 </a>
 
-<!-- SCRIPTS -->
+<!-- SCRIPT PRINCIPAL -->
 <script src="assets/js/main.js"></script>
+
+<!-- SCRIPT DO CARROSSEL -->
 <script>
-// Renderizar marcas e produtos dinamicamente
-document.addEventListener('DOMContentLoaded', () => {
-  // Marcas Grid
-  const marcasGrid = document.querySelector('.js-marcas-grid');
-  if (marcasGrid) {
-    const marcas = [
-      { nome: "Daikin", url: "marcas.index/daikin.html", logo: "images/logo-marcas/daikin.png" },
-      { nome: "Electrolux", url: "marcas.index/electrolux.html", logo: "images/logo-marcas/electrolux.png" },
-      { nome: "Elgin", url: "marcas.index/elgin.html", logo: "images/logo-marcas/elgin.png" },
-      { nome: "Fujitsu", url: "marcas.index/fujitsu.html", logo: "images/logo-marcas/fujitsu.png" },
-      { nome: "Gree", url: "marcas.index/gree.html", logo: "images/logo-marcas/gree.png" },
-      { nome: "Hisense", url: "marcas.index/hisense.html", logo: "images/logo-marcas/hisense.png" },
-      { nome: "Hitachi", url: "marcas.index/hitachi.html", logo: "images/logo-marcas/hitachi.png" },
-      { nome: "LG", url: "marcas.index/lg.html", logo: "images/logo-marcas/lg.png" },
-      { nome: "Midea", url: "marcas.index/midea.html", logo: "images/logo-marcas/midea.png" },
-      { nome: "Philco", url: "marcas.index/philco.html", logo: "images/logo-marcas/philco.png" },
-      { nome: "Samsung", url: "marcas.index/samsung.html", logo: "images/logo-marcas/samsung.png" },
-      { nome: "TCL", url: "marcas.index/tcl.html", logo: "images/logo-marcas/tcl.png" }
-    ];
+(function(){
+  const track = document.getElementById('carouselTrack');
+  if(!track) return;
+  const slides = Array.from(track.children);
+  const prev = document.getElementById('prevBtn');
+  const next = document.getElementById('nextBtn');
+  const dotsContainer = document.getElementById('carouselDots');
+  let index = 0;
+  let timer;
 
-    marcasGrid.innerHTML = marcas.map(marca => `
-      <a href="${marca.url}" class="logo-marca" title="${marca.nome}">
-        <img src="${marca.logo}" alt="${marca.nome}" onerror="this.src='images/logo-marcas/logo-transparente.png'">
-      </a>
-    `).join('');
+  if(dotsContainer) {
+    dotsContainer.innerHTML = '';
+    slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      if (i === 0) b.classList.add('active');
+      b.onclick = () => { goTo(i); resetTimer(); };
+      dotsContainer.appendChild(b);
+    });
   }
 
-  // Produtos Grid
-  const catalogoGrid = document.getElementById('catalogo-grid');
-  if (catalogoGrid) {
-    const produtos = [
-      { id: 1, nome: "Ar Condicionado Split Quente/Frio 12.000 BTU", preco: "R$ 1.500,00", imagem: "images/logo-marcas/logo-transparente.png" },
-      { id: 2, nome: "Ar Condicionado Split 18.000 BTU", preco: "R$ 2.200,00", imagem: "images/logo-marcas/logo-transparente.png" },
-      { id: 3, nome: "Ar Condicionado Inverter 22.000 BTU", preco: "R$ 3.500,00", imagem: "images/logo-marcas/logo-transparente.png" },
-      { id: 4, nome: "Ar Condicionado Cassete 24.000 BTU", preco: "R$ 4.200,00", imagem: "images/logo-marcas/logo-transparente.png" }
-    ];
-
-    catalogoGrid.innerHTML = produtos.map(p => `
-      <div class="produto-card">
-        <img src="${p.imagem}" alt="${p.nome}">
-        <div class="produto-info">
-          <h4>${p.nome}</h4>
-          <div class="preco">${p.preco}</div>
-          <button class="cta-card btn-add-cart" onclick="adicionarAoCarrinho(${p.id}, '${p.nome}', '${p.preco}', '${p.imagem}')">
-            <i class="fas fa-shopping-cart"></i> Adicionar
-          </button>
-        </div>
-      </div>
-    `).join('');
+  function goTo(i) {
+    index = (i + slides.length) % slides.length;
+    track.style.transform = `translateX(-${index * 100}%)`;
+    const dots = dotsContainer ? Array.from(dotsContainer.children) : [];
+    dots.forEach(d => d.classList.remove('active'));
+    if(dots[index]) dots[index].classList.add('active');
   }
-});
+
+  function nextSlide() { goTo(index + 1); }
+  function prevSlide() { goTo(index - 1); }
+
+  if(next) next.onclick = () => { nextSlide(); resetTimer(); };
+  if(prev) prev.onclick = () => { prevSlide(); resetTimer(); };
+
+  function startTimer() { timer = setInterval(nextSlide, 5000); }
+  function stopTimer() { clearInterval(timer); }
+  function resetTimer() { stopTimer(); startTimer(); }
+
+  startTimer();
+})();
 </script>
+
+<script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href !== '#' && document.querySelector(href)) {
+                e.preventDefault();
+                document.querySelector(href).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
