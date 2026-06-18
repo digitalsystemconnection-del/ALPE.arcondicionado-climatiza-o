@@ -7,7 +7,8 @@ window.navegarParaSistema = (el) => {
 
   // Detecta se estamos em uma subpasta (como marcas.index/) para ajustar o caminho relativo
   const isSubfolder = window.location.pathname.includes('/marcas.index/') || 
-                      window.location.pathname.includes('/sobre-nos/');
+                      window.location.pathname.includes('/sobre-nos/') ||
+                      window.location.pathname.includes('/sistemas/');
 
   const finalLink = (isSubfolder && !link.startsWith('http') && !link.startsWith('../')) 
     ? '../' + link 
@@ -166,23 +167,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Injeção Dinâmica de Marcas no Menu ---
   window.renderizarMenuMarcas = () => {
-    const ehPaginaDeMarca = window.location.pathname.toLowerCase().includes("/marcas.index/");
-    const prefixo = ehPaginaDeMarca ? "" : "marcas.index/";
+    const path = window.location.pathname.toLowerCase();
+    const ehPaginaDeMarca = path.includes("/marcas.index/");
+    const ehSubpasta = ehPaginaDeMarca || path.includes('/sobre-nos/') || path.includes('/sistemas/') || path.includes('/dashboard/');
 
-    // Corrige o link principal do botão Marcas se estiver em uma página de marca (subpasta)
-    const brandsMainLink = document.querySelector('a[href="#marcas"]');
-    if (brandsMainLink && ehPaginaDeMarca) {
-      // Se estiver em marcas.index/, o link deve voltar para a raiz. 
-      // Tenta detectar se a base é venda.html ou index.html
-      const rootFile = window.location.pathname.includes('venda.html') ? 'venda.html' : 'index.html';
-      brandsMainLink.setAttribute('href', ehPaginaDeMarca ? `../${rootFile}#marcas` : '#marcas');
-    }
+    // Seleciona TODOS os links que apontam para a seção de marcas (#marcas)
+    const brandsLinks = document.querySelectorAll('a[href="#marcas"], a[href="#"], a[href$="#marcas"]');
+    
+    // Define o prefixo correto para os links dentro do dropdown
+    // Se estamos em uma subpasta, precisamos subir um nível (../) exceto se já estivermos na pasta de marcas
+    const prefixo = ehSubpasta ? (ehPaginaDeMarca ? "" : "../marcas.index/") : "marcas.index/";
+
+    // Corrige os links principais (#marcas) para apontarem para a página correta
+    brandsLinks.forEach(link => {
+      if (ehSubpasta) {
+        const rootFile = path.includes('venda.html') ? 'venda.html' : 'index.html';
+        link.setAttribute('href', `../${rootFile}#marcas`);
+      } else {
+        link.setAttribute('href', '#marcas');
+      }
+    });
 
     const containers = document.querySelectorAll(".js-dropdown-marcas");
     if (containers.length === 0) return;
 
     const html = LISTA_MARCAS.map(m => `<a href="${prefixo}${m.url}">${m.nome}</a>`).join("");
-    
+
     containers.forEach(container => {
       container.innerHTML = html;
     });
