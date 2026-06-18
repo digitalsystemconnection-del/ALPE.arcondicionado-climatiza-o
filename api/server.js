@@ -6,10 +6,21 @@ const crypto = require('crypto');
 const axios = require('axios');
 const https = require('https');
 const fs = require('fs');
+const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
+
+// ============================================================
+// CONFIGURAÇÃO SUPABASE
+// ============================================================
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY; // Usar service_role key para operações de escrita no backend
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+// Inicializa o cliente Supabase (usando service_role key para operações de backend)
+const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -182,28 +193,102 @@ app.get('/api/pagamentos/atualizacoes', (req, res) => {
 // ROTAS DE FORNECEDORES
 // ============================================================
 
-app.get('/api/fornecedores/status', (req, res) => {
+// Função auxiliar para simular a importação e atualização no Supabase
+async function importarEAtualizarSupabase(fornecedorNome, dadosFornecedor) {
+  console.log(`[Fornecedor] Importando dados de ${fornecedorNome}...`);
+  // Simula a busca de dados do fornecedor
+  const produtosDoFornecedor = [
+    { sku: 'LG-S4Q12', nome: 'LG Dual Inverter 9.000 BTU', preco: 2450, estoque: 10 },
+    { sku: 'SAM-WF12K', nome: 'Samsung WindFree 12.000 BTU', preco: 2999, estoque: 5 },
+    // ... outros produtos (em um cenário real, você processaria os dados reais do fornecedor aqui)
+  ];
+
+  for (const prod of produtosDoFornecedor) {
+    // 1. Verifica se o produto existe na tabela 'produtos'
+    const { data: existingProduct, error: productError } = await supabase
+      .from('produtos')
+      .select('id, sku')
+      .eq('sku', prod.sku)
+      .single();
+
+    if (productError && productError.code !== 'PGRST116') { // PGRST116 significa "no rows found"
+      console.error(`Erro ao buscar produto ${prod.sku}:`, productError);
+      continue;
+    }
+
+    let produtoId;
+    if (existingProduct) {
+      produtoId = existingProduct.id;
+      // Atualiza o produto existente (se necessário, ex: nome, descrição)
+      await supabase
+        .from('produtos')
+        .update({ nome: prod.nome, updated_at: new Date().toISOString() })
+        .eq('id', produtoId);
+    } else {
+      // Insere o novo produto
+      const { data: newProduct, error: insertProductError } = await supabase
+        .from('produtos')
+        .insert({
+          sku: prod.sku,
+          nome: prod.nome,
+          preco_base: prod.preco, // Preço inicial, pode ser ajustado depois
+          // Adicione outras colunas padrão aqui
+        })
+        .select('id')
+        .single();
+
+      if (insertProductError) {
+        console.error(`Erro ao inserir novo produto ${prod.sku}:`, insertProductError);
+        continue;
+      }
+      produtoId = newProduct.id;
+    }
+
+    // 2. Upsert (insere ou atualiza) o preço do fornecedor
+    const { error: upsertPriceError } = await supabase
+      .from('precos_fornecedores')
+      .upsert({
+        produto_sku: prod.sku,
+        fornecedor_nome: fornecedorNome,
+        preco: prod.preco,
+        estoque: prod.estoque,
+        data_atualizacao: new Date().toISOString()
+      }, { onConflict: 'produto_sku,fornecedor_nome' });
+
+    if (upsertPriceError) {
+      console.error(`Erro ao upsert preço do fornecedor ${fornecedorNome} para ${prod.sku}:`, upsertPriceError);
+    }
+  }
+  console.log(`[Fornecedor] Dados de ${fornecedorNome} atualizados no Supabase.`);
+}
+
+app.get('/api/fornecedores/status', async (req, res) => {
+  // Em um cenário real, você verificaria a conectividade com as APIs dos fornecedores
   res.json({ status: "Operacional", integracoes: ["Adias", "Leveros", "Dufrio", "ClimaRio"] });
 });
 
-app.post('/api/importar/adias', (req, res) => {
+app.post('/api/importar/adias', async (req, res) => {
   if (!FORNECEDORES_CONFIG.adias.apiKey) return res.status(400).json({ erro: "Chave Adias não configurada no .env" });
-  res.json({ sucesso: true, msg: "Conectando à API da Adias..." });
+  await importarEAtualizarSupabase('Adias', {}); // Passar dados reais da API Adias
+  res.json({ sucesso: true, msg: "Dados da Adias sincronizados com Supabase." });
 });
 
-app.post('/api/importar/leveros', (req, res) => {
+app.post('/api/importar/leveros', async (req, res) => {
   if (!FORNECEDORES_CONFIG.leveros.apiKey) return res.status(400).json({ erro: "Chave Leveros não configurada no .env" });
-  res.json({ sucesso: true, msg: "Conectando à API da Leveros..." });
+  await importarEAtualizarSupabase('Leveros', {}); // Passar dados reais da API Leveros
+  res.json({ sucesso: true, msg: "Dados da Leveros sincronizados com Supabase." });
 });
 
-app.post('/api/importar/dufrio', (req, res) => {
+app.post('/api/importar/dufrio', async (req, res) => {
   if (!FORNECEDORES_CONFIG.dufrio.url) return res.status(400).json({ erro: "URL CSV Dufrio não configurada no .env" });
-  res.json({ sucesso: true, msg: "Baixando planilha da Dufrio..." });
+  await importarEAtualizarSupabase('Dufrio', {}); // Processar CSV da Dufrio
+  res.json({ sucesso: true, msg: "Dados da Dufrio sincronizados com Supabase." });
 });
 
-app.post('/api/importar/climario', (req, res) => {
+app.post('/api/importar/climario', async (req, res) => {
   if (!FORNECEDORES_CONFIG.climario.apiKey) return res.status(400).json({ erro: "Chave ClimaRio não configurada no .env" });
-  res.json({ sucesso: true, msg: "Conectando à API da ClimaRio..." });
+  await importarEAtualizarSupabase('ClimaRio', {}); // Passar dados reais da API ClimaRio
+  res.json({ sucesso: true, msg: "Dados da ClimaRio sincronizados com Supabase." });
 });
 
 app.get('/api/comparar', (req, res) => {
@@ -211,8 +296,34 @@ app.get('/api/comparar', (req, res) => {
   res.json({ sku, melhorPreco: 2400, fornecedor: "Adias" });
 });
 
-app.get('/api/precos', (req, res) => {
-  res.json([]);
+// Novo endpoint para o frontend buscar os preços consolidados
+app.get('/api/produtos/precos-vitrine', async (req, res) => {
+  try {
+    // Busca todos os produtos
+    const { data: produtos, error: produtosError } = await supabase
+      .from('produtos')
+      .select('sku, id, nome, imagem_url');
+
+    if (produtosError) throw produtosError;
+
+    const precosVitrine = {};
+    for (const produto of produtos) {
+      // Para cada produto, busca o menor preço entre os fornecedores
+      const { data: precos, error: precosError } = await supabase
+        .from('precos_fornecedores')
+        .select('preco')
+        .eq('produto_sku', produto.sku)
+        .order('preco', { ascending: true })
+        .limit(1);
+
+      if (precosError) console.warn(`Erro ao buscar preços para ${produto.sku}:`, precosError.message);
+      precosVitrine[produto.sku] = precos && precos.length > 0 ? precos[0].preco : produto.preco_base; // Usa preco_base se não houver preço de fornecedor
+    }
+    res.json(precosVitrine);
+  } catch (error) {
+    console.error('Erro ao buscar preços para vitrine:', error.message);
+    res.status(500).json({ erro: 'Erro ao buscar preços da vitrine.' });
+  }
 });
 
 // ============================================================

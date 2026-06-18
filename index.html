@@ -36,6 +36,9 @@
     }
   };
 </script>
+<!-- Supabase Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 /* Base styles from user input */
 :root {
@@ -572,7 +575,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
       <div class="carousel-track" id="carouselTrack">
         <img class="carousel-slide" src="images/banner/banner-daikin-5anos.jpg" alt="Banner 1" style="background:#eee;">
         <img class="carousel-slide" src="images/banner/banner-fujitsu-premium.png" alt="Banner 2" style="background:#ddd;">
-        <img class="carousel-slide" src="images/banner/banner-elgin.png" alt="Banner 3" style="background:#ccc;">
+        <img class="carousel-slide" src="images/banner/banner-Elgin.png" alt="Banner 3" style="background:#ccc;">
       </div>
       <button class="carousel-arrow left" id="prevBtn" aria-label="Slide anterior">&#10094;</button>
       <button class="carousel-arrow right" id="nextBtn" aria-label="Próximo slide">&#10095;</button>
@@ -735,7 +738,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
         <h2 style="margin-bottom:20px;">OS MAIS VENDIDOS DA ALPE</h2>
         <div class="catalogo-grid" id="catalogo-produtos">
           
-          <div class="produto-card" data-id="1">
+          <div class="produto-card" data-id="1" data-sku="SAM-WF12K">
             <img src="images/produtos/split-samsung/samsung-12000.webp" alt="Ar Condicionado Samsung Inverter 12.000 BTU">
             <div class="produto-info">
               <h4>Samsung Inverter 12.000 BTU</h4>
@@ -744,7 +747,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
             </div>
           </div>
 
-          <div class="produto-card" data-id="2">
+          <div class="produto-card" data-id="2" data-sku="LG-DI9K">
             <img src="images/produtos/split-lg/split-inverter-lg-hi-wall-dual-compact-9000-btus-frio-220v.png" alt="Ar Condicionado LG Dual Inverter 9.000 BTU">
             <div class="produto-info">
               <h4>LG Dual Inverter 9.000 BTU</h4>
@@ -753,7 +756,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
             </div>
           </div>
 
-          <div class="produto-card" data-id="3">
+          <div class="produto-card" data-id="3" data-sku="DAI-K736K">
             <img src="images/produtos/cassete/k7-4-vias-daikin-sky-air.webp" alt="Ar Condicionado Daikin Cassete 36.000 BTU">
             <div class="produto-info">
               <h4>Daikin Cassete 36.000 BTU</h4>
@@ -762,7 +765,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
             </div>
           </div>
 
-          <div class="produto-card" data-id="4">
+          <div class="produto-card" data-id="4" data-sku="HIS-INV12K">
             <img src="images/produtos/split-hisense/ar-condicionado-split-inverter-hi-wall-wi-fi-hisense-12000-btus-frio-220v.jpg" alt="Ar Condicionado Hisense Inverter 12.000 BTU">
             <div class="produto-info">
               <h4>Hisense Inverter 12.000 BTU</h4>
@@ -771,21 +774,21 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
             </div>
           </div>
 
-          <div class="produto-card" data-id="5"><img src="images/produtos/split-elgin/ar-condicionado-elgin-inverter-eco-ii-wi-fi-12000-btus-frio-220v-r-32.webp" alt="Ar Condicionado Elgin Inverter 12.000 BTU"><div class="produto-info"><h4>Elgin Inverter 12.000 BTU</h4><div class="preco">R$ 2.155,60</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="5" data-sku="ELG-ECO12K"><img src="images/produtos/split-elgin/ar-condicionado-elgin-inverter-eco-ii-wi-fi-12000-btus-frio-220v-r-32.webp" alt="Ar Condicionado Elgin Inverter 12.000 BTU"><div class="produto-info"><h4>Elgin Inverter 12.000 BTU</h4><div class="preco">R$ 2.155,60</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="6"><img src="images/produtos/split-electrolux/electrolux-9000.png" alt="Ar Condicionado Electrolux Inverter 9.000 BTU"><div class="produto-info"><h4>Electrolux Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="6" data-sku="ELX-INV9K"><img src="images/produtos/split-electrolux/electrolux-9000.png" alt="Ar Condicionado Electrolux Inverter 9.000 BTU"><div class="produto-info"><h4>Electrolux Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="7"><img src="images/produtos/split-fujitsu/fujitsu-9000-premium.jpg" alt="Ar Condicionado Fujitsu Inverter 9.000 BTU"><div class="produto-info"><h4>Fujitsu Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="7" data-sku="FUJ-PREM9K"><img src="images/produtos/split-fujitsu/fujitsu-9000-premium.jpg" alt="Ar Condicionado Fujitsu Inverter 9.000 BTU"><div class="produto-info"><h4>Fujitsu Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="8"><img src="images/produtos/split-hitachi/hitachi-9000.webp" alt="Ar Condicionado Hitachi Inverter 9.000 BTU"><div class="produto-info"><h4>Hitachi Inverter 9.000 BTU</h4><div class="preco">R$ 2.496,79</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="8" data-sku="HIT-AH9K"><img src="images/produtos/split-hitachi/hitachi-9000.webp" alt="Ar Condicionado Hitachi Inverter 9.000 BTU"><div class="produto-info"><h4>Hitachi Inverter 9.000 BTU</h4><div class="preco">R$ 2.496,79</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="9"><img src="images/produtos/split-philco/philco-split-12000.webp" alt="Ar Condicionado Philco Inverter 12.000 BTU"><div class="produto-info"><h4>Philco Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="9" data-sku="PHL-ECO12K"><img src="images/produtos/split-philco/philco-split-12000.webp" alt="Ar Condicionado Philco Inverter 12.000 BTU"><div class="produto-info"><h4>Philco Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
 
-          <div class="produto-card" data-id="10"><img src="images/produtos/split-gree/split-inverter-gree-g-top-auto-9000-btuh-frio-r-32-220v-9000-frio-63.webp" alt="Ar Condicionado Gree Inverter 9.000 BTU"><div class="produto-info"><h4>Gree Inverter 9.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="10" data-sku="GRE-GTOP9K"><img src="images/produtos/split-gree/split-inverter-gree-g-top-auto-9000-btuh-frio-r-32-220v-9000-frio-63.webp" alt="Ar Condicionado Gree Inverter 9.000 BTU"><div class="produto-info"><h4>Gree Inverter 9.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="11"><img src="images/produtos/split-tcl/tcl-freshin3-0-1.webp" alt="Ar Condicionado TCL Inverter 12.000 BTU"><div class="produto-info"><h4>TCL Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="11" data-sku="TCL-ELITE12K"><img src="images/produtos/split-tcl/tcl-freshin3-0-1.webp" alt="Ar Condicionado TCL Inverter 12.000 BTU"><div class="produto-info"><h4>TCL Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
 
-          <div class="produto-card" data-id="12"><img src="images/produtos/split-midea/midea-9000.webp" alt="Ar Condicionado Midea Inverter 9.000 BTU"><div class="produto-info"><h4>Midea Inverter 9.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="12" data-sku="MID-XTREME9K"><img src="images/produtos/split-midea/midea-9000.webp" alt="Ar Condicionado Midea Inverter 9.000 BTU"><div class="produto-info"><h4>Midea Inverter 9.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
         </div>
       </div>
     </section>

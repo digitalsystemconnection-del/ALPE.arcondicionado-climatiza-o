@@ -1,5 +1,8 @@
 // --- State ---
 
+// Supabase Client Initialization (Frontend)
+const { createClient } = Supabase;
+
 // Função segura para acessar o Storage (evita erro de Tracking Prevention)
 window.safeStorage = window.safeStorage || {
   get: (key) => {
@@ -19,6 +22,10 @@ window.safeStorage = window.safeStorage || {
   }
 };
 
+// Configure Supabase (use anon key for frontend)
+const SUPABASE_URL = 'SUA_URL_DO_PROJETO_SUPABASE'; // Substitua pela URL do seu projeto Supabase
+const SUPABASE_ANON_KEY = 'SUA_ANON_KEY_PUBLICA_SUPABASE'; // Substitua pela sua chave pública anon
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // Configurações globais
 document.addEventListener('DOMContentLoaded', () => {
   // --- Configuração Centralizada de Marcas ---
@@ -44,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   };
 
-  window.atualizarBadge = () => {
+  window.atualizarBadgeCarrinho = () => {
     const el = document.getElementById('cart-count');
     if(el) el.textContent = window.carrinho.length;
     safeStorage.set('alpe_cart', JSON.stringify(window.carrinho));
@@ -52,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.adicionarAoCarrinho = (id, nome, preco, imagem, event) => {
     window.carrinho.push({ id, nome, preco, imagem });
-    window.atualizarBadge();
+    window.atualizarBadgeCarrinho();
     
     const isMarcaPage = window.location.pathname.toLowerCase().includes('/marcas.index/');
     const prefix = isMarcaPage ? '../' : '';
@@ -68,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.removerDoCarrinho = (index) => {
     window.carrinho.splice(index, 1);
-    window.atualizarBadge();
+    window.atualizarBadgeCarrinho();
     window.renderCarrinho();
   };
 
@@ -193,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         
         window.carrinho.push(produto);
-        window.atualizarBadge();
+        window.atualizarBadgeCarrinho();
 
         const isMarcaPage = window.location.pathname.toLowerCase().includes('/marcas.index/');
         const checkoutUrl = (isMarcaPage ? '../' : '') + 'checkout.html';
@@ -205,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnRemove) {
       const index = parseInt(btnRemove.dataset.index);
       window.carrinho.splice(index, 1);
-      window.atualizarBadge();
+      window.atualizarBadgeCarrinho();
       window.renderCarrinho();
     }
   });
@@ -248,8 +255,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     showToast("Pedido enviado para o Admin!");
-    window.carrinho = [];
-    window.atualizarBadge();
+    window.carrinho = []; // Esvazia o carrinho
+    window.atualizarBadgeCarrinho(); // Atualiza o badge do carrinho
     e.target.reset();
     mostrarPagina("page-loja");
   });
@@ -340,3 +347,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 5000);
   }
 });
+
+// Função para carregar preços dinamicamente do Supabase
+async function carregarPrecosDinamicos() {
+  // Tenta buscar preços do Supabase
+  try {
+    // Busca preços do backend (que consolida o menor preço do Supabase)
+    const response = await fetch('http://localhost:3002/api/produtos/precos-vitrine'); // Assumindo que seu backend está em 3002
+    if (!response.ok) {
+      throw new Error(`Erro HTTP! status: ${response.status}`);
+    }
+    const precosBackend = await response.json(); // Isso será um mapa de {sku: menorPreco}
+
+    aplicarPrecosNaVitrine(precosBackend);
+  } catch (error) {
+    console.error('Erro ao buscar preços do backend:', error.message);
+    // Fallback para localStorage se o Supabase falhar
+    const precosSalvos = JSON.parse(safeStorage.get('alpe_precos_vitrine'));
+    if (precosSalvos) {
+      aplicarPrecosNaVitrine(precosSalvos);
+    }
+  }
+}
+
+function aplicarPrecosNaVitrine(precos) {
+  document.querySelectorAll('.produto-card').forEach(card => {
+    const sku = card.dataset.sku; // Agora usa data-sku
+    if (precos[sku]) {
+      const precoFormatado = precos[sku].toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      const precoElemento = card.querySelector('.preco');
+      if (precoElemento) {
+        precoElemento.textContent = precoFormatado;
+      }
+    }
+  });
+}
+
+// Chama a função de carregamento de preços ao carregar a página
+document.addEventListener('DOMContentLoaded', carregarPrecosDinamicos);

@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -21,6 +21,10 @@
     }
   };
 </script>
+<!-- Supabase Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -661,42 +665,12 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
       <div class="container">
         <h2>Soluções para Todos os Projetos</h2>
         <div class="sistemas-grid">
-          <div class="sistema-card" data-link="sistemas/split-hi-wall.html" onclick="navegarParaSistema(this)">
-            <img src="images/produtos/split-lg/split-inverter-lg-hi-wall-dual-compact-9000-btus-frio-220v.png" alt="Ar Condicionado Split Hi-Wall" class="sistema-img">
-            <h3>Split Hi-Wall</h3>
-            <p>O modelo mais popular para residências.</p>
-            <span class="cta-header">Ver Detalhes</span>
-          </div>
-          <div class="sistema-card" data-link="sistemas/multi-split.html" onclick="navegarParaSistema(this)">
-            <img src="images/produtos/multi-split/multi-split-fujitsu.webp" alt="Sistema Multi-Split" class="sistema-img">
-            <h3>Multi-Split</h3>
-            <p>Climatize até 5 ambientes com uma unidade externa.</p>
-            <span class="cta-header">Ver Detalhes</span>
-          </div>
-          <div class="sistema-card" data-link="sistemas/mini-vrf.html" onclick="navegarParaSistema(this)">
-            <img src="images/produtos/mini-vrf/vrv-daikin-fit.webp" alt="Mini VRF Residencial" class="sistema-img">
-            <h3>Mini VRF</h3>
-            <p>Alta capacidade para residências de alto padrão.</p>
-            <span class="cta-header">Ver Detalhes</span>
-          </div>
-          <div class="sistema-card" data-link="sistemas/vrf.html" onclick="navegarParaSistema(this)">
-            <img src="images/produtos/vrf/hisense-x3-vrf.png" alt="Sistema VRF Comercial" class="sistema-img">
-            <h3>VRF</h3>
-            <p>A solução definitiva para grandes edifícios.</p>
-            <span class="cta-header">Ver Detalhes</span>
-          </div>
-          <div class="sistema-card" data-link="sistemas/cassette.html" onclick="navegarParaSistema(this)">
-            <img src="images/produtos/cassete/hisense-cassete.webp" alt="Ar Condicionado Cassete" class="sistema-img">
-            <h3>Cassete</h3>
-            <p>Ideal para ambientes amplos e com forro rebaixado.</p>
-            <span class="cta-header">Ver Detalhes</span>
-          </div>
-          <div class="sistema-card" data-link="sistemas/piso-teto.html" onclick="navegarParaSistema(this)">
-            <img src="images/produtos/piso-teto/piso-teto-fujitsu.webp" alt="Ar Condicionado Piso Teto" class="sistema-img">
-            <h3>Piso Teto</h3>
-            <p>Versatilidade e alta potência para comércios.</p>
-            <span class="cta-header">Ver Detalhes</span>
-          </div>
+          <div class="sistema-card" data-link="sistemas/split-hi-wall.html" onclick="navegarParaSistema(this)"><img src="images/produtos/split-lg/split-inverter-lg-hi-wall-dual-compact-9000-btus-frio-220v.png" class="sistema-img"><h3>Split Hi-Wall</h3><p>O modelo mais popular para residências.</p></div>
+          <div class="sistema-card" data-link="sistemas/multi-split.html" onclick="navegarParaSistema(this)"><img src="images/produtos/multi-split/multi-split-fujitsu.webp" class="sistema-img"><h3>Multi-Split</h3><p>Climatize até 5 ambientes with uma unidade externa.</p></div>
+          <div class="sistema-card" data-link="sistemas/mini-vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/mini-vrf/vrv-daikin-fit.webp" class="sistema-img"><h3>Mini VRF</h3><p>Alta capacidade para residências de alto padrão.</p></div>
+          <div class="sistema-card" data-link="sistemas/vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/vrf/v8-series-vrf.webp" class="sistema-img"><h3>VRF</h3><p>A solução definitiva para grandes edifícios.</p></div>
+          <div class="sistema-card" data-link="sistemas/cassete.html" onclick="navegarParaSistema(this)"><img src="images/produtos/cassete/cassete-electrolux.jpg" class="sistema-img"><h3>Cassete</h3><p>Ideal para ambientes amplos e com forro rebaixado.</p></div>
+          <div class="sistema-card" data-link="sistemas/piso-teto.html" onclick="navegarParaSistema(this)"><img src="images/produtos/piso-teto/piso-teto-fujitsu.webp" class="sistema-img"><h3>Piso Teto</h3><p>Versatilidade e alta potência para comércios.</p></div>
         </div>
       </div>
     </section>
@@ -871,7 +845,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
           <div class="banner-inner-contact">
             <div class="banner-copy">
               <div class="tag" style="color: #fff;">Suporte e Vendas Especializadas</div>
-              <h2>Fale Conosco !</h2>
+              <h2>Fale Conosco</h2>
               <p class="lead" style="margin-top: 0; max-width: 85ch; color: #fff;">
                 Tem alguma dúvida ou quer um orçamento personalizado? Envie uma mensagem e nossa equipe retornará com atenção, clareza e agilidade para entender sua necessidade.
               </p>
@@ -1010,8 +984,8 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 </footer>
 
 <!-- BOTÕES FLUTUANTES -->
-<a href="https://api.whatsapp.com/send?phone=5521980220417" class="whatsapp-square" target="_blank" rel="noopener noreferrer" aria-label="Fale Conosco pelo WhatsApp">
-  <img src="images/icone/whatsapp-logo.png" alt="WhatsApp" style="width: 20px; height: 20px; object-fit: contain;">
+<a href="https://api.whatsapp.com/send?phone=5521980220417" class="whatsapp-square" target="_blank" rel="noopener noreferrer">
+  <img src="./images/icone/whatsapp-logo-.png" alt="WhatsApp" style="width: 20px; height: 20px; object-fit: contain;">
   <span>Fale Conosco</span>
 </a>
 

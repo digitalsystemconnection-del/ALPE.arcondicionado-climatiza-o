@@ -402,6 +402,10 @@
     </div>
 </div>
 
+<!-- Supabase Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <script>
     const CONFIG = {
         precoUnitario: 5669.00,
@@ -416,6 +420,7 @@
     };
 
     // --- Inicialização ---
+    const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     document.addEventListener('DOMContentLoaded', () => {
         const cart = JSON.parse(localStorage.getItem('alpe_cart')) || [];
         if (cart.length === 0) {
