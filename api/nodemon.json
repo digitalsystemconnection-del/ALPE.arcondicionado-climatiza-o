@@ -1,0 +1,8 @@
+{
+  "watch": ["server.js"],
+  "ext": "js",
+  "ignore": [
+    "*.json"
+  ],
+  "delay": "2500"
+}
