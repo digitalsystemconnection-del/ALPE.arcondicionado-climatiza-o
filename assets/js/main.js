@@ -1,7 +1,20 @@
 // --- State ---
 
-// Supabase Client Initialization (Frontend)
-const { createClient } = Supabase;
+// Função global para navegação dos cards de sistemas
+window.navegarParaSistema = (el) => {
+  const link = el.getAttribute('data-link');
+  if(!link) return;
+
+  // Detecta se estamos em uma subpasta (como marcas.index/) para ajustar o caminho relativo
+  const isSubfolder = window.location.pathname.includes('/marcas.index/') || 
+                      window.location.pathname.includes('/sobre-nos/');
+
+  const finalLink = (isSubfolder && !link.startsWith('http') && !link.startsWith('../')) 
+    ? '../' + link 
+    : link;
+
+  window.location.href = finalLink;
+};
 
 // Função segura para acessar o Storage (evita erro de Tracking Prevention)
 window.safeStorage = window.safeStorage || {
@@ -22,11 +35,18 @@ window.safeStorage = window.safeStorage || {
   }
 };
 
+// Configurações de Ambiente
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+  ? 'http://localhost:3002' 
+  : 'https://sua-api-no-render.com'; // Substitua quando fizer o deploy do backend
+
 // Configure Supabase (use anon key for frontend)
-const SUPABASE_URL = 'SUA_URL_DO_PROJETO_SUPABASE'; // Substitua pela URL do seu projeto Supabase
-const SUPABASE_ANON_KEY = 'SUA_ANON_KEY_PUBLICA_SUPABASE'; // Substitua pela sua chave pública anon
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-// Configurações globais
+const SUPABASE_URL = 'sb_publishable_mH7kfp5VODY-Vl0ZFbzMdA_OCCN4-FY'; // Substitua pela URL do seu projeto Supabase
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlta2t4aHN4bHF3dGJkZmxqd3NxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNTYxNjEsImV4cCI6MjA5NTkzMjE2MX0.7WHQvxf_uW90Gs2wzlmuduukoENII5syowTTFiTvtTs'; // Substitua pela sua chave pública anon
+
+// Inicialização do cliente Supabase corrigida para evitar falhas de carregamento
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
 document.addEventListener('DOMContentLoaded', () => {
   // --- Configuração Centralizada de Marcas ---
   const LISTA_MARCAS = [
@@ -56,6 +76,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if(el) el.textContent = window.carrinho.length;
     safeStorage.set('alpe_cart', JSON.stringify(window.carrinho));
   };
+
+  // Alias para manter compatibilidade com chamadas existentes no HTML
+  window.atualizarBadge = window.atualizarBadgeCarrinho;
 
   window.adicionarAoCarrinho = (id, nome, preco, imagem, event) => {
     window.carrinho.push({ id, nome, preco, imagem });
@@ -114,11 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     html += `<div class="carrinho-total-row" style="padding: 20px 0 0; text-align: right; font-size: 22px; font-weight: 800; color: var(--cor-secundaria);">TOTAL: ${window.brl(total)}</div>`;
     lista.innerHTML = html;
-  };
-
-  window.navegarParaSistema = (el) => {
-    const link = el.getAttribute('data-link');
-    if(link) window.location.href = link;
   };
 
   window.mostrarPagina = (id) => {
@@ -353,7 +371,7 @@ async function carregarPrecosDinamicos() {
   // Tenta buscar preços do Supabase
   try {
     // Busca preços do backend (que consolida o menor preço do Supabase)
-    const response = await fetch('http://localhost:3002/api/produtos/precos-vitrine'); // Assumindo que seu backend está em 3002
+    const response = await fetch(`${API_BASE_URL}/api/produtos/precos-vitrine`);
     if (!response.ok) {
       throw new Error(`Erro HTTP! status: ${response.status}`);
     }

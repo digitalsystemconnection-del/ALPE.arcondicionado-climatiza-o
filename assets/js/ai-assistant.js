@@ -1,4 +1,4 @@
-const API_KEY = "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";
+const API_KEY = "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"; // ATENÇÃO: Esta chave está exposta no frontend. Para produção, considere proxy via backend.
 const chat = document.getElementById("corpoChat");
 const inputChat = document.getElementById("inputChat");
 const btnEnviar = document.getElementById("enviarMsg");

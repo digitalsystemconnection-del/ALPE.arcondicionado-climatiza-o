@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3002;
 // ============================================================
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY; // Usar service_role key para operações de escrita no backend
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // Esta chave deve ser usada para operações de escrita/leitura privilegiadas no backend
 
 // Inicializa o cliente Supabase (usando service_role key para operações de backend)
 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
@@ -196,7 +196,7 @@ app.get('/api/pagamentos/atualizacoes', (req, res) => {
 // Função auxiliar para simular a importação e atualização no Supabase
 async function importarEAtualizarSupabase(fornecedorNome, dadosFornecedor) {
   console.log(`[Fornecedor] Importando dados de ${fornecedorNome}...`);
-  // Simula a busca de dados do fornecedor
+  // TODO: Substituir esta simulação pela lógica real de busca de dados do fornecedor (API, CSV, etc.)
   const produtosDoFornecedor = [
     { sku: 'LG-S4Q12', nome: 'LG Dual Inverter 9.000 BTU', preco: 2450, estoque: 10 },
     { sku: 'SAM-WF12K', nome: 'Samsung WindFree 12.000 BTU', preco: 2999, estoque: 5 },
@@ -253,7 +253,7 @@ async function importarEAtualizarSupabase(fornecedorNome, dadosFornecedor) {
         preco: prod.preco,
         estoque: prod.estoque,
         data_atualizacao: new Date().toISOString()
-      }, { onConflict: 'produto_sku,fornecedor_nome' });
+      }, { onConflict: 'produto_sku,fornecedor_nome' }); // Requer um UNIQUE constraint no banco de dados para 'produto_sku' e 'fornecedor_nome'
 
     if (upsertPriceError) {
       console.error(`Erro ao upsert preço do fornecedor ${fornecedorNome} para ${prod.sku}:`, upsertPriceError);

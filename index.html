@@ -23,19 +23,7 @@
 
 <!-- Project Styles -->
 <link rel="stylesheet" href="assets/css/style.css" />
-<script>
-  // Definição antecipada do safeStorage para evitar erros em scripts inline
-  window.safeStorage = window.safeStorage || {
-    get: (key) => {
-      try { return localStorage.getItem(key); } 
-      catch (e) { return null; }
-    },
-    set: (key, value) => {
-      try { localStorage.setItem(key, value); } 
-      catch (e) { console.error('Erro no storage:', e); }
-    }
-  };
-</script>
+
 <!-- Supabase Client -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -1017,24 +1005,6 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 
   startTimer();
 })();
-</script>
-
-<script>
-  function carregarPrecosDinamicos() {
-    const precosSalvos = JSON.parse(safeStorage.get('alpe_precos_vitrine'));
-    if (!precosSalvos) return;
-    document.querySelectorAll('.produto-card .btn-add-cart').forEach(btn => {
-      const id = btn.getAttribute('data-id');
-      if (precosSalvos[id]) {
-        const precoFormatado = precosSalvos[id].toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        const precoElemento = btn.closest('.produto-info').querySelector('.preco');
-        if (precoElemento) {
-          precoElemento.textContent = precoFormatado;
-        }
-      }
-    });
-  }
-  document.addEventListener('DOMContentLoaded', carregarPrecosDinamicos);
 </script>
 
 <!-- WIDGET ASSISTENTE IA -->
