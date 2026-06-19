@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -22,18 +22,10 @@
 
 <!-- Project Styles -->
 <link rel="stylesheet" href="assets/css/style.css" />
-<script>
-  window.safeStorage = window.safeStorage || {
-    get: (key) => {
-      try { return localStorage.getItem(key); } 
-      catch (e) { return null; }
-    },
-    set: (key, value) => {
-      try { localStorage.setItem(key, value); } 
-      catch (e) { console.error('Erro no storage:', e); }
-    }
-  };
-</script>
+
+<!-- SUPABASE - CARREGAMENTO -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root {
   --cor-principal: #0066cc;
@@ -57,6 +49,132 @@
   -webkit-font-smoothing: antialiased;
 }
 
+/* TOP BAR */
+.top-bar {
+  width: 100%;
+  background: var(--cor-principal);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  font-size: 11px;
+  padding: 0;
+}
+.top-bar-container {
+  max-width: 1400px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 2px 10px;
+}
+.top-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff !important;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.top-item:hover { color: rgba(255,255,255,0.8); }
+.top-item div { display: flex; flex-direction: column; line-height: 1.1; }
+.top-item strong { white-space: nowrap; }
+.top-item span { font-size: 10px; color: rgba(255,255,255,0.7); }
+.top-item img { width: 18px; height: 18px; object-fit: contain; filter: brightness(0) invert(1); }
+
+/* HEADER */
+header {
+  background: white;
+  padding: 0 5% 0 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 90px;
+  gap: 30px;
+  overflow: visible;
+}
+.logo {
+  position: relative;
+  width: auto;
+  min-width: 380px;
+  flex-shrink: 0;
+  height: 90px;
+  text-decoration: none;
+  z-index: 105;
+  isolation: isolate;
+}
+.logo img {
+  height: 300px;
+  width: auto;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  display: block;
+  z-index: -1;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+.header-actions { display: flex; align-items: center; gap: 20px; }
+.cart-link { position: relative; display: flex; align-items: center; text-decoration: none; color: #333 !important; transition: transform 0.2s; font-size: 26px; }
+.cart-link:hover { transform: scale(1.1); }
+.cart-link i { font-size: 24px; }
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #d30029;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  line-height: 1;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.cart-icon { width: 26px; height: 26px; object-fit: contain; }
+.cta-header {
+  background: var(--cor-principal);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 12px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+  transition: all 0.3s;
+}
+.cta-header:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 102, 204, 0.3); }
+
+#main-nav { display: flex; align-items: center; position: relative; margin-left: auto; padding-right: 20px; z-index: 120; }
+#main-nav a { color: #333; text-decoration: none; margin-left: 20px; font-weight: 400; transition: color 0.3s; display: inline-block; padding: 0; }
+#main-nav a:hover { color: var(--cor-principal); }
+
+.dropdown { position: relative; display: inline-block; z-index: 9999; }
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 180px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  z-index: 9999;
+  border-radius: 8px;
+  top: 100%;
+  left: 0;
+  padding: 10px 0;
+  overflow: visible;
+}
 .dropdown-content a {
   color: var(--cor-texto);
   padding: 10px 20px;
@@ -71,8 +189,28 @@
 .dropdown-content a:hover { background-color: #f8f9fa; color: var(--cor-principal); }
 .dropdown:hover .dropdown-content { display: block; animation: fadeIn 0.3s; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-</style>
-<style>
+
+.mobile-menu-toggle { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--cor-secundaria); z-index: 1002; }
+
+@media (max-width: 900px) {
+  .mobile-menu-toggle { display: block; }
+  #main-nav { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 100px; position: fixed; top: 0; right: 0; width: 100%; height: 100%; background: white; transform: translateX(100%); transition: transform 0.3s ease-in-out; z-index: 1001; overflow-y: auto; }
+  #main-nav.nav-open { transform: translateX(0); overflow: visible; }
+  #main-nav a { padding: 15px 0; width: 80%; text-align: center; border-bottom: 1px solid #eee; }
+  #main-nav .dropdown { width: 80%; text-align: center; }
+  #main-nav .dropdown > a { border-bottom: none; padding-bottom: 15px; }
+  .dropdown-content { position: static; display: none; box-shadow: none; background-color: #f8f9fa; width: 100%; border-radius: 0; padding: 0; }
+  .dropdown-content a { text-align: center; padding: 12px 0; border-top: 1px solid #eee; }
+  .dropdown:hover .dropdown-content { display: none; }
+}
+
+@media (max-width: 768px) {
+  header { padding: 8px 3%; flex-wrap: wrap; height: auto; min-height: 70px; }
+  .logo { width: auto; height: 70px; min-width: auto; }
+  .logo img { height: 100px; position: static; transform: none; }
+}
+
+/* CARROSSEL */
 .carousel {
   position: relative;
   overflow: hidden;
@@ -130,16 +268,11 @@
   background: rgba(255,255,255,0.5);
   cursor: pointer;
 }
-.carousel-dots button.active {
-  background: var(--cor-principal);
-  width: 25px;
-  border-radius: 5px;
-}
+.carousel-dots button.active { background: var(--cor-principal); width: 25px; border-radius: 5px; }
 
 @media (max-width: 768px) {
   .carousel { height: 200px; }
   .video-banner { height: 200px; }
-  .carousel-slide, .video-content { object-position: center center !important; }
 }
 
 .video-banner {
@@ -150,43 +283,53 @@
   background: #000;
 }
 .video-content { object-fit: cover; object-position: center center; height: 100%; width: 100%; }
-</style>
-<style>
-:root {
-  --banner-blue-dark: #001529;
-  --banner-blue-mid: #003366;
-  --banner-blue-bright: #007bff;
-  --banner-shadow: 0 28px 70px rgba(0, 21, 41, 0.18);
-  --banner-radius: 28px;
-  --banner-image: url('images/banner/banner-calculadora-btu.png');
+
+/* MARCAS */
+.marcas-grid { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
+.logo-marca { width: 140px; height: 80px; background: white; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid #eee; padding: 10px; transition: transform 0.3s; }
+.logo-marca:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.logo-marca img { max-width: 85%; max-height: 50px; object-fit: contain; }
+
+/* SISTEMAS */
+.sistemas-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-top: 20px; overflow-x: auto; padding-bottom: 15px; }
+.sistema-card { background: #fff; padding: 20px 15px; min-width: 160px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; text-align: center; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: all 0.3s ease; cursor: pointer; }
+.sistema-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-color: var(--cor-principal); }
+.sistema-img { width: 100%; height: 140px; object-fit: contain; margin-bottom: 15px; }
+.sistema-card h3 { font-size: 16px; margin: 10px 0 5px; color: var(--cor-secundaria); }
+.sistema-card p { font-size: 12px; color: #666; line-height: 1.4; flex-grow: 1; margin-bottom: 15px; }
+
+@media (max-width: 900px) {
+  .sistemas-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
 }
 
-.banner-btu-wrapper {
-  width: 100%;
-  max-width: 1240px;
-  margin: 20px auto 60px;
-  padding: 0 20px;
-}
+/* CATÁLOGO DE PRODUTOS */
+.catalogo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; max-width: 1400px; margin-left: auto; margin-right: auto; }
+.produto-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: all 0.3s; display: flex; flex-direction: column; text-align: left; }
+.produto-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+.produto-card img { width: 100%; height: 200px; object-fit: contain; background: #fafafa; padding: 10px; }
+.produto-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; }
+.produto-info h4 { margin: 0 0 10px; font-size: 15px; line-height: 1.4; flex-grow: 1; color: #333; }
+.produto-info .preco { font-size: 20px; font-weight: 700; color: var(--cor-principal); margin-bottom: 15px; }
+.produto-info .cta-card { margin-top: auto; background: var(--cor-principal); color: #fff; text-align: center; padding: 10px; border-radius: var(--radius-sm); text-decoration: none; font-weight: bold; transition: all 0.3s; border: none; cursor: pointer; font-size: 14px; }
+.produto-info .cta-card:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3); }
+.produto-info .cta-card.adicionado { background: #22c55e; }
 
-.banners-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 30px;
-}
+/* BANNERS */
+.banner-btu-wrapper { width: 100%; max-width: 1240px; margin: 20px auto 60px; padding: 0 20px; }
+.banners-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
 
 .banner-btu {
   position: relative;
   min-height: 480px;
-  border-radius: var(--banner-radius) !important;
+  border-radius: 28px !important;
   overflow: hidden;
-  box-shadow: var(--banner-shadow);
+  box-shadow: 0 28px 70px rgba(0, 21, 41, 0.18);
   isolation: isolate;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(100deg, var(--banner-blue-dark) 0%, var(--banner-blue-mid) 38%, var(--banner-blue-bright) 54%, rgba(255,255,255,0) 54.2%), var(--banner-image) center center / cover no-repeat;
+  background: linear-gradient(100deg, #001529 0%, #003366 38%, #007bff 54%, rgba(255,255,255,0) 54.2%), url('images/banner/banner-calculadora-btu.png') center center / cover no-repeat;
   text-align: left;
 }
-
 .banner-btu::before {
   content: "";
   position: absolute;
@@ -195,18 +338,7 @@
   z-index: 0;
   pointer-events: none;
 }
-
-.banner-btu .content {
-  position: relative;
-  z-index: 2;
-  padding: 30px 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  max-width: 100%;
-}
-
+.banner-btu .content { position: relative; z-index: 2; padding: 30px 40px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; max-width: 100%; }
 .banner-btu .tag {
   display: inline-flex;
   align-items: center;
@@ -225,7 +357,6 @@
   font-weight: 700;
   font-family: 'Montserrat', sans-serif;
 }
-
 .banner-btu .tag::before {
   content: "";
   width: 6px;
@@ -234,31 +365,9 @@
   background: linear-gradient(180deg, #84f4ff, #007bff);
   box-shadow: 0 0 0 4px rgba(132,244,255,0.12);
 }
-
-.banner-btu h2 {
-  margin: 0;
-  font-family: 'Sora', sans-serif;
-  font-size: clamp(2.5rem, 5vw, 3.8rem);
-  line-height: .93;
-  letter-spacing: -.05em;
-  text-transform: uppercase;
-  color: #fff !important;
-  max-width: 12ch;
-}
-
-.banner-btu h2 .accent {
-  display: block;
-  color: #00d4ff;
-}
-
-.banner-btu .lead {
-  margin: 8px 0 0;
-  color: rgba(255,255,255,0.86);
-  font-size: clamp(1rem, 1.5vw, 1.4rem);
-  line-height: 1.15;
-  max-width: 50ch;
-}
-
+.banner-btu h2 { margin: 0; font-family: 'Sora', sans-serif; font-size: clamp(2.5rem, 5vw, 3.8rem); line-height: .93; letter-spacing: -.05em; text-transform: uppercase; color: #fff !important; max-width: 12ch; }
+.banner-btu h2 .accent { display: block; color: #00d4ff; }
+.banner-btu .lead { margin: 8px 0 0; color: rgba(255,255,255,0.86); font-size: clamp(1rem, 1.5vw, 1.4rem); line-height: 1.15; max-width: 50ch; }
 .banner-btu .btn-banner {
   display: inline-flex;
   align-items: center;
@@ -277,45 +386,24 @@
   transition: all 0.25s ease;
   font-family: 'Montserrat', sans-serif;
 }
-
-.banner-btu .btn-banner:hover {
-  transform: translateY(-2px);
-  background: rgba(255,255,255,0.1);
-  border-color: rgba(255,255,255,0.58);
-  box-shadow: 0 14px 30px rgba(0,0,0,0.16);
-}
-
-.banner-btu .floating-badge {
-  position: absolute;
-  right: 22px;
-  bottom: 22px;
-  z-index: 3;
-  padding: 6px 12px;
-  background: rgba(255,255,255,0.18);
-  border: 1px solid rgba(255,255,255,0.26);
-  border-radius: 12px;
-  backdrop-filter: blur(14px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
-  color: #fff;
-}
-
+.banner-btu .btn-banner:hover { transform: translateY(-2px); background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.58); box-shadow: 0 14px 30px rgba(0,0,0,0.16); }
+.banner-btu .floating-badge { position: absolute; right: 22px; bottom: 22px; z-index: 3; padding: 6px 12px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.26); border-radius: 12px; backdrop-filter: blur(14px); box-shadow: 0 12px 28px rgba(0,0,0,0.12); color: #fff; }
 .banner-btu .floating-badge small { font-size: 0.65rem; display: block; line-height: 1.2; opacity: 0.9; }
 .banner-btu .floating-badge strong { font-size: 0.75rem; display: block; line-height: 1.2; }
 
 .contact-banner {
   position: relative;
   display: block;
-  border-radius: var(--banner-radius) !important;
+  border-radius: 28px !important;
   overflow: hidden;
   min-height: 540px;
-  background: linear-gradient(135deg, var(--banner-blue-dark) 0%, var(--banner-blue-mid) 100%);
-  box-shadow: var(--banner-shadow);
+  background: linear-gradient(135deg, #001529 0%, #003366 100%);
+  box-shadow: 0 28px 70px rgba(0, 21, 41, 0.18);
   isolation: isolate;
   text-decoration: none;
   transition: transform 0.3s ease;
 }
 .contact-banner:hover { transform: translateY(-5px); }
-
 .contact-banner::before {
   content: "";
   position: absolute;
@@ -324,112 +412,123 @@
   opacity: 0.15;
   z-index: -1;
 }
-
-.banner-inner-contact {
-  position: relative;
-  z-index: 2;
-  padding: 30px 40px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  text-align: left;
-}
-
-.contact-banner h2 {
-  font-family: 'Sora', sans-serif;
-  font-size: clamp(2.5rem, 5vw, 3.8rem);
-  line-height: .93;
-  color: #fff !important;
-  margin: 0 0 20px;
-  text-transform: uppercase;
-  letter-spacing: -.05em;
-}
-
-.banner-points {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 15px;
-  width: 100%;
-  align-items: stretch;
-  grid-auto-rows: 1fr;
-  margin: 12px 0; 
-}
-
-.banner-point {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: flex-start;
-  padding: 12px 18px;
-  background: rgba(0, 21, 41, 0.7);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 20px;
-  backdrop-filter: blur(14px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-  color: #fff;
-  transition: transform 0.25s ease;
-}
+.banner-inner-contact { position: relative; z-index: 2; padding: 30px 40px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left; }
+.contact-banner h2 { font-family: 'Sora', sans-serif; font-size: clamp(2.5rem, 5vw, 3.8rem); line-height: .93; color: #fff !important; margin: 0 0 20px; text-transform: uppercase; letter-spacing: -.05em; }
+.banner-points { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; width: 100%; align-items: stretch; grid-auto-rows: 1fr; margin: 12px 0; }
+.banner-point { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; padding: 12px 18px; background: rgba(0, 21, 41, 0.7); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px; backdrop-filter: blur(14px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); color: #fff; transition: transform 0.25s ease; }
 .banner-point:hover { transform: translateY(-3px); }
-.banner-point i {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.16);
-  color: #00d4ff;
-  font-size: 1.15rem;
-  margin-top: 0;
-}
-
-.banner-point small, .cta-box-banner small { 
-  display: block; text-transform: uppercase; letter-spacing: .16em; font-size: .65rem; font-weight: 800; color: #fff; margin-bottom: 5px; 
-  font-family: 'Sora', sans-serif;
-}
-.banner-point p, .cta-box-banner p { 
-  margin: 0; color: #fff; line-height: 1.2; font-size: 0.85rem; 
-  flex-grow: 1;
-}
-
-.btn-contact-white {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  margin-top: 10px;
-  padding: 6px 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.4);
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.78rem;
-  font-weight: 800;
-  font-family: 'Montserrat', sans-serif;
-  background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(10px);
-  transition: all 0.25s ease;
-}
-.btn-contact-white:hover {
-  transform: translateY(-2px);
-  background: rgba(255,255,255,0.1);
-  border-color: rgba(255,255,255,0.58);
-  box-shadow: 0 14px 30px rgba(0,0,0,0.16);
-}
+.banner-point i { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 16px; background: rgba(255,255,255,0.16); color: #00d4ff; font-size: 1.15rem; margin-top: 0; }
+.banner-point small, .cta-box-banner small { display: block; text-transform: uppercase; letter-spacing: .16em; font-size: .65rem; font-weight: 800; color: #fff; margin-bottom: 5px; font-family: 'Sora', sans-serif; }
+.banner-point p, .cta-box-banner p { margin: 0; color: #fff; line-height: 1.2; font-size: 0.85rem; flex-grow: 1; }
+.btn-contact-white { display: inline-flex; align-items: center; justify-content: center; width: fit-content; margin-top: 10px; padding: 6px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.4); color: #fff; text-decoration: none; font-size: 0.78rem; font-weight: 800; font-family: 'Montserrat', sans-serif; background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); transition: all 0.25s ease; }
+.btn-contact-white:hover { transform: translateY(-2px); background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.58); box-shadow: 0 14px 30px rgba(0,0,0,0.16); }
 
 @media (max-width: 980px) {
   .banner-points { grid-template-columns: 1fr 1fr; }
-  .banner-btu {
-    background: linear-gradient(180deg, var(--banner-blue-dark) 0%, var(--banner-blue-mid) 42%, rgba(0,123,255,0.3) 64%, rgba(255,255,255,0) 100%), var(--banner-image) center center / cover no-repeat;
-  }
+  .banner-btu { background: linear-gradient(180deg, #001529 0%, #003366 42%, rgba(0,123,255,0.3) 64%, rgba(255,255,255,0) 100%), url('images/banner/banner-calculadora-btu.png') center center / cover no-repeat; }
 }
-@media (max-width: 650px) {
-  .banner-points { grid-template-columns: 1fr; }
-}
-</style>
+@media (max-width: 650px) { .banner-points { grid-template-columns: 1fr; } }
 
-<style>
+/* SERVIÇOS */
+.section-servicos { background-color: #f8f9fa; }
+.servicos-grid { display: flex; justify-content: center; gap: 30px; margin-top: 20px; flex-wrap: wrap; }
+.servico-card { background: white; color: var(--cor-secundaria); padding: 30px; border-radius: 8px; width: 45%; min-width: 300px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s; }
+.servico-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.15); }
+.servico-card h3 { display: flex; align-items: center; justify-content: center; }
+.icon-service { width: 32px; height: 32px; vertical-align: middle; margin-right: 10px; }
+
+/* PAGAMENTO */
+.section-pagamento { padding: 40px 5%; text-align: center; background-color: #f8f9fa; border-top: 1px solid #eee; }
+.title-pagamento { font-size: 28px; margin-bottom: 30px; color: var(--cor-secundaria); }
+.grid-pagamento { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 800px; margin: 0 auto; }
+.img-pagamento { height: 40px; width: auto; object-fit: contain; filter: grayscale(100%); opacity: 0.7; transition: all 0.3s ease; }
+.img-pagamento:hover { filter: grayscale(0%); opacity: 1; transform: scale(1.05); }
+
+/* CARRINHO */
+.carrinho-lista-container { background: #fff; border-radius: var(--radius-lg); border: 1px solid #eee; box-shadow: 0 4px 20px rgba(0,0,0,0.05); overflow: hidden; min-height: 100px; padding: 15px; }
+.carrinho-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+.carrinho-item:last-child { border-bottom: none; }
+.carrinho-item .remover { color: red; cursor: pointer; margin-left: 10px; }
+.carrinho-vazio { text-align: center; color: #999; padding: 30px 0; }
+
+/* BOTÕES FLUTUANTES */
+.whatsapp-square {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 25px;
+  background: transparent;
+  border: 2px solid #25d366;
+  color: #25d366;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s;
+  font-size: 16px;
+}
+.whatsapp-square:hover { background: rgba(37, 211, 102, 0.1); transform: translateY(-2px); }
+
+/* ASSISTENTE */
+.assistente-toggle {
+  position: fixed;
+  bottom: 85px;
+  right: 20px;
+  z-index: 1000;
+  background: transparent;
+  color: #333;
+  border: 2px solid #d2b48c;
+  padding: 12px 24px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.assistente-toggle:hover { transform: scale(1.05); background-color: rgba(210, 180, 140, 0.2); }
+.assistente-toggle svg { width: 20px; height: 20px; fill: #333; }
+
+.assistente {
+  position: fixed;
+  bottom: 150px;
+  right: 20px;
+  width: 350px;
+  height: 500px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  display: none;
+  flex-direction: column;
+  z-index: 1001;
+  overflow: hidden;
+  border: 1px solid #eee;
+}
+.assistente.ativo { display: flex; animation: fadeIn 0.3s; }
+.cabecalho-chat { background: var(--cor-principal); color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+.fechar-chat { background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+.corpo-chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #f8f9fa; }
+.msg-chat { padding: 10px 15px; border-radius: 15px; font-size: 14px; max-width: 85%; line-height: 1.4; }
+.msg-ia { background: white; align-self: flex-start; color: #333; border: 1px solid #ddd; }
+.msg-usuario { background: var(--cor-principal); color: white; align-self: flex-end; }
+.rodape-chat { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 8px; background: white; }
+.entrada-chat { flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 8px; outline: none; }
+.botao-enviar { background: var(--cor-principal); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+@media (max-width: 768px) {
+  .assistente { width: 90%; right: 5%; left: 5%; height: 70vh; bottom: 135px; }
+  .assistente-toggle { right: 20px; bottom: 75px; padding: 10px; }
+  .assistente-toggle span { display: none; }
+  .whatsapp-square { padding: 10px; }
+  .whatsapp-square span { display: none; }
+}
+
+/* FOOTER */
 footer.footer { background: #f8f9fa !important; color: #333 !important; padding: 60px 5% 20px !important; text-align: left !important; border-top: 1px solid #eee !important; }
 .footer-content { display: flex; flex-wrap: wrap; gap: 40px; max-width: 1200px; margin: 0 auto; justify-content: space-between; }
 .footer-brand { flex: 1.5; min-width: 280px; }
@@ -439,13 +538,11 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 .social-link { width: 38px; height: 38px; background: rgba(0,0,0,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; text-decoration: none; transition: 0.3s; font-size: 18px; }
 .social-link:hover { transform: translateY(-5px); color: white; }
 .social-link img { width: 24px; height: 24px; object-fit: contain; }
-
 .social-link.whatsapp { color: #25D366; background: rgba(37, 211, 102, 0.1); }
 .social-link.phone { color: #007bff; background: rgba(0, 123, 255, 0.1); }
 .social-link.instagram { color: #E1306C; background: rgba(225, 48, 108, 0.1); }
 .social-link.facebook { color: #1877F2; background: rgba(24, 119, 242, 0.1); }
 .social-link.linkedin { color: #0A66C2; background: rgba(10, 102, 194, 0.1); }
-
 .social-link.whatsapp:hover { background: #25D366; color: white; }
 .social-link.phone:hover { background: #007bff; color: white; }
 .social-link.instagram:hover { background: #E1306C; color: white; }
@@ -462,18 +559,50 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 .footer-bottom { border-top: 1px solid #eee; margin-top: 50px; padding-top: 20px; text-align: center; color: #999; font-size: 13px; }
 
 @media (max-width: 768px) {
-    .footer { padding: 40px 5% 20px; text-align: center; }
-    .footer-content { flex-direction: column; gap: 30px; align-items: center; }
-    .footer-logo, .footer-social { justify-content: center; }
-    .footer-column h3 { text-align: center; }
-    .footer-bottom { margin-top: 30px; }
+  .footer { padding: 40px 5% 20px; text-align: center; }
+  .footer-content { flex-direction: column; gap: 30px; align-items: center; }
+  .footer-logo, .footer-social { justify-content: center; }
+  .footer-column h3 { text-align: center; }
+  .footer-bottom { margin-top: 30px; }
 }
-</style>
 
+.btn-pill { background: #22c55e; color: white; border: none; padding: 0.9rem 2rem; font-size: 1.05rem; font-weight: 500; border-radius: 9999px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: system-ui, sans-serif; transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.1); text-decoration: none; }
+.btn-pill.blue { background: var(--cor-principal); }
+.btn-pill:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+
+.section { padding: 30px 5%; text-align: center; }
+.section-loja { padding: 40px 0; text-align: center; background-color: #fff; color: #333; }
+.section-loja h2 { font-size: 32px; margin-bottom: 20px; color: var(--cor-secundaria); }
+.container { max-width: var(--max); margin-left: auto; margin-right: auto; padding-left: 5%; padding-right: 5%; }
+.icon-inline { width: 16px; height: 16px; vertical-align: middle; margin-bottom: 3px; margin-right: 4px; }
+
+.btn-especialista { display: inline-block; margin-top: 30px; }
+
+.card-destaque { flex: 1; min-width: 300px; background: white; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); overflow: hidden; transition: transform 0.3s; display: flex; flex-direction: column; }
+.card-destaque-premium { border-top: 6px solid #d30029; }
+.card-destaque-essencial { border-top: 6px solid #00918E; }
+.card-destaque-body { padding: 20px; text-align: left; display: flex; flex-direction: column; flex: 1; }
+.card-destaque-title { font-size: 22px; margin-bottom: 5px; font-weight: bold; }
+.card-destaque-title.premium { color: #d30029; }
+.card-destaque-title.essencial { color: #00918E; }
+.card-destaque-desc { color: #555; font-size: 14px; margin: 0; min-height: 45px; }
+.card-destaque-hr { border: 0; border-top: 1px solid #eee; margin: 15px 0; }
+.card-destaque-list { text-align: left; list-style: none; padding: 0; color: #444; font-size: 14px; }
+.card-destaque-list li { margin-bottom: 8px; }
+.btn-destaque { display: block; text-align: center; margin-top: auto; border-radius: 50px; color: white; }
+.btn-destaque.premium { background: #d30029; }
+.btn-destaque.essencial { background: #00918E; }
+.destaque-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
+.destaque-img { max-width: 250px; display: block; margin: 0 auto 20px; }
+.section-destaque { background: linear-gradient(to bottom, #fff, #f8f9fa); border-top: 1px solid #eee; }
+
+.page { display: none; }
+.page.active { display: block; }
+</style>
 </head>
 <body class="light">
 
-<!-- BARRA SUPERIOR COMPLETA -->
+<!-- BARRA SUPERIOR -->
 <div class="top-bar">
     <div class="top-bar-container">
         <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá%20ALPE,%20visitei%20o%20site%20e%20gostaria%20de%20falar%20com%20um%20especialista." target="_blank" class="top-item">
@@ -512,7 +641,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
     </div>
 </div>
 
-<!-- Cabeçalho -->
+<!-- CABEÇALHO -->
 <header>
   <a href="index.html" class="logo" id="nav-loja">
     <img src="images/logo-marcas/logo-transparente.png" alt="ALPE Ar Condicionado">
@@ -540,6 +669,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
   </div>
 </header>
 
+<!-- CONTEÚDO PRINCIPAL -->
 <main>
   <div id="page-loja" class="page active">
     
@@ -586,12 +716,24 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
       <div class="container">
         <h2>Soluções para Todos os Projetos</h2>
         <div class="sistemas-grid">
-          <div class="sistema-card" data-link="sistemas/split-hi-wall.html" onclick="navegarParaSistema(this)"><img src="images/produtos/split-lg/split-inverter-lg-hi-wall-dual-compact-9000-btus-frio-220v.png" class="sistema-img"><h3>Split Hi-Wall</h3><p>O modelo mais popular para residências.</p><span class="cta-header">Ver Detalhes</span></div>
-          <div class="sistema-card" data-link="sistemas/multi-split.html" onclick="navegarParaSistema(this)"><img src="images/produtos/multi-split/multi-split-fujitsu.webp" class="sistema-img"><h3>Multi-Split</h3><p>Climatize até 5 ambientes com uma unidade externa.</p><span class="cta-header">Ver Detalhes</span></div>
-          <div class="sistema-card" data-link="sistemas/mini-vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/mini-vrf/vrv-daikin-fit.webp" class="sistema-img"><h3>Mini VRF</h3><p>Alta capacidade para residências de alto padrão.</p><span class="cta-header">Ver Detalhes</span></div>
-          <div class="sistema-card" data-link="sistemas/vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/vrf/hisense-x3-vrf.png" class="sistema-img"><h3>VRF</h3><p>A solução definitiva para grandes edifícios.</p><span class="cta-header">Ver Detalhes</span></div>
-          <div class="sistema-card" data-link="sistemas/cassette.html" onclick="navegarParaSistema(this)"><img src="images/produtos/cassete/hisense-cassete.webp" class="sistema-img"><h3>Cassete</h3><p>Ideal para ambientes amplos e com forro rebaixado.</p><span class="cta-header">Ver Detalhes</span></div>
-          <div class="sistema-card" data-link="sistemas/piso-teto.html" onclick="navegarParaSistema(this)"><img src="images/produtos/piso-teto/piso-teto-fujitsu.webp" class="sistema-img"><h3>Piso Teto</h3><p>Versatilidade e alta potência para comércios.</p><span class="cta-header">Ver Detalhes</span></div>
+          <div class="sistema-card" data-link="sistemas/split-hi-wall.html" onclick="navegarParaSistema(this)">
+            <img src="images/produtos/split-lg/split-inverter-lg-hi-wall-dual-compact-9000-btus-frio-220v.png" class="sistema-img"><h3>Split Hi-Wall</h3><p>O modelo mais popular para residências.</p><span class="cta-header">Ver Detalhes</span>
+          </div>
+          <div class="sistema-card" data-link="sistemas/multi-split.html" onclick="navegarParaSistema(this)">
+            <img src="images/produtos/multi-split/multi-split-fujitsu.webp" class="sistema-img"><h3>Multi-Split</h3><p>Climatize até 5 ambientes com uma unidade externa.</p><span class="cta-header">Ver Detalhes</span>
+          </div>
+          <div class="sistema-card" data-link="sistemas/mini-vrf.html" onclick="navegarParaSistema(this)">
+            <img src="images/produtos/mini-vrf/vrv-daikin-fit.webp" class="sistema-img"><h3>Mini VRF</h3><p>Alta capacidade para residências de alto padrão.</p><span class="cta-header">Ver Detalhes</span>
+          </div>
+          <div class="sistema-card" data-link="sistemas/vrf.html" onclick="navegarParaSistema(this)">
+            <img src="images/produtos/vrf/hisense-x3-vrf.png" class="sistema-img"><h3>VRF</h3><p>A solução definitiva para grandes edifícios.</p><span class="cta-header">Ver Detalhes</span>
+          </div>
+          <div class="sistema-card" data-link="sistemas/cassette.html" onclick="navegarParaSistema(this)">
+            <img src="images/produtos/cassete/hisense-cassete.webp" class="sistema-img"><h3>Cassete</h3><p>Ideal para ambientes amplos e com forro rebaixado.</p><span class="cta-header">Ver Detalhes</span>
+          </div>
+          <div class="sistema-card" data-link="sistemas/piso-teto.html" onclick="navegarParaSistema(this)">
+            <img src="images/produtos/piso-teto/piso-teto-fujitsu.webp" class="sistema-img"><h3>Piso Teto</h3><p>Versatilidade e alta potência para comércios.</p><span class="cta-header">Ver Detalhes</span>
+          </div>
         </div>
       </div>
     </section>
@@ -675,23 +817,13 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
       </div>
     </section>
 
-    <!-- PRODUTOS -->
+    <!-- PRODUTOS - DINÂMICOS VIA SUPABASE -->
     <section id="produtos" class="section-loja">
       <div class="container">
         <h2 style="margin-bottom:20px;">OS MAIS VENDIDOS DA ALPE</h2>
         <div class="catalogo-grid" id="catalogo-produtos">
-          <div class="produto-card" data-id="1"><img src="images/produtos/split-samsung/samsung-12000.webp" alt="Samsung"><div class="produto-info"><h4>Samsung Inverter 12.000 BTU</h4><div class="preco">R$ 2.999,00</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          <div class="produto-card" data-id="2"><img src="images/produtos/split-lg/split-inverter-lg-hi-wall-dual-compact-9000-btus-frio-220v.png" alt="LG"><div class="produto-info"><h4>LG Dual Inverter 9.000 BTU</h4><div class="preco">R$ 2.450,00</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          <div class="produto-card" data-id="3"><img src="images/produtos/cassete/k7-4-vias-daikin-sky-air.webp" alt="Daikin"><div class="produto-info"><h4>Daikin Cassete 36.000 BTU</h4><div class="preco">R$ 8.990,00</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          <div class="produto-card" data-id="4"><img src="images/produtos/split-hisense/ar-condicionado-split-inverter-hi-wall-wi-fi-hisense-12000-btus-frio-220v.jpg" alt="Hisense"><div class="produto-info"><h4>Hisense Inverter 12.000 BTU</h4><div class="preco">R$ 2.050,48</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          <div class="produto-card" data-id="5"><img src="images/produtos/split-elgin/ar-condicionado-elgin-inverter-eco-ii-wi-fi-12000-btus-frio-220v-r-32.webp" alt="Elgin"><div class="produto-info"><h4>Elgin Inverter 12.000 BTU</h4><div class="preco">R$ 2.155,60</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          <div class="produto-card" data-id="6"><img src="images/produtos/split-electrolux/electrolux-9000.png" alt="Electrolux"><div class="produto-info"><h4>Electrolux Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          <div class="produto-card" data-id="7"><img src="images/produtos/split-fujitsu/fujitsu-9000-premium.jpg" alt="Fujitsu"><div class="produto-info"><h4>Fujitsu Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          <div class="produto-card" data-id="8"><img src="images/produtos/split-hitachi/hitachi-9000.webp" alt="Hitachi"><div class="produto-info"><h4>Hitachi Inverter 9.000 BTU</h4><div class="preco">R$ 2.496,79</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          <div class="produto-card" data-id="9"><img src="images/produtos/split-philco/philco-split-12000.webp" alt="Philco"><div class="produto-info"><h4>Philco Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          <div class="produto-card" data-id="10"><img src="images/produtos/split-gree/split-inverter-gree-g-top-auto-9000-btuh-frio-r-32-220v-9000-frio-63.webp" alt="Gree"><div class="produto-info"><h4>Gree Inverter 9.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          <div class="produto-card" data-id="11"><img src="images/produtos/split-tcl/tcl-freshin3-0-1.webp" alt="TCL"><div class="produto-info"><h4>TCL Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
-          <div class="produto-card" data-id="12"><img src="images/produtos/split-midea/midea-9000.webp" alt="Midea"><div class="produto-info"><h4>Midea Inverter 9.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <!-- Os produtos serão carregados pelo JavaScript -->
+          <p style="text-align:center;width:100%;color:#999;">🔄 Carregando produtos...</p>
         </div>
       </div>
     </section>
@@ -751,7 +883,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
         <h2 style="text-align: center; margin-bottom: 25px; font-size: 28px; color: var(--cor-secundaria);">Seu Carrinho</h2>
         <div id="carrinho-lista" class="carrinho-lista-container" style="box-shadow: none; border: none; margin: 0;"></div>
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 30px;">
-          <button id="btn-finalizar" class="cta-header" style="width: 100%; padding: 18px; font-size: 18px; text-align: center; border: none; cursor: pointer;">Finalizar Pedido</button>
+          <button id="btn-finalizar" class="cta-header" style="width: 100%; padding: 18px; font-size: 18px; text-align: center; border: none; cursor: pointer; background: #0066cc; color: white; border-radius: 8px; font-weight: bold;">🛒 Finalizar Pedido</button>
           <a href="#" id="btn-continuar-comprando" style="text-align: center; color: #666; text-decoration: none; font-size: 14px; font-weight: 500;">
             <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Continuar Comprando
           </a>
@@ -762,7 +894,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 
 </main>
 
-<!-- Footer -->
+<!-- FOOTER -->
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-brand">
@@ -825,71 +957,6 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
   <span>Fale Conosco</span>
 </a>
 
-<!-- SCRIPTS -->
-<script src="assets/js/main.js"></script>
-
-<script>
-(function(){
-  const track = document.getElementById('carouselTrack');
-  if(!track) return;
-  const slides = Array.from(track.children);
-  const prev = document.getElementById('prevBtn');
-  const next = document.getElementById('nextBtn');
-  const dotsContainer = document.getElementById('carouselDots');
-  let index = 0;
-  let timer;
-
-  if(dotsContainer) {
-    dotsContainer.innerHTML = '';
-    slides.forEach((_, i) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      if (i === 0) b.classList.add('active');
-      b.onclick = () => { goTo(i); resetTimer(); };
-      dotsContainer.appendChild(b);
-    });
-  }
-
-  function goTo(i) {
-    index = (i + slides.length) % slides.length;
-    track.style.transform = 'translateX(-' + (index * 100) + '%)';
-    const dots = dotsContainer ? Array.from(dotsContainer.children) : [];
-    dots.forEach(d => d.classList.remove('active'));
-    if(dots[index]) dots[index].classList.add('active');
-  }
-
-  function nextSlide() { goTo(index + 1); }
-  function prevSlide() { goTo(index - 1); }
-
-  if(next) next.onclick = function() { nextSlide(); resetTimer(); };
-  if(prev) prev.onclick = function() { prevSlide(); resetTimer(); };
-
-  function startTimer() { timer = setInterval(nextSlide, 5000); }
-  function stopTimer() { clearInterval(timer); }
-  function resetTimer() { stopTimer(); startTimer(); }
-
-  startTimer();
-})();
-</script>
-
-<script>
-  function carregarPrecosDinamicos() {
-    const precosSalvos = JSON.parse(safeStorage.get('alpe_precos_vitrine'));
-    if (!precosSalvos) return;
-    document.querySelectorAll('.produto-card .btn-add-cart').forEach(btn => {
-      const id = btn.getAttribute('data-id');
-      if (precosSalvos[id]) {
-        const precoFormatado = precosSalvos[id].toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        const precoElemento = btn.closest('.produto-info').querySelector('.preco');
-        if (precoElemento) {
-          precoElemento.textContent = precoFormatado;
-        }
-      }
-    });
-  }
-  document.addEventListener('DOMContentLoaded', carregarPrecosDinamicos);
-</script>
-
 <!-- ASSISTENTE IA -->
 <button class="assistente-toggle" id="toggleAssistente">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v14l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
@@ -907,52 +974,379 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
   </div>
 </div>
 
+<!-- SCRIPTS -->
 <script src="assets/js/ai-assistant.js"></script>
 
 <script>
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const href = this.getAttribute('href');
-            if (href !== '#' && document.querySelector(href)) {
-                e.preventDefault();
-                document.querySelector(href).scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+// ============================================================
+// SUPABASE - CONFIGURAÇÃO
+// ============================================================
+const SUPABASE_URL = 'https://imkkxhsxlqwtbdfljwsq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlta2t4aHN4bHF3dGJkZmxqd3NxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNTYxNjEsImV4cCI6MjA5NTkzMjE2MX0.7WHQvxf_uW90Gs2wzlmuduukoENII5syowTTFiTvtTs';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ============================================================
+// VARIÁVEIS GLOBAIS
+// ============================================================
+let produtos = [];
+let carrinho = JSON.parse(localStorage.getItem('carrinho_alpe') || '[]');
+
+// ============================================================
+// CARREGAR PRODUTOS DO SUPABASE
+// ============================================================
+async function carregarProdutos() {
+    try {
+        console.log('🔄 Buscando produtos do Supabase...');
+        
+        const { data, error } = await supabase
+            .from('produtos')
+            .select('*')
+            .eq('ativo', true)
+            .limit(20);
+        
+        if (error) {
+            console.error('❌ Erro:', error);
+            document.getElementById('catalogo-produtos').innerHTML = 
+                '<p style="text-align:center;color:red;width:100%;">❌ Erro ao carregar produtos: ' + error.message + '</p>';
+            return;
+        }
+        
+        if (!data || data.length === 0) {
+            console.warn('⚠️ Nenhum produto encontrado');
+            document.getElementById('catalogo-produtos').innerHTML = 
+                '<p style="text-align:center;color:orange;width:100%;">⚠️ Nenhum produto disponível no momento.</p>';
+            return;
+        }
+        
+        produtos = data;
+        console.log('✅ Produtos carregados:', produtos.length);
+        renderizarProdutos();
+        
+    } catch (error) {
+        console.error('❌ Erro inesperado:', error);
+        document.getElementById('catalogo-produtos').innerHTML = 
+            '<p style="text-align:center;color:red;width:100%;">❌ Erro ao carregar produtos. Verifique o console.</p>';
+    }
+}
+
+// ============================================================
+// RENDERIZAR PRODUTOS
+// ============================================================
+function renderizarProdutos() {
+    const grid = document.getElementById('catalogo-produtos');
+    grid.innerHTML = '';
+    
+    produtos.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'produto-card';
+        card.dataset.id = p.id;
+        card.innerHTML = `
+            <img src="${p.imagem_url || 'images/default.jpg'}" alt="${p.nome}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2270%22 y=%22110%22 font-family=%22Arial%22 font-size=%2230%22 fill=%22%23999%22%3E📦%3C/text%3E%3C/svg%3E'">
+            <div class="produto-info">
+                <h4>${p.nome}</h4>
+                <p style="font-size:12px;color:#666;">${p.marca || ''} ${p.btu ? '- ' + p.btu + ' BTU' : ''}</p>
+                <div class="preco">R$ ${p.preco.toFixed(2).replace('.', ',')}</div>
+                <button class="cta-card btn-add-cart" data-id="${p.id}">🛒 COMPRAR AGORA</button>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+    
+    configurarBotoes();
+}
+
+// ============================================================
+// CARRINHO
+// ============================================================
+function adicionarAoCarrinho(produtoId) {
+    const produto = produtos.find(p => p.id === produtoId);
+    if (!produto) {
+        alert('Produto não encontrado!');
+        return;
+    }
+    
+    const existente = carrinho.find(item => item.id === produtoId);
+    if (existente) {
+        existente.quantidade += 1;
+    } else {
+        carrinho.push({
+            id: produto.id,
+            nome: produto.nome,
+            preco: produto.preco,
+            imagem: produto.imagem_url,
+            quantidade: 1
+        });
+    }
+    
+    salvarCarrinho();
+    atualizarBadge();
+    
+    // Feedback visual
+    const btn = document.querySelector(`.btn-add-cart[data-id="${produtoId}"]`);
+    if (btn) {
+        const original = btn.textContent;
+        btn.textContent = '✅ ADICIONADO!';
+        btn.classList.add('adicionado');
+        setTimeout(() => {
+            btn.textContent = original;
+            btn.classList.remove('adicionado');
+        }, 2000);
+    }
+    
+    console.log('✅ Produto adicionado:', produto.nome);
+}
+
+function removerDoCarrinho(produtoId) {
+    carrinho = carrinho.filter(item => item.id !== produtoId);
+    salvarCarrinho();
+    atualizarBadge();
+    renderizarCarrinho();
+}
+
+function atualizarBadge() {
+    const total = carrinho.reduce((sum, item) => sum + item.quantidade, 0);
+    const badge = document.getElementById('cart-count');
+    if (badge) {
+        badge.textContent = total;
+        badge.style.display = total > 0 ? 'flex' : 'none';
+    }
+}
+
+function salvarCarrinho() {
+    localStorage.setItem('carrinho_alpe', JSON.stringify(carrinho));
+}
+
+// ============================================================
+// RENDERIZAR CARRINHO
+// ============================================================
+function renderizarCarrinho() {
+    const lista = document.getElementById('carrinho-lista');
+    if (!lista) return;
+    
+    if (carrinho.length === 0) {
+        lista.innerHTML = '<div class="carrinho-vazio">🛒 Seu carrinho está vazio</div>';
+        return;
+    }
+    
+    let html = '';
+    let total = 0;
+    
+    carrinho.forEach(item => {
+        const subtotal = item.preco * item.quantidade;
+        total += subtotal;
+        html += `
+            <div class="carrinho-item">
+                <span>${item.nome} <small style="color:#999;">x${item.quantidade}</small></span>
+                <span>R$ ${subtotal.toFixed(2).replace('.', ',')} 
+                    <span class="remover" onclick="removerDoCarrinho('${item.id}')">✕</span>
+                </span>
+            </div>
+        `;
+    });
+    
+    lista.innerHTML = html;
+}
+
+// ============================================================
+= FINALIZAR PEDIDO - SALVA NO SUPABASE
+// ============================================================
+async function finalizarPedido() {
+    if (carrinho.length === 0) {
+        alert('🛒 Carrinho vazio!');
+        return;
+    }
+    
+    const nome = prompt('📝 Seu nome completo:');
+    if (!nome || nome.trim() === '') {
+        alert('⚠️ Nome é obrigatório!');
+        return;
+    }
+    
+    const telefone = prompt('📱 Seu telefone:');
+    if (!telefone || telefone.trim() === '') {
+        alert('⚠️ Telefone é obrigatório!');
+        return;
+    }
+    
+    const total = carrinho.reduce((s, i) => s + (i.preco * i.quantidade), 0);
+    const numPedido = 'ALPE-' + Date.now().toString().slice(-8) + '-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+    
+    try {
+        console.log('📝 Criando pedido no Supabase...');
+        
+        const { data: pedido, error } = await supabase
+            .from('pedidos')
+            .insert({
+                numero_pedido: numPedido,
+                cliente_nome: nome.trim(),
+                cliente_telefone: telefone.trim(),
+                cliente_email: prompt('📧 Email:') || '',
+                cliente_cpf: prompt('📄 CPF:') || '',
+                endereco_entrega: {
+                    rua: prompt('🏠 Rua:') || '',
+                    numero: prompt('🔢 Número:') || '',
+                    bairro: prompt('🏘️ Bairro:') || '',
+                    cidade: prompt('🌆 Cidade:') || '',
+                    estado: prompt('📌 Estado:') || '',
+                    cep: prompt('📮 CEP:') || ''
+                },
+                total_produtos: total,
+                total_pedido: total,
+                forma_pagamento: 'pendente',
+                session_id: 'web_' + Date.now()
+            })
+            .select()
+            .single();
+        
+        if (error) {
+            console.error('❌ Erro:', error);
+            alert('❌ Erro ao criar pedido: ' + error.message);
+            return;
+        }
+        
+        console.log('✅ Pedido criado:', pedido);
+        
+        // Salvar itens
+        const itens = carrinho.map(item => ({
+            pedido_id: pedido.id,
+            sku: 'SKU-' + item.id.slice(0, 8),
+            nome_produto: item.nome,
+            quantidade: item.quantidade,
+            preco_unitario: item.preco,
+            subtotal: item.preco * item.quantidade
+        }));
+        
+        await supabase.from('itens_pedido').insert(itens);
+        
+        // Limpar carrinho
+        carrinho = [];
+        salvarCarrinho();
+        atualizarBadge();
+        renderizarCarrinho();
+        
+        alert('✅ PEDIDO #' + numPedido + ' CRIADO COM SUCESSO!');
+        console.log('🎉 Pedido finalizado!');
+        
+    } catch (error) {
+        console.error('❌ Erro inesperado:', error);
+        alert('❌ Erro ao finalizar pedido: ' + error.message);
+    }
+}
+
+// ============================================================
+= CONFIGURAR BOTÕES
+// ============================================================
+function configurarBotoes() {
+    // Botões "COMPRAR AGORA"
+    document.querySelectorAll('.btn-add-cart').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const id = this.dataset.id;
+            if (id) adicionarAoCarrinho(id);
         });
     });
+    
+    // Botão "Finalizar Pedido"
+    const btnFinalizar = document.getElementById('btn-finalizar');
+    if (btnFinalizar) {
+        btnFinalizar.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            finalizarPedido();
+        });
+    }
+}
 
-    const searchInput = document.querySelector('.search-bar input');
-    const searchButton = document.querySelector('.search-bar button');
-    
-    const handleSearch = function() {
-        const query = searchInput ? searchInput.value.trim() : "";
-        if (query) {
-            window.location.href = 'https://api.whatsapp.com/send?phone=5521980220417&text=Olá, gostaria de saber sobre: ' + encodeURIComponent(query);
-        }
-    };
-    
-    if (searchButton && searchInput) {
-        searchButton.addEventListener('click', handleSearch);
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') handleSearch();
+// ============================================================
+= CARROSSEL
+// ============================================================
+(function() {
+    const track = document.getElementById('carouselTrack');
+    if (!track) return;
+    const slides = Array.from(track.children);
+    const prev = document.getElementById('prevBtn');
+    const next = document.getElementById('nextBtn');
+    const dotsContainer = document.getElementById('carouselDots');
+    let index = 0;
+    let timer;
+
+    if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        slides.forEach((_, i) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            if (i === 0) b.classList.add('active');
+            b.onclick = () => { goTo(i); resetTimer(); };
+            dotsContainer.appendChild(b);
         });
     }
 
-    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
+    function goTo(i) {
+        index = (i + slides.length) % slides.length;
+        track.style.transform = 'translateX(-' + (index * 100) + '%)';
+        const dots = dotsContainer ? Array.from(dotsContainer.children) : [];
+        dots.forEach(d => d.classList.remove('active'));
+        if (dots[index]) dots[index].classList.add('active');
+    }
 
-    document.querySelectorAll('.produto-card, .sistema-card, .feature-card').forEach(function(el) {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'all 0.6s ease';
-        observer.observe(el);
+    function nextSlide() { goTo(index + 1); }
+    function prevSlide() { goTo(index - 1); }
+
+    if (next) next.onclick = function() { nextSlide(); resetTimer(); };
+    if (prev) prev.onclick = function() { prevSlide(); resetTimer(); };
+
+    function startTimer() { timer = setInterval(nextSlide, 5000); }
+    function stopTimer() { clearInterval(timer); }
+    function resetTimer() { stopTimer(); startTimer(); }
+
+    startTimer();
+})();
+
+// ============================================================
+= SMOOTH SCROLL
+// ============================================================
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href !== '#' && document.querySelector(href)) {
+            e.preventDefault();
+            document.querySelector(href).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     });
+});
+
+// ============================================================
+= ANIMAÇÃO AO SCROLL
+// ============================================================
+const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+document.querySelectorAll('.produto-card, .sistema-card, .feature-card').forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'all 0.6s ease';
+    observer.observe(el);
+});
+
+// ============================================================
+= INICIAR
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 ALPE Loja Iniciada!');
+    carregarProdutos();
+    atualizarBadge();
+    renderizarCarrinho();
+});
+
+console.log('✅ Script carregado!');
 </script>
 
 </body>
