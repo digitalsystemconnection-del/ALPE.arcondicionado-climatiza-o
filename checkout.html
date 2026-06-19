@@ -169,7 +169,7 @@
                     <input type="text" id="cep" placeholder="00000-000" maxlength="9" style="margin-bottom:0;">
                     <button onclick="calcularFrete()" class="btn-primary" style="width: auto;">Calcular</button>
                 </div>
-                <a href="#" onclick="alert('Consulte no site dos Correios')" style="color:var(--primary); display:inline-block; margin-top:10px; font-size: 14px;">Não sei meu CEP</a>
+                <a href="https://buscacepinter.correios.com.br/app/endereco/index.php" target="_blank" style="color:var(--primary); display:inline-block; margin-top:10px; font-size: 14px;">Não sei meu CEP</a>
                 <div id="resultado-frete" style="display:none; margin-top:15px; font-size: 14px;"></div>
             </div>
 
@@ -179,11 +179,7 @@
                     <input type="text" id="cupom" placeholder="Digite o código" style="margin-bottom:0;">
                     <button onclick="aplicarCupom()" class="btn-primary" style="width: auto; background: var(--success);">Aplicar</button>
                 </div>
-                <div id="resultado-frete" style="display:none; margin-top:15px; font-size: 14px;"></div>
-            </div>
-
-            <div class="card">
-                <h3>Resumo do Pedido</h3>
+                <div id="resultado-cupom" style="display:none; margin-top:15px; font-size: 14px;"></div>
                 <div class="resumo-linha"><span>Subtotal</span><span id="subtotal">R$ 5.669,00</span></div>
                 <div class="resumo-linha"><span>Frete</span><span id="frete-valor" style="color:var(--success);">R$ 0,00</span></div>
                 <hr style="margin:15px 0; border:0; border-top:1px solid #eee;">
@@ -497,22 +493,68 @@
         }
     }
 
-    function calcularFrete() {
-        const cep = document.getElementById('cep').value;
-        if (cep.length < 9) {
-            alert("Informe um CEP válido.");
+    async function calcularFrete() {
+        const cepRaw = document.getElementById('cep').value.replace(/\D/g, '');
+        const res = document.getElementById('resultado-frete');
+
+        if (cepRaw.length !== 8) {
+            res.style.display = 'block';
+            res.innerHTML = '<p style="color:var(--danger);">Informe um CEP válido (8 dígitos).</p>';
             return;
         }
-        state.frete = CONFIG.valorFreteSimulado;
-        
-        const res = document.getElementById('resultado-frete');
+
         res.style.display = 'block';
-        res.innerHTML = `
-            <div style="border-top:1px solid #eee; padding-top:10px; margin-top:10px;">
-                <p><strong>Normal:</strong> R$ ${state.frete.toLocaleString('pt-BR')} (7 dias úteis)</p>
-            </div>
-        `;
-        atualizarValores();
+        res.innerHTML = '<p style="color:#666;">Consultando CEP...</p>';
+
+        try {
+            const r = await fetch(`https://viacep.com.br/ws/${cepRaw}/json/`);
+            const data = await r.json();
+
+            if (data.erro) {
+                res.innerHTML = '<p style="color:var(--danger);">CEP não encontrado.</p>';
+                return;
+            }
+
+            // Tabela de frete por região (UF)
+            const freteUF = {
+                RJ: 0,    // gratis (sede)
+                SP: 89.90, MG: 99.90, ES: 79.90,
+                PR: 119.90, SC: 129.90, RS: 139.90,
+                DF: 149.90, GO: 159.90, MT: 169.90, MS: 159.90,
+                BA: 149.90, SE: 159.90, AL: 169.90, PE: 169.90,
+                PB: 179.90, RN: 179.90, CE: 179.90, PI: 189.90, MA: 189.90,
+                PA: 199.90, AP: 219.90, AM: 219.90, RR: 229.90, AC: 229.90,
+                RO: 219.90, TO: 199.90
+            };
+            const uf = data.uf;
+            const valorFrete = freteUF[uf] ?? 199.90;
+            const prazo = valorFrete === 0 ? '3 dias úteis' : uf === 'SP' || uf === 'MG' || uf === 'ES' ? '5 dias úteis' : '7 dias úteis';
+
+            state.frete = valorFrete;
+
+            // Preenche campo CEP da entrega automaticamente
+            const cepEntrega = document.getElementById('cliente-cep-entrega');
+            if (cepEntrega && !cepEntrega.value) cepEntrega.value = data.cep;
+            const cidadeEl = document.getElementById('cliente-cidade');
+            if (cidadeEl && !cidadeEl.value) cidadeEl.value = data.localidade;
+            const estadoEl = document.getElementById('cliente-estado');
+            if (estadoEl && !estadoEl.value) estadoEl.value = data.uf;
+            const bairroEl = document.getElementById('cliente-bairro');
+            if (bairroEl && !bairroEl.value) bairroEl.value = data.bairro || '';
+            const endEl = document.getElementById('cliente-endereco');
+            if (endEl && !endEl.value) endEl.value = data.logradouro || '';
+
+            const fmt = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            res.innerHTML = `
+                <div style="border-top:1px solid #eee; padding-top:10px; margin-top:10px;">
+                    <p style="margin-bottom:6px;"><strong>${data.logradouro ? data.logradouro + ', ' : ''}${data.localidade} - ${data.uf}</strong></p>
+                    <p style="color:var(--success);">✅ <strong>Frete Econômico:</strong> ${valorFrete === 0 ? 'GRÁTIS' : fmt(valorFrete)} &nbsp;&bull;&nbsp; ${prazo}</p>
+                </div>`;
+
+            atualizarValores();
+        } catch(e) {
+            res.innerHTML = '<p style="color:var(--danger);">Erro ao consultar CEP. Tente novamente.</p>';
+        }
     }
 
     function aplicarCupom() {
