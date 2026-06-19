@@ -5,7 +5,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 Inicializando...');
   
-  // Aguardar o supabaseAPI carregar
   if (typeof supabaseAPI === 'undefined') {
     console.log('⏳ Aguardando supabaseAPI...');
     setTimeout(init, 1000);
@@ -37,19 +36,10 @@ async function carregarProdutos() {
       produtos.forEach(p => {
         const card = document.createElement('div');
         card.className = 'produto-card';
-        card.innerHTML = 
-          <img src="" alt="" loading="lazy" onerror="this.src='images/default.jpg'">
-          <div class="produto-info">
-            <h4></h4>
-            <p style="font-size:12px;color:#666;"> </p>
-            <div class="preco">R$ </div>
-            <button class="cta-card btn-add-cart" data-id="">COMPRAR AGORA</button>
-          </div>
-        ;
+        card.innerHTML = '<img src=\"' + (p.imagem_url || 'images/default.jpg') + '\" alt=\"' + p.nome + '\" loading=\"lazy\" onerror=\"this.src='images/default.jpg'\"><div class=\"produto-info\"><h4>' + p.nome + '</h4><p style=\"font-size:12px;color:#666;\">' + (p.marca || '') + (p.btu ? ' - ' + p.btu + ' BTU' : '') + '</p><div class=\"preco\">R$ ' + p.preco.toFixed(2).replace('.', ',') + '</div><button class=\"cta-card btn-add-cart\" data-id=\"' + p.id + '\">COMPRAR AGORA</button></div>';
         catalogo.appendChild(card);
       });
       console.log('✅ Produtos carregados:', produtos.length);
-      // Reconfigurar botões após carregar produtos
       configurarBotoesComprar();
     }
   } catch (error) {
@@ -65,13 +55,13 @@ async function carregarMarcasDropdown() {
       container.innerHTML = '';
       marcas.forEach(m => {
         const link = document.createElement('a');
-        link.href = marcas.index/.html;
+        link.href = 'marcas.index/' + (m.slug || m.nome.toLowerCase()) + '.html';
         link.textContent = m.nome;
         container.appendChild(link);
       });
     }
   } catch (error) {
-    console.error('❌ Erro ao carregar marcas:', error);
+    console.error('❌ Erro:', error);
   }
 }
 
@@ -94,136 +84,96 @@ async function atualizarBadge() {
       badge.style.display = total > 0 ? 'flex' : 'none';
     }
   } catch (error) {
-    console.error('❌ Erro ao atualizar badge:', error);
+    console.error('❌ Erro:', error);
   }
 }
 
-// ============================================
-// BOTÃO COMPRAR AGORA
-// ============================================
 function configurarBotoesComprar() {
   document.querySelectorAll('.btn-add-cart').forEach(btn => {
-    // Remover eventos antigos
     const novoBtn = btn.cloneNode(true);
     btn.parentNode.replaceChild(novoBtn, btn);
-    
     novoBtn.addEventListener('click', async function(e) {
       e.preventDefault();
       e.stopPropagation();
-      
       const produtoId = this.dataset.id;
-      if (!produtoId) {
-        console.error('❌ Produto ID não encontrado');
-        return;
-      }
-      
+      if (!produtoId) return;
       try {
         await supabaseAPI.adicionarAoCarrinho(produtoId, 1);
         await atualizarBadge();
-        
-        // Feedback visual
         const originalText = this.textContent;
         this.textContent = '✓ ADICIONADO!';
         this.style.background = '#22c55e';
         this.style.color = 'white';
-        
         setTimeout(() => {
           this.textContent = originalText;
           this.style.background = '';
           this.style.color = '';
         }, 2000);
-        
-        console.log('✅ Produto adicionado ao carrinho');
       } catch (error) {
-        console.error('❌ Erro ao adicionar:', error);
-        alert('Erro ao adicionar produto. Tente novamente.');
+        console.error('❌ Erro:', error);
       }
     });
   });
 }
 
-// ============================================
-// BOTÃO FINALIZAR PEDIDO
-// ============================================
 function configurarBotaoFinalizar() {
   const btn = document.getElementById('btn-finalizar');
-  if (!btn) {
-    console.log('⚠️ Botão finalizar não encontrado');
-    return;
-  }
-  
-  // Remover botão antigo
+  if (!btn) return;
   const novoBtn = document.createElement('button');
   novoBtn.id = 'btn-finalizar';
   novoBtn.className = 'cta-header';
   novoBtn.style.cssText = 'width:100%;padding:18px;font-size:18px;text-align:center;border:none;cursor:pointer;background:#0066cc;color:white;border-radius:8px;font-weight:bold;';
   novoBtn.textContent = '🛒 Finalizar Pedido';
   btn.parentNode.replaceChild(novoBtn, btn);
-  
   novoBtn.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
     console.log('🔘 Finalizar Pedido clicado!');
-    finalizarPedido();
+    window.finalizarPedido();
   });
-  
   console.log('✅ Botão Finalizar configurado!');
 }
 
-// ============================================
-// FUNÇÃO FINALIZAR PEDIDO
-// ============================================
 window.finalizarPedido = async function() {
-  console.log('🛒 Iniciando finalização...');
-  
+  console.log('🛒 Finalizando...');
   try {
     const carrinho = await supabaseAPI.obterCarrinho();
-    
     if (!carrinho || carrinho.length === 0) {
-      alert('🛒 Seu carrinho está vazio!');
+      alert('🛒 Carrinho vazio!');
       return;
     }
-    
-    console.log('📦 Itens no carrinho:', carrinho.length);
-    
     const dadosCliente = {
-      nome: prompt('📝 Digite seu nome completo:') || '',
-      telefone: prompt('📱 Digite seu telefone (ex: 21999999999):') || '',
-      email: prompt('📧 Digite seu email:') || '',
-      cpf: prompt('📄 Digite seu CPF:') || '',
+      nome: prompt('📝 Nome completo:') || '',
+      telefone: prompt('📱 Telefone:') || '',
+      email: prompt('📧 Email:') || '',
+      cpf: prompt('📄 CPF:') || '',
       endereco: {
         rua: prompt('🏠 Rua:') || '',
         numero: prompt('🔢 Número:') || '',
         complemento: prompt('📦 Complemento:') || '',
         bairro: prompt('🏘️ Bairro:') || '',
         cidade: prompt('🌆 Cidade:') || '',
-        estado: prompt('📌 Estado (UF):') || '',
+        estado: prompt('📌 Estado:') || '',
         cep: prompt('📮 CEP:') || ''
       },
       pagamento: 'pendente',
       parcelas: 1
     };
-    
     if (!dadosCliente.nome || !dadosCliente.telefone) {
       alert('⚠️ Nome e telefone são obrigatórios!');
       return;
     }
-    
-    console.log('📝 Criando pedido...');
     const pedido = await supabaseAPI.criarPedido(dadosCliente);
-    
     if (pedido) {
-      alert(✅ Pedido # criado com sucesso!);
+      alert('✅ Pedido #' + pedido.numero_pedido + ' criado!');
       const badge = document.getElementById('cart-count');
       if (badge) badge.textContent = '0';
       window.location.href = 'obrigado.html';
-    } else {
-      alert('❌ Erro ao criar pedido. Verifique o console.');
     }
   } catch (error) {
-    console.error('❌ Erro ao finalizar:', error);
-    alert('❌ Erro ao finalizar pedido: ' + error.message);
+    console.error('❌ Erro:', error);
+    alert('❌ Erro: ' + error.message);
   }
 };
 
-console.log('✅ Script carregado com sucesso!');
+console.log('✅ Script carregado!');
