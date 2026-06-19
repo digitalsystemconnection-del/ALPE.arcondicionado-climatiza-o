@@ -1118,10 +1118,294 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 
 
 
-<!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/supabase-client.js"></script>
-<script src="assets/js/integracao.js"></script>
+<script>
+// ============================================
+// SUPABASE - VERSÃO EMBUTIDA
+// ============================================
+
+// 1. CARREGAR SUPABASE
+const SUPABASE_URL = 'https://imkkxhsxlqwtbdfljwsq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlta2t4aHN4bHF3dGJkZmxqd3NxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNTYxNjEsImV4cCI6MjA5NTkzMjE2MX0.7WHQvxf_uW90Gs2wzlmuduukoENII5syowTTFiTvtTs';
+
+// Aguardar o Supabase carregar
+function initSupabase() {
+    if (typeof supabase === 'undefined') {
+        console.log('⏳ Aguardando Supabase...');
+        setTimeout(initSupabase, 500);
+        return;
+    }
+    
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // 2. API
+    window.supabaseAPI = {
+        supabase: supabaseClient,
+        
+        async obterCarrinho() {
+            const sessionId = localStorage.getItem('session_id') || 'session_' + Date.now();
+            const { data, error } = await supabaseClient.from('carrinhos').select('*').eq('session_id', sessionId);
+            if (error) { console.error('Erro:', error); return []; }
+            return data;
+        },
+        
+        async adicionarAoCarrinho(produtoId, quantidade = 1) {
+            const sessionId = localStorage.getItem('session_id') || 'session_' + Date.now();
+            const { data, error } = await supabaseClient.from('carrinhos').insert({
+                session_id: sessionId,
+                produto_id: produtoId,
+                quantidade: quantidade
+            }).select();
+            if (error) { console.error('Erro:', error); return null; }
+            return data;
+        },
+        
+        async criarPedido(dadosCliente) {
+            const carrinho = await this.obterCarrinho();
+            if (carrinho.length === 0) { alert('Carrinho vazio!'); return null; }
+            
+            let totalProdutos = 0;
+            const itens = carrinho.map(item => {
+                const subtotal = item.produtos?.preco * item.quantidade || 0;
+                totalProdutos += subtotal;
+                return {
+                    sku: item.produtos?.sku || 'N/A',
+                    nome_produto: item.produtos?.nome || 'Produto',
+                    quantidade: item.quantidade,
+                    preco_unitario: item.produtos?.preco || 0,
+                    subtotal: subtotal
+                };
+            });
+            
+            const numeroPedido = 'ALPE-' + Date.now().toString().slice(-8) + '-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+            const sessionId = localStorage.getItem('session_id') || 'session_' + Date.now();
+            
+            const { data: pedido, error: pedidoError } = await supabaseClient.from('pedidos').insert({
+                numero_pedido: numeroPedido,
+                cliente_nome: dadosCliente.nome,
+                cliente_email: dadosCliente.email || '',
+                cliente_telefone: dadosCliente.telefone,
+                cliente_cpf: dadosCliente.cpf || '',
+                endereco_entrega: dadosCliente.endereco || {},
+                total_produtos: totalProdutos,
+                total_frete: dadosCliente.frete || 0,
+                total_desconto: dadosCliente.desconto || 0,
+                total_pedido: totalProdutos + (dadosCliente.frete || 0) - (dadosCliente.desconto || 0),
+                forma_pagamento: dadosCliente.pagamento || 'pendente',
+                parcelas: dadosCliente.parcelas || 1,
+                session_id: sessionId
+            }).select().single();
+            
+            if (pedidoError) { console.error('Erro:', pedidoError); return null; }
+            
+            const itensParaInserir = itens.map(item => ({ pedido_id: pedido.id, ...item }));
+            await supabaseClient.from('itens_pedido').insert(itensParaInserir);
+            await supabaseClient.from('carrinhos').delete().eq('session_id', sessionId);
+            
+            return pedido;
+        },
+        
+        async carregarProdutosEmDestaque(limite = 12) {
+            const { data, error } = await supabaseClient.from('produtos').select('*').eq('ativo', true).eq('destaque', true).limit(limite);
+            if (error) { console.error('Erro:', error); return []; }
+            return data;
+        },
+        
+        async carregarMarcas() {
+            const { data, error } = await supabaseClient.from('marcas').select('*').eq('ativo', true).order('nome');
+            if (error) { console.error('Erro:', error); return []; }
+            return data;
+        },
+        
+        async carregarConfiguracoes() {
+            const { data, error } = await supabaseClient.from('configuracoes').select('*');
+            if (error) { console.error('Erro:', error); return {}; }
+            const config = {};
+            data.forEach(item => { config[item.chave] = item.valor; });
+            return config;
+        }
+    };
+    
+    console.log('✅ SupabaseAPI carregado!');
+    iniciarSite();
+}
+
+// 3. FUNÇÕES DO SITE
+async function iniciarSite() {
+    console.log('🚀 Inicializando site...');
+    try {
+        await carregarProdutos();
+        await carregarMarcas();
+        await atualizarBadge();
+        configurarBotoes();
+        console.log('✅ Site inicializado!');
+    } catch (error) {
+        console.error('❌ Erro:', error);
+    }
+}
+
+async function carregarProdutos() {
+    try {
+        const produtos = await supabaseAPI.carregarProdutosEmDestaque(12);
+        const catalogo = document.getElementById('catalogo-produtos');
+        if (catalogo && produtos.length > 0) {
+            catalogo.innerHTML = '';
+            produtos.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'produto-card';
+                card.innerHTML = '<img src="' + (p.imagem_url || 'images/default.jpg') + '" alt="' + p.nome + '" loading="lazy" onerror="this.src=\'images/default.jpg\'"><div class="produto-info"><h4>' + p.nome + '</h4><p style="font-size:12px;color:#666;">' + (p.marca || '') + (p.btu ? ' - ' + p.btu + ' BTU' : '') + '</p><div class="preco">R$ ' + p.preco.toFixed(2).replace('.', ',') + '</div><button class="cta-card btn-add-cart" data-id="' + p.id + '">COMPRAR AGORA</button></div>';
+                catalogo.appendChild(card);
+            });
+            configurarBotoes();
+            console.log('✅ Produtos carregados:', produtos.length);
+        }
+    } catch (error) {
+        console.error('❌ Erro:', error);
+    }
+}
+
+async function carregarMarcas() {
+    try {
+        const marcas = await supabaseAPI.carregarMarcas();
+        const container = document.querySelector('.js-dropdown-marcas');
+        if (container && marcas.length > 0) {
+            container.innerHTML = '';
+            marcas.forEach(m => {
+                const link = document.createElement('a');
+                link.href = 'marcas.index/' + (m.slug || m.nome.toLowerCase()) + '.html';
+                link.textContent = m.nome;
+                container.appendChild(link);
+            });
+        }
+    } catch (error) {
+        console.error('❌ Erro:', error);
+    }
+}
+
+async function atualizarBadge() {
+    try {
+        const carrinho = await supabaseAPI.obterCarrinho();
+        const badge = document.getElementById('cart-count');
+        if (badge) {
+            const total = carrinho.reduce((sum, item) => sum + item.quantidade, 0);
+            badge.textContent = total;
+            badge.style.display = total > 0 ? 'flex' : 'none';
+        }
+    } catch (error) {
+        console.error('❌ Erro:', error);
+    }
+}
+
+function configurarBotoes() {
+    // Botões Comprar Agora
+    document.querySelectorAll('.btn-add-cart').forEach(btn => {
+        btn.onclick = async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const produtoId = this.dataset.id;
+            if (!produtoId) return;
+            try {
+                await supabaseAPI.adicionarAoCarrinho(produtoId, 1);
+                await atualizarBadge();
+                const original = this.textContent;
+                this.textContent = '✓ ADICIONADO!';
+                this.style.background = '#22c55e';
+                this.style.color = 'white';
+                setTimeout(() => {
+                    this.textContent = original;
+                    this.style.background = '';
+                    this.style.color = '';
+                }, 2000);
+            } catch (error) {
+                console.error('❌ Erro:', error);
+            }
+        };
+    });
+    
+    // Botão Finalizar Pedido
+    const btnFinalizar = document.getElementById('btn-finalizar');
+    if (btnFinalizar) {
+        btnFinalizar.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            finalizarPedido();
+        };
+    }
+}
+
+// 4. FUNÇÃO FINALIZAR PEDIDO
+window.finalizarPedido = async function() {
+    console.log('🛒 Finalizando...');
+    try {
+        const carrinho = await supabaseAPI.obterCarrinho();
+        if (!carrinho || carrinho.length === 0) {
+            alert('🛒 Carrinho vazio!');
+            return;
+        }
+        
+        const dadosCliente = {
+            nome: prompt('📝 Nome completo:') || '',
+            telefone: prompt('📱 Telefone:') || '',
+            email: prompt('📧 Email:') || '',
+            cpf: prompt('📄 CPF:') || '',
+            endereco: {
+                rua: prompt('🏠 Rua:') || '',
+                numero: prompt('🔢 Número:') || '',
+                complemento: prompt('📦 Complemento:') || '',
+                bairro: prompt('🏘️ Bairro:') || '',
+                cidade: prompt('🌆 Cidade:') || '',
+                estado: prompt('📌 Estado:') || '',
+                cep: prompt('📮 CEP:') || ''
+            },
+            pagamento: 'pendente',
+            parcelas: 1
+        };
+        
+        if (!dadosCliente.nome || !dadosCliente.telefone) {
+            alert('⚠️ Nome e telefone são obrigatórios!');
+            return;
+        }
+        
+        const pedido = await supabaseAPI.criarPedido(dadosCliente);
+        if (pedido) {
+            alert('✅ Pedido #' + pedido.numero_pedido + ' criado!');
+            const badge = document.getElementById('cart-count');
+            if (badge) badge.textContent = '0';
+            window.location.href = 'obrigado.html';
+        }
+    } catch (error) {
+        console.error('❌ Erro:', error);
+        alert('❌ Erro: ' + error.message);
+    }
+};
+
+// 5. INICIAR
+console.log('🔧 Iniciando sistema...');
+document.addEventListener('DOMContentLoaded', function() {
+    // Carregar Supabase primeiro
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    script.onload = function() {
+        console.log('✅ Supabase carregado!');
+        initSupabase();
+    };
+    script.onerror = function() {
+        console.error('❌ Erro ao carregar Supabase');
+    };
+    document.head.appendChild(script);
+});
+
+// Fallback se o DOM já estiver carregado
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    console.log('⚠️ DOM já carregado, carregando Supabase...');
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    script.onload = function() {
+        console.log('✅ Supabase carregado!');
+        initSupabase();
+    };
+    document.head.appendChild(script);
+}
+</script>
 </body>
 </html>
 
