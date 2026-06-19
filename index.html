@@ -72,31 +72,48 @@ const SUPABASE_URL = 'https://imkkxhsxlqwtbdfljwsq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlta2t4aHN4bHF3dGJkZmxqd3NxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNTYxNjEsImV4cCI6MjA5NTkzMjE2MX0.7WHQvxf_uW90Gs2wzlmuduukoENII5syowTTFiTvtTs';
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 let produtos = [];
 let carrinho = [];
 
 // ============================================
-// CARREGAR PRODUTOS
+// CARREGAR PRODUTOS - COM TRATAMENTO DE ERROS
 // ============================================
 async function carregarProdutos() {
-    const { data, error } = await supabase
-        .from('produtos')
-        .select('*')
-        .eq('ativo', true)
-        .eq('destaque', true)
-        .limit(12);
-    
-    if (error) {
-        console.error('❌ Erro:', error);
-        return;
+    try {
+        console.log('🔄 Buscando produtos...');
+        
+        // Buscar produtos sem filtros para teste
+        const { data, error } = await supabase
+            .from('produtos')
+            .select('*')
+            .limit(12);
+        
+        if (error) {
+            console.error('❌ Erro ao buscar produtos:', error);
+            document.getElementById('produtosGrid').innerHTML = '<p style="color:red;">❌ Erro ao carregar produtos: ' + error.message + '</p>';
+            return;
+        }
+        
+        if (!data || data.length === 0) {
+            console.warn('⚠️ Nenhum produto encontrado! Verifique a tabela produtos.');
+            document.getElementById('produtosGrid').innerHTML = '<p style="color:orange;">⚠️ Nenhum produto disponível no momento.</p>';
+            return;
+        }
+        
+        produtos = data;
+        console.log('✅ Produtos carregados:', produtos.length);
+        renderizarProdutos();
+        carregarCarrinho();
+        
+    } catch (error) {
+        console.error('❌ Erro inesperado:', error);
+        document.getElementById('produtosGrid').innerHTML = '<p style="color:red;">❌ Erro ao carregar produtos. Verifique o console.</p>';
     }
-    
-    produtos = data;
-    renderizarProdutos();
-    carregarCarrinho();
 }
 
+// ============================================
+// RENDERIZAR PRODUTOS - USANDO data-id E addEventListener
+// ============================================
 function renderizarProdutos() {
     const grid = document.getElementById('produtosGrid');
     grid.innerHTML = '';
@@ -104,16 +121,28 @@ function renderizarProdutos() {
     produtos.forEach(p => {
         const card = document.createElement('div');
         card.className = 'produto-card';
+        
+        // Usar data-id em vez de onclick inline
         card.innerHTML = `
             <img src="${p.imagem_url || 'images/default.jpg'}" alt="${p.nome}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2270%22 y=%22110%22 font-family=%22Arial%22 font-size=%2230%22 fill=%22%23999%22%3E📦%3C/text%3E%3C/svg%3E'">
             <div class="info">
                 <h3>${p.nome}</h3>
                 <p class="marca">${p.marca || ''} ${p.btu ? p.btu + ' BTU' : ''}</p>
                 <div class="preco">R$ ${p.preco.toFixed(2).replace('.', ',')}</div>
-                <button onclick="adicionarAoCarrinho('${p.id}')" id="btn-${p.id}">🛒 COMPRAR</button>
+                <button class="btn-comprar" data-id="${p.id}">🛒 COMPRAR</button>
             </div>
         `;
+        
         grid.appendChild(card);
+    });
+    
+    // Adicionar event listeners para os botões
+    document.querySelectorAll('.btn-comprar').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const id = this.dataset.id;
+            console.log('🔘 Botão clicado, ID:', id);
+            adicionarAoCarrinho(id);
+        });
     });
 }
 
@@ -121,8 +150,14 @@ function renderizarProdutos() {
 // CARRINHO
 // ============================================
 function adicionarAoCarrinho(produtoId) {
+    console.log('🛒 Adicionando produto:', produtoId);
+    
     const produto = produtos.find(p => p.id === produtoId);
-    if (!produto) return;
+    if (!produto) {
+        console.error('❌ Produto não encontrado:', produtoId);
+        alert('Produto não encontrado!');
+        return;
+    }
     
     const existente = carrinho.find(item => item.id === produtoId);
     if (existente) {
@@ -141,15 +176,17 @@ function adicionarAoCarrinho(produtoId) {
     atualizarBadge();
     
     // Feedback visual
-    const btn = document.getElementById('btn-' + produtoId);
+    const btn = document.querySelector(`.btn-comprar[data-id="${produtoId}"]`);
     if (btn) {
         btn.textContent = '✅ ADICIONADO!';
-        btn.className = 'adicionado';
+        btn.classList.add('adicionado');
         setTimeout(() => {
             btn.textContent = '🛒 COMPRAR';
-            btn.className = '';
+            btn.classList.remove('adicionado');
         }, 2000);
     }
+    
+    console.log('✅ Produto adicionado! Carrinho:', carrinho);
 }
 
 function removerDoCarrinho(produtoId) {
@@ -171,8 +208,13 @@ function salvarCarrinho() {
 function carregarCarrinho() {
     const saved = localStorage.getItem('carrinho_alpe');
     if (saved) {
-        carrinho = JSON.parse(saved);
-        atualizarBadge();
+        try {
+            carrinho = JSON.parse(saved);
+            atualizarBadge();
+        } catch (e) {
+            console.error('Erro ao carregar carrinho:', e);
+            carrinho = [];
+        }
     }
 }
 
@@ -219,7 +261,7 @@ function renderizarCarrinho() {
 }
 
 // ============================================
-// FINALIZAR PEDIDO
+// FINALIZAR PEDIDO - COM VALIDAÇÃO
 // ============================================
 async function finalizarPedido() {
     if (carrinho.length === 0) {
@@ -228,71 +270,103 @@ async function finalizarPedido() {
     }
     
     const nome = prompt('📝 Seu nome completo:');
-    if (!nome) return;
+    if (!nome || nome.trim() === '') {
+        alert('⚠️ Nome é obrigatório!');
+        return;
+    }
     
     const telefone = prompt('📱 Seu telefone:');
-    if (!telefone) return;
+    if (!telefone || telefone.trim() === '') {
+        alert('⚠️ Telefone é obrigatório!');
+        return;
+    }
+    
+    const email = prompt('📧 Email:') || '';
+    const cpf = prompt('📄 CPF:') || '';
+    
+    const endereco = {
+        rua: prompt('🏠 Rua:') || '',
+        numero: prompt('🔢 Número:') || '',
+        bairro: prompt('🏘️ Bairro:') || '',
+        cidade: prompt('🌆 Cidade:') || '',
+        estado: prompt('📌 Estado:') || '',
+        cep: prompt('📮 CEP:') || ''
+    };
     
     const total = carrinho.reduce((s, i) => s + (i.preco * i.quantidade), 0);
     const numPedido = 'ALPE-' + Date.now().toString().slice(-8) + '-' + Math.random().toString(36).substr(2, 4).toUpperCase();
     
-    const { data: pedido, error } = await supabase
-        .from('pedidos')
-        .insert({
-            numero_pedido: numPedido,
-            cliente_nome: nome,
-            cliente_telefone: telefone,
-            cliente_email: prompt('📧 Email:') || '',
-            cliente_cpf: prompt('📄 CPF:') || '',
-            endereco_entrega: {
-                rua: prompt('🏠 Rua:') || '',
-                numero: prompt('🔢 Número:') || '',
-                bairro: prompt('🏘️ Bairro:') || '',
-                cidade: prompt('🌆 Cidade:') || '',
-                estado: prompt('📌 Estado:') || '',
-                cep: prompt('📮 CEP:') || ''
-            },
-            total_produtos: total,
-            total_pedido: total,
-            forma_pagamento: 'pendente',
-            session_id: 'web_' + Date.now()
-        })
-        .select()
-        .single();
-    
-    if (error) {
-        alert('❌ Erro: ' + error.message);
-        return;
+    try {
+        console.log('📝 Criando pedido...', { nome, telefone, total, numPedido });
+        
+        const { data: pedido, error } = await supabase
+            .from('pedidos')
+            .insert({
+                numero_pedido: numPedido,
+                cliente_nome: nome.trim(),
+                cliente_telefone: telefone.trim(),
+                cliente_email: email.trim(),
+                cliente_cpf: cpf.trim(),
+                endereco_entrega: endereco,
+                total_produtos: total,
+                total_pedido: total,
+                forma_pagamento: 'pendente',
+                session_id: 'web_' + Date.now()
+            })
+            .select()
+            .single();
+        
+        if (error) {
+            console.error('❌ Erro ao criar pedido:', error);
+            alert('❌ Erro ao criar pedido: ' + error.message);
+            return;
+        }
+        
+        console.log('✅ Pedido criado:', pedido);
+        
+        // Salvar itens
+        const itens = carrinho.map(item => ({
+            pedido_id: pedido.id,
+            sku: 'SKU-' + item.id.slice(0, 8),
+            nome_produto: item.nome,
+            quantidade: item.quantidade,
+            preco_unitario: item.preco,
+            subtotal: item.preco * item.quantidade
+        }));
+        
+        const { error: itensError } = await supabase
+            .from('itens_pedido')
+            .insert(itens);
+        
+        if (itensError) {
+            console.error('❌ Erro ao salvar itens:', itensError);
+            alert('⚠️ Pedido criado, mas erro ao salvar itens.');
+        }
+        
+        // Limpar carrinho
+        carrinho = [];
+        salvarCarrinho();
+        atualizarBadge();
+        fecharCheckout();
+        
+        alert('✅ PEDIDO #' + numPedido + ' CRIADO COM SUCESSO!');
+        console.log('🎉 Pedido finalizado!', numPedido);
+        
+    } catch (error) {
+        console.error('❌ Erro inesperado:', error);
+        alert('❌ Erro ao finalizar pedido: ' + error.message);
     }
-    
-    // Salvar itens
-    const itens = carrinho.map(item => ({
-        pedido_id: pedido.id,
-        sku: 'SKU-' + item.id.slice(0, 8),
-        nome_produto: item.nome,
-        quantidade: item.quantidade,
-        preco_unitario: item.preco,
-        subtotal: item.preco * item.quantidade
-    }));
-    
-    await supabase.from('itens_pedido').insert(itens);
-    
-    // Limpar carrinho
-    carrinho = [];
-    salvarCarrinho();
-    atualizarBadge();
-    fecharCheckout();
-    
-    alert('✅ PEDIDO #' + numPedido + ' CRIADO COM SUCESSO!');
 }
 
 // ============================================
 // INICIAR
 // ============================================
-carregarProdutos();
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 LOJA ALPE INICIADA!');
+    carregarProdutos();
+});
 
-console.log('✅ LOJA ALPE INICIADA!');
-console.log('📦 Clique em COMPRAR para adicionar produtos ao carrinho.');
+console.log('✅ Script carregado!');
 </script>
 </body>
 </html>
