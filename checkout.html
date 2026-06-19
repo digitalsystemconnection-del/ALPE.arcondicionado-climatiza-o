@@ -402,11 +402,16 @@
     </div>
 </div>
 
-<!-- Supabase Client -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script>
+    // Fallback de storage igual ao main.js
+    const _mem = {};
+    const _tryLocal = (fn) => { try { return fn(); } catch(e) { return null; } };
+    const safeStorage = {
+      get: (k) => _tryLocal(() => localStorage.getItem(k)) ?? _mem[k] ?? null,
+      set: (k, v) => { _mem[k] = v; _tryLocal(() => localStorage.setItem(k, v)); }
+    };
+
     const CONFIG = {
         precoUnitario: 5669.00,
         valorFreteSimulado: 141.26
@@ -420,11 +425,13 @@
     };
 
     // --- Inicialização ---
-    const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     document.addEventListener('DOMContentLoaded', () => {
-        const cart = JSON.parse(localStorage.getItem('alpe_cart')) || [];
+        let cart = [];
+        try { cart = JSON.parse(safeStorage.get('alpe_cart')) || []; } catch(e) {}
+
         if (cart.length === 0) {
-            window.location.href = 'index.html';
+            document.getElementById('product-title-step1').textContent = 'Carrinho vazio. Volte à loja e adicione um produto.';
+            document.getElementById('product-img-step1').style.display = 'none';
             return;
         }
 
@@ -453,7 +460,7 @@
     });
 
     function loadStoredData() {
-        const saved = JSON.parse(localStorage.getItem('alpe_customer_data')) || {};
+        const saved = JSON.parse(safeStorage.get('alpe_customer_data') || '{}');
         if(saved.nome) document.getElementById('cliente-nome').value = saved.nome;
         if(saved.email) document.getElementById('cliente-email').value = saved.email;
         if(saved.telefone) document.getElementById('cliente-telefone').value = saved.telefone;
@@ -621,7 +628,6 @@
         btn.disabled = true;
         btn.innerHTML = `Processando... <div class="spinner"></div>`;
 
-        // Salva para facilitar futuras compras
         localStorage.setItem('alpe_customer_data', JSON.stringify(customerData));
 
         // Validação extra para cartão (simulada)
@@ -694,12 +700,11 @@
             instalacao: "Aguardando"                          // Necessário para o fluxo do Admin
         };
 
-        const pedidosSalvos = JSON.parse(localStorage.getItem('alpe_pedidos')) || [];
+        const pedidosSalvos = JSON.parse(safeStorage.get('alpe_pedidos') || '[]');
         pedidosSalvos.unshift(pedidoNovo);
-        localStorage.setItem('alpe_pedidos', JSON.stringify(pedidosSalvos));
+        safeStorage.set('alpe_pedidos', JSON.stringify(pedidosSalvos));
 
-        // Limpa carrinho após sucesso
-        localStorage.removeItem('alpe_cart');
+        safeStorage.set('alpe_cart', '[]');
 
         // UI Update
         document.getElementById('step-2').style.display = 'none';

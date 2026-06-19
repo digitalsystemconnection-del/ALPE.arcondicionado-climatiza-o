@@ -17,36 +17,23 @@ window.navegarParaSistema = (el) => {
   window.location.href = finalLink;
 };
 
-// Função segura para acessar o Storage (evita erro de Tracking Prevention)
-window.safeStorage = window.safeStorage || {
-  get: (key) => {
-    try {
-      return localStorage.getItem(key);
-    } catch (e) {
-      console.warn('Acesso ao localStorage bloqueado pelo navegador.', e);
-      return null;
-    }
-  },
-  set: (key, value) => {
-    try {
-      localStorage.setItem(key, value);
-    } catch (e) {
-      console.warn('Erro ao salvar no localStorage.', e);
-    }
-  }
-};
+// Armazenamento com fallback em memória quando localStorage estiver bloqueado
+window.safeStorage = window.safeStorage || (() => {
+  let mem = {};
+  const tryLocal = (fn) => { try { return fn(); } catch(e) { return null; } };
+  return {
+    get: (k) => tryLocal(() => localStorage.getItem(k)) ?? mem[k] ?? null,
+    set: (k, v) => { mem[k] = v; tryLocal(() => localStorage.setItem(k, v)); }
+  };
+})();
 
 // Configurações de Ambiente
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
   ? 'http://localhost:3002' 
   : 'https://sua-api-no-render.com'; // Substitua quando fizer o deploy do backend
 
-// Configure Supabase (use anon key for frontend)
-const SUPABASE_URL = 'sb_publishable_mH7kfp5VODY-Vl0ZFbzMdA_OCCN4-FY'; // Substitua pela URL do seu projeto Supabase
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlta2t4aHN4bHF3dGJkZmxqd3NxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNTYxNjEsImV4cCI6MjA5NTkzMjE2MX0.7WHQvxf_uW90Gs2wzlmuduukoENII5syowTTFiTvtTs'; // Substitua pela sua chave pública anon
-
-// Inicialização do cliente Supabase corrigida para evitar falhas de carregamento
-const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+// Supabase desativado - configurar quando tiver URL válida
+const supabaseClient = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- Configuração Centralizada de Marcas ---
@@ -141,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.mostrarPagina = (id) => {
-    document.querySelectorAll("section.page").forEach(sec => {
+    document.querySelectorAll(".page").forEach(sec => {
       sec.classList.toggle("active", sec.id === id);
     });
     sessionStorage.setItem('last_page', id);
@@ -171,22 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const ehPaginaDeMarca = path.includes("/marcas.index/");
     const ehSubpasta = ehPaginaDeMarca || path.includes('/sobre-nos/') || path.includes('/sistemas/') || path.includes('/dashboard/');
 
-    // Seleciona TODOS os links que apontam para a seção de marcas (#marcas)
-    const brandsLinks = document.querySelectorAll('a[href="#marcas"], a[href="#"], a[href$="#marcas"]');
-    
     // Define o prefixo correto para os links dentro do dropdown
-    // Se estamos em uma subpasta, precisamos subir um nível (../) exceto se já estivermos na pasta de marcas
     const prefixo = ehSubpasta ? (ehPaginaDeMarca ? "" : "../marcas.index/") : "marcas.index/";
-
-    // Corrige os links principais (#marcas) para apontarem para a página correta
-    brandsLinks.forEach(link => {
-      if (ehSubpasta) {
-        const rootFile = path.includes('venda.html') ? 'venda.html' : 'index.html';
-        link.setAttribute('href', `../${rootFile}#marcas`);
-      } else {
-        link.setAttribute('href', '#marcas');
-      }
-    });
 
     const containers = document.querySelectorAll(".js-dropdown-marcas");
     if (containers.length === 0) return;
@@ -212,12 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnAdd) {
       e.preventDefault();
       
-      // Se o botão tem handlers manuais complexos, deixa eles agirem
-      if (btnAdd.getAttribute('onclick') && (btnAdd.getAttribute('onclick').includes('abrirCheckout') || btnAdd.getAttribute('onclick').includes('adicionarAoCarrinho'))) {
-        return;
-      }
-      
-      // Captura os dados direto do cartão do produto (DOM) para garantir consistência
       const card = btnAdd.closest('.produto-card');
       if (card) {
         const produto = {
@@ -230,9 +197,19 @@ document.addEventListener('DOMContentLoaded', () => {
         window.carrinho.push(produto);
         window.atualizarBadgeCarrinho();
 
-        const isMarcaPage = window.location.pathname.toLowerCase().includes('/marcas.index/');
-        const checkoutUrl = (isMarcaPage ? '../' : '') + 'checkout.html';
-        window.location.href = checkoutUrl;
+        btnAdd.innerText = 'ADICIONADO!';
+
+        // Se existe página de carrinho inline, mostra ela; senão redireciona
+        const carrinhoInline = document.getElementById('page-carrinho');
+        if (carrinhoInline) {
+          setTimeout(() => {
+            window.renderCarrinho();
+            window.mostrarPagina('page-carrinho');
+          }, 500);
+        } else {
+          const isMarcaPage = window.location.pathname.toLowerCase().includes('/marcas.index/');
+          setTimeout(() => { window.location.href = (isMarcaPage ? '../' : '') + 'checkout.html'; }, 500);
+        }
       }
     }
 
@@ -292,11 +269,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Initial Load ---
   window.atualizarBadge();
   window.renderizarMenuMarcas();
-  
-  const lastPage = sessionStorage.getItem('last_page');
-  if (lastPage) {
-    window.mostrarPagina(lastPage);
-  }
 
   // === Integração Scripts da Loja ===
   
@@ -413,3 +385,44 @@ function aplicarPrecosNaVitrine(precos) {
 
 // Chama a função de carregamento de preços ao carregar a página
 document.addEventListener('DOMContentLoaded', carregarPrecosDinamicos);
+
+// =============================================
+// CARRINHO - lógica direta e sem dependências
+// =============================================
+document.addEventListener('DOMContentLoaded', () => {
+  // Garante que window.carrinho está sincronizado com localStorage
+  if (!window.carrinho) {
+    try { window.carrinho = JSON.parse(localStorage.getItem('alpe_cart')) || []; }
+    catch(e) { window.carrinho = []; }
+  }
+
+  // Delegação de clique nos botões COMPRAR AGORA
+  document.body.addEventListener('click', function(e) {
+    const btn = e.target.closest('.btn-add-cart');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    const card = btn.closest('.produto-card');
+    if (!card) return;
+
+    const produto = {
+      id: Date.now(),
+      name: (card.querySelector('h4') || {}).innerText || 'Produto',
+      price: (card.querySelector('.preco') || {}).innerText || '0',
+      image: (card.querySelector('img') || {}).src || ''
+    };
+
+    const cart = JSON.parse(window.safeStorage.get('alpe_cart') || '[]');
+    cart.push(produto);
+    window.safeStorage.set('alpe_cart', JSON.stringify(cart));
+
+    btn.textContent = 'ADICIONADO! ✓';
+    btn.style.background = '#28a745';
+
+    const isMarca = window.location.pathname.toLowerCase().includes('/marcas.index/');
+    setTimeout(() => {
+      window.location.href = (isMarca ? '../' : '') + 'checkout.html';
+    }, 600);
+  }, true); // capture=true garante prioridade máxima
+});
