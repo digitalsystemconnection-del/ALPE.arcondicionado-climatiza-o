@@ -104,4 +104,3 @@ window.supabaseAPI = {
   adicionarAoCarrinho,
   supabase
 };
-
