@@ -33,7 +33,7 @@ async function carregarProdutosDinamicamente() {
           const precoFormatado = produto.preco.toFixed(2).replace('.', ',');
           
           card.innerHTML = 
-            <img src="https://seu-projeto.supabase.co/storage/v1/object/public/produtos/" 
+            <img src="" 
                  alt=""
                  loading="lazy"
                  onerror="this.src='images/default-product.jpg'">

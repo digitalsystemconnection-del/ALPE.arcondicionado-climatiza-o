@@ -93,6 +93,73 @@ async function adicionarAoCarrinho(produtoId, quantidade = 1) {
   return data;
 }
 
+async function criarPedido(dadosCliente) {
+  const carrinho = await obterCarrinho();
+  
+  if (carrinho.length === 0) {
+    alert('Carrinho vazio!');
+    return null;
+  }
+  
+  let totalProdutos = 0;
+  const itens = carrinho.map(item => {
+    const subtotal = item.produtos?.preco * item.quantidade || 0;
+    totalProdutos += subtotal;
+    return {
+      sku: item.produtos?.sku || 'N/A',
+      nome_produto: item.produtos?.nome || 'Produto',
+      quantidade: item.quantidade,
+      preco_unitario: item.produtos?.preco || 0,
+      subtotal: subtotal
+    };
+  });
+  
+  const numeroPedido = 'ALPE-' + Date.now().toString().slice(-8) + '-' + 
+                      Math.random().toString(36).substr(2, 4).toUpperCase();
+  
+  const { data: pedido, error: pedidoError } = await supabase
+    .from('pedidos')
+    .insert({
+      numero_pedido: numeroPedido,
+      cliente_nome: dadosCliente.nome,
+      cliente_email: dadosCliente.email || '',
+      cliente_telefone: dadosCliente.telefone,
+      cliente_cpf: dadosCliente.cpf || '',
+      endereco_entrega: dadosCliente.endereco || {},
+      total_produtos: totalProdutos,
+      total_frete: dadosCliente.frete || 0,
+      total_desconto: dadosCliente.desconto || 0,
+      total_pedido: totalProdutos + (dadosCliente.frete || 0) - (dadosCliente.desconto || 0),
+      forma_pagamento: dadosCliente.pagamento || 'pendente',
+      parcelas: dadosCliente.parcelas || 1,
+      session_id: localStorage.getItem('session_id') || 'session_' + Date.now()
+    })
+    .select()
+    .single();
+    
+  if (pedidoError) {
+    console.error('Erro ao criar pedido:', pedidoError);
+    return null;
+  }
+  
+  const itensParaInserir = itens.map(item => ({
+    pedido_id: pedido.id,
+    ...item
+  }));
+  
+  const { error: itensError } = await supabase
+    .from('itens_pedido')
+    .insert(itensParaInserir);
+    
+  if (itensError) {
+    console.error('Erro ao inserir itens do pedido:', itensError);
+  }
+  
+  await supabase.from('carrinhos').delete().eq('session_id', localStorage.getItem('session_id') || 'session_' + Date.now());
+  
+  return pedido;
+}
+
 // ============================================
 // EXPORTAR FUNÇÕES
 // ============================================
@@ -102,5 +169,6 @@ window.supabaseAPI = {
   carregarConfiguracoes,
   obterCarrinho,
   adicionarAoCarrinho,
+  criarPedido,
   supabase
 };
