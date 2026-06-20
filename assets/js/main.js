@@ -39,13 +39,12 @@ window.safeStorage = window.safeStorage || {
 // Configurações de Ambiente
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
   ? 'http://localhost:3002' 
-  : 'https://sua-api-no-render.com'; // Substitua quando fizer o deploy do backend
+  : 'https://sua-api-no-render.com';
 
-// Configure Supabase (use anon key for frontend)
-const SUPABASE_URL = 'sb_publishable_mH7kfp5VODY-Vl0ZFbzMdA_OCCN4-FY'; // Substitua pela URL do seu projeto Supabase
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlta2t4aHN4bHF3dGJkZmxqd3NxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNTYxNjEsImV4cCI6MjA5NTkzMjE2MX0.7WHQvxf_uW90Gs2wzlmuduukoENII5syowTTFiTvtTs'; // Substitua pela sua chave pública anon
+// Supabase
+const SUPABASE_URL = 'https://imkkxhsxlqwtbdfljwsq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlta2t4aHN4bHF3dGJkZmxqd3NxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNTYxNjEsImV4cCI6MjA5NTkzMjE2MX0.7WHQvxf_uW90Gs2wzlmuduukoENII5syowTTFiTvtTs';
 
-// Inicialização do cliente Supabase corrigida para evitar falhas de carregamento
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -253,18 +252,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Para simplificar, cria um pedido para cada item ou agrupa (aqui agruparemos o primeiro item como exemplo principal)
     if (window.carrinho.length > 0) {
       const pedidoNovo = {
-        id: Math.floor(Math.random() * 10000) + 1000, // Gera ID aleatório
         cliente: nomeCliente,
         itens: itensPedido,
         total: totalPedido,
-        status: "Pendente",
-        instalacao: "Aguardando",
+        status: 'Pendente',
+        instalacao: 'Aguardando',
         data: hoje
       };
-      
-      // Salva no LocalStorage para o Dashboard ler
+
+      // Salva no Supabase
+      if (supabaseClient) {
+        supabaseClient.from('pedidos').insert([pedidoNovo]).then(({ error }) => {
+          if (error) console.warn('Erro ao salvar pedido no Supabase:', error);
+        });
+      }
+
+      // Salva também no localStorage como backup
       const pedidosSalvos = JSON.parse(safeStorage.get('alpe_pedidos')) || [];
-      pedidosSalvos.unshift(pedidoNovo);
+      pedidosSalvos.unshift({ ...pedidoNovo, id: Math.floor(Math.random() * 10000) + 1000 });
       safeStorage.set('alpe_pedidos', JSON.stringify(pedidosSalvos));
     }
 
@@ -362,39 +367,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Função para carregar preços dinamicamente do Supabase
+// Função para carregar produtos do Supabase e renderizar os cards
 async function carregarPrecosDinamicos() {
-  // Tenta buscar preços do Supabase
+  if (!supabaseClient) return;
   try {
-    // Busca preços do backend (que consolida o menor preço do Supabase)
-    const response = await fetch(`${API_BASE_URL}/api/produtos/precos-vitrine`);
-    if (!response.ok) {
-      throw new Error(`Erro HTTP! status: ${response.status}`);
-    }
-    const precosBackend = await response.json(); // Isso será um mapa de {sku: menorPreco}
+    const { data: produtos, error } = await supabaseClient
+      .from('produtos')
+      .select('sku, preco, nome, imagem_url')
+      .eq('ativo', true);
 
-    aplicarPrecosNaVitrine(precosBackend);
-  } catch (error) {
-    console.error('Erro ao buscar preços do backend:', error.message);
-    // Fallback para localStorage se o Supabase falhar
-    const precosSalvos = JSON.parse(safeStorage.get('alpe_precos_vitrine'));
-    if (precosSalvos) {
-      aplicarPrecosNaVitrine(precosSalvos);
-    }
+    if (error || !produtos) return;
+
+    produtos.forEach(p => {
+      const card = document.querySelector(`.produto-card[data-sku="${p.sku}"]`);
+      if (!card) return;
+      const precoEl = card.querySelector('.preco');
+      if (precoEl) precoEl.textContent = p.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      const imgEl = card.querySelector('img');
+      if (imgEl && p.imagem_url) imgEl.src = p.imagem_url;
+      const nomeEl = card.querySelector('h4');
+      if (nomeEl && p.nome) nomeEl.textContent = p.nome;
+    });
+  } catch (e) {
+    console.warn('Supabase indisponível, usando preços fixos.', e);
   }
-}
-
-function aplicarPrecosNaVitrine(precos) {
-  document.querySelectorAll('.produto-card').forEach(card => {
-    const sku = card.dataset.sku; // Agora usa data-sku
-    if (precos[sku]) {
-      const precoFormatado = precos[sku].toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      const precoElemento = card.querySelector('.preco');
-      if (precoElemento) {
-        precoElemento.textContent = precoFormatado;
-      }
-    }
-  });
 }
 
 // Chama a função de carregamento de preços ao carregar a página
