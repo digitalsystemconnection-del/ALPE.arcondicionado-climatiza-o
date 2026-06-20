@@ -1,4 +1,4 @@
-﻿﻿﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -8,9 +8,7 @@
 <!-- Favicon -->
 <link rel="icon" href="images/logo-marcas/logo-transparente.png" type="image/png">
 
-
-
-<!-- Google Fonts -->
+<!-- Fontes do Google -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,750&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -20,31 +18,55 @@
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 
-<!-- Chart.js for Graphs -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Chart.js para Gráficos -->
 
-<!-- Project Styles -->
+
+<!-- Estilos do Projeto -->
 <link rel="stylesheet" href="assets/css/style.css" />
-<style>
-:root{--cor-principal:#007bff;--cor-secundaria:#343a40;--cor-texto:#333;}
-header { padding-left: 10px !important; }
-/* Estilos simplificados pois agora o global cuida da tipografia */
-strong, b { font-weight: 600 !important; }
-body{margin:0;color:var(--cor-texto);background:white;line-height:1.6;}
-nav a{color:var(--cor-secundaria);text-decoration:none;margin-left:20px;font-weight:400;}
-.cta-header{background:var(--cor-principal);color:white;padding:8px 15px;border-radius:5px;text-decoration:none;font-weight:bold;white-space:nowrap;}
-.section{padding:30px 5%;text-align:center;}
-.catalogo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;max-width:1200px;margin:0 auto;}
-.produto-card{background:white;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.08);transition:all 0.3s;display:flex;flex-direction:column;}
-.produto-card:hover{transform:translateY(-8px);}
-.produto-card img{width:100%;height:180px;object-fit:contain;background:#fafafa;padding:10px;display:block;}
-.produto-info{padding:12px;text-align:left;display:flex;flex-direction:column;flex:1;}
-.produto-info h4{margin:5px 0;color:var(--cor-secundaria);font-size:14px;line-height:1.4;}
-.produto-info .preco{font-size:18px;font-weight:bold;color:var(--cor-principal);margin:5px 0;}
-.produto-info p{font-size:11px !important; margin: 4px 0;}
-.cta-card{display:block;color:white;text-align:center;padding:8px 0;border-radius:5px;text-decoration:none;margin-top:auto;font-weight:600;font-size:13px;background:var(--cor-principal);}
 
+
+<style>
+/* Estilos base da entrada do usuário */
+:root {
+  --cor-principal: #0066cc;
+  --cor-secundaria: #001529;
+  --cor-fundo: #f8f9fa;
+  --cor-texto: #333;
+  --cor-whatsapp: #25d366;
+  --radius-xl: 26px;
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --radius-sm: 12px;
+  --gap: clamp(14px, 2.2vw, 22px);
+  --max: 1220px;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.2px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dropdown-content a {
+  color: var(--cor-texto);
+  padding: 10px 20px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  margin: 0;
+  font-weight: 400;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+.dropdown-content a:hover { background-color: #f8f9fa; color: var(--cor-principal); }
+.dropdown:hover .dropdown-content { display: block; animation: fadeIn 0.3s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+<style>
 /* PADRONIZAÇÃO DE TAMANHO DOS BANNERS */
+
 /* Carrossel */
 .carousel {
   position: relative;
@@ -65,7 +87,7 @@ nav a{color:var(--cor-secundaria);text-decoration:none;margin-left:20px;font-wei
   height: 100%;
   flex-shrink: 0;
   object-fit: cover;
-  object-position: center center !important; 
+  object-position: center center !important; /* Centralizado para evitar esconder a direita */
 }
 .carousel-arrow {
   position: absolute;
@@ -124,130 +146,6 @@ nav a{color:var(--cor-secundaria);text-decoration:none;margin-left:20px;font-wei
   background: #000;
 }
 .video-content { object-fit: cover; object-position: center center; height: 100%; width: 100%; }
-
-/* Estilos do Novo Rodapé */
-footer.footer { background: #f8f9fa !important; color: #333 !important; padding: 60px 5% 20px !important; text-align: left !important; border-top: 1px solid #eee !important; }
-.footer-content { display: flex; flex-wrap: wrap; gap: 40px; max-width: 1200px; margin: 0 auto; justify-content: space-between; }
-.footer-brand { flex: 1.5; min-width: 280px; }
-.footer-logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; margin-bottom: 20px; }
-.footer-description { color: #666; font-size: 14px; margin-bottom: 25px; line-height: 1.6; }
-.footer-social { display: flex; gap: 15px; }
-.social-link { width: 38px; height: 38px; background: rgba(0,0,0,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; text-decoration: none; transition: 0.3s; font-size: 18px; }
-.social-link:hover { transform: translateY(-5px); color: white; }
-.social-link img { width: 24px; height: 24px; object-fit: contain; }
-
-.social-link.whatsapp { color: #25D366; background: rgba(37, 211, 102, 0.1); }
-.social-link.phone { color: #007bff; background: rgba(0, 123, 255, 0.1); }
-.social-link.instagram { color: #E1306C; background: rgba(225, 48, 108, 0.1); }
-.social-link.facebook { color: #1877F2; background: rgba(24, 119, 242, 0.1); }
-.social-link.linkedin { color: #0A66C2; background: rgba(10, 102, 194, 0.1); }
-
-.social-link.whatsapp:hover { background: #25D366; color: white; }
-.social-link.phone:hover { background: #007bff; color: white; }
-.social-link.instagram:hover { background: #E1306C; color: white; }
-.social-link.facebook:hover { background: #1877F2; color: white; }
-.social-link.linkedin:hover { background: #0A66C2; color: white; }
-
-.footer-column { flex: 1; min-width: 150px; }
-.footer-column h3 { font-size: 16px; margin-bottom: 20px; color: #333; border-bottom: 2px solid var(--cor-principal); display: inline-block; padding-bottom: 5px; }
-.footer-links { list-style: none; padding: 0; margin: 0; }
-.footer-links li { margin-bottom: 12px; }
-.footer-links a { color: #666; text-decoration: none; font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
-.footer-links a:hover { color: var(--cor-principal); padding-left: 5px; }
-.footer-links i { color: var(--cor-principal); font-size: 14px; }
-.footer-bottom { border-top: 1px solid #eee; margin-top: 50px; padding-top: 20px; text-align: center; color: #999; font-size: 13px; }
-
-@media (max-width: 768px) {
-    .footer { padding: 40px 5% 20px; text-align: center; }
-    .footer-content { flex-direction: column; gap: 30px; align-items: center; }
-    .footer-logo, .footer-social { justify-content: center; }
-    .footer-column h3 { text-align: center; }
-    .footer-bottom { margin-top: 30px; }
-}
-
-/* RESPONSIVO - Tablet */
-@media (max-width:1024px){
-  .catalogo-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));}
-}
-
-/* RESPONSIVO - Celular */
-@media (max-width:768px){
-  header {
-    padding: 8px 3%;
-    flex-wrap: wrap;
-    height: auto;
-    min-height: 70px;
-  }
-  .logo { height: 70px; }
-  .logo img { height: 90px; }
-  .carousel { 
-    margin-top: 20px; 
-  }
-  nav{display:none;}
-  .nav-open{display:flex;flex-direction:column;width:100%;background:white;padding:15px 0;position:relative;z-index:150;overflow:visible;}
-  .nav-open a{margin:10px 20px;font-size:16px;}
-  .nav-open .dropdown-content{position:static;box-shadow:none;border:1px solid #eee;border-radius:5px;margin:0 20px;}
-  
-  .top-bar{font-size:11px;}
-  .top-bar-container{padding:5px;gap:8px;flex-direction:column;}
-  .top-item{font-size:10px;}
-  .top-item img{width:18px;height:18px;}
-  
-  .catalogo-grid{grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;}
-  .produto-card{border-radius:6px;}
-  .produto-card img{height:100px;}
-  .produto-info h4{font-size:11px;}
-  .produto-info .preco{font-size:14px;}
-  .cta-card{font-size:11px;padding:6px 0;}
-  
-  .section{padding:20px 3%;}
-  .section h2{font-size:22px;}
-}
-.icon-inline { width: 16px; height: 16px; vertical-align: middle; margin-bottom: 3px; margin-right: 4px; }
-
-/* MENU DROPDOWN */
-.dropdown { position: relative; display: inline-block; z-index: 9999; }
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #fff;
-  min-width: 180px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-  z-index: 9999;
-  border-radius: 8px;
-  top: 100%;
-  left: 0;
-  padding: 10px 0;
-  overflow: visible;
-}
-.dropdown-content a {
-  color: var(--cor-texto);
-  padding: 10px 20px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-  margin: 0;
-  font-weight: 400;
-  font-size: 14px;
-  transition: background 0.2s;
-}
-.dropdown-content a:hover { background-color: #f8f9fa; color: var(--cor-principal); }
-.dropdown:hover .dropdown-content { display: block; animation: fadeIn 0.3s; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-/* Header Actions */
-.header-actions { display: flex; align-items: center; gap: 20px; }
-.cart-link { position: relative; display: flex; align-items: center; text-decoration: none; }
-.cart-badge { position: absolute; top: -8px; right: -8px; background: #d30029; color: white; font-size: 10px; font-weight: bold; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
-
-/* Classes utilitárias */
-.section-hero { background-color: #f8f9fa; }
-.brand-logo { height: auto; max-width: 200px; margin: 0 auto 20px; display: block; }
-.grid-margin { margin-top: 20px; }
-.footer-link { color: white; text-decoration: underline; }
-.cart-icon { width: 26px; height: 26px; }
-.selo-procel { color: green; font-weight: 600; }
-
 </style>
 <style> /* ESTILOS DO NOVO BANNER DA CALCULADORA */
 :root {
@@ -256,13 +154,14 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
   --banner-blue-bright: #007bff;
   --banner-shadow: 0 28px 70px rgba(0, 21, 41, 0.18);
   --banner-radius: 28px;
+  /* ALTERE AQUI A IMAGEM DA CALCULADORA */
   --banner-image: url('images/banner/banner-calculadora-btu.png');
 }
 
 .banner-btu-wrapper {
   width: 100%;
   max-width: 1240px;
-  margin: 20px auto 60px; /* Reduzido margem superior para subir os blocos */
+  margin: 20px auto 60px;
   padding: 0 20px;
 }
 
@@ -275,8 +174,8 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 
 .banner-btu {
   position: relative;
-  min-height: 500px;
-  border-radius: var(--banner-radius);
+  min-height: 480px;
+  border-radius: var(--banner-radius) !important;
   overflow: hidden;
   box-shadow: var(--banner-shadow);
   isolation: isolate;
@@ -298,7 +197,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 .banner-btu .content {
   position: relative;
   z-index: 2;
-  padding: 20px 40px;
+  padding: 30px 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -351,10 +250,10 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 }
 
 .banner-btu .lead {
-  margin: 15px 0 0;
+  margin: 8px 0 0;
   color: rgba(255,255,255,0.86);
   font-size: clamp(1rem, 1.5vw, 1.4rem);
-  line-height: 1.45;
+  line-height: 1.15;
   max-width: 50ch; /* Aumentado para aproveitar a largura total */
 }
 
@@ -363,7 +262,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
   align-items: center;
   justify-content: center;
   width: fit-content;
-  margin-top: 24px;
+  margin-top: 18px;
   padding: 6px 16px;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,0.4);
@@ -405,7 +304,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 .contact-banner {
   position: relative;
   display: block;
-  border-radius: var(--banner-radius);
+  border-radius: var(--banner-radius) !important;
   overflow: hidden;
   min-height: 540px;
   background: linear-gradient(135deg, var(--banner-blue-dark) 0%, var(--banner-blue-mid) 100%);
@@ -420,6 +319,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
   content: "";
   position: absolute;
   inset: 0;
+  /* ALTERE AQUI A IMAGEM DO FALE CONOSCO */
   background: url('images/banner/banner-fale-conosco.png') center center / cover no-repeat;
   opacity: 0.15;
   z-index: -1;
@@ -428,7 +328,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 .banner-inner-contact {
   position: relative;
   z-index: 2;
-  padding: 20px 40px;
+  padding: 30px 40px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -450,20 +350,20 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 .banner-points {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Isso já cuida da responsividade naturalmente */
-  gap: 20px;
+  gap: 15px;
   width: 100%;
   align-items: stretch;
   grid-auto-rows: 1fr;
-  margin: 25px 0 35px; /* margens mescladas */
+  margin: 12px 0; 
 }
 
 .banner-point {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 6px;
   align-items: flex-start;
-  padding: 24px 22px;
-  background: rgba(255,255,255,0.12);
+  padding: 12px 18px;
+  background: rgba(0, 21, 41, 0.7); /* Azul profundo semi-transparente para contraste total do texto */
   border: 1px solid rgba(255,255,255,0.18);
   border-radius: 20px;
   backdrop-filter: blur(14px);
@@ -485,11 +385,11 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 }
 
 .banner-point small, .cta-box-banner small { 
-  display: block; text-transform: uppercase; letter-spacing: .16em; font-size: 0.6rem; font-weight: 800; color: #fff; margin-bottom: 4px; 
+  display: block; text-transform: uppercase; letter-spacing: .16em; font-size: .65rem; font-weight: 800; color: #fff; margin-bottom: 5px; 
   font-family: 'Sora', sans-serif;
 }
 .banner-point p, .cta-box-banner p { 
-  margin: 0; color: #fff; line-height: 1.5; font-size: 0.88rem; 
+  margin: 0; color: #fff; line-height: 1.2; font-size: 0.85rem; 
   flex-grow: 1;
 }
 
@@ -498,7 +398,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
   align-items: center;
   justify-content: center;
   width: fit-content;
-  margin-top: 5px;
+  margin-top: 10px; /* Adicionado para um pequeno espaçamento */
   padding: 6px 16px;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,0.4);
@@ -523,12 +423,67 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
   .banner-btu {
     background: linear-gradient(180deg, var(--banner-blue-dark) 0%, var(--banner-blue-mid) 42%, rgba(0,123,255,0.3) 64%, rgba(255,255,255,0) 100%), var(--banner-image) center center / cover no-repeat;
   }
+  
+  :root {
+    --banner-standard-height: 380px;
+  }
 }
 @media (max-width: 650px) {
   .banner-points { grid-template-columns: 1fr; }
+
+  :root {
+    --banner-standard-height: 320px;
+  }
 }
 
 </style>
+
+<style>
+/* Estilos do Novo Rodapé (Restaurado) */
+footer.footer { background: #f8f9fa !important; color: #333 !important; padding: 60px 5% 20px !important; text-align: left !important; border-top: 1px solid #eee !important; }
+.footer-content { display: flex; flex-wrap: wrap; gap: 40px; max-width: 1200px; margin: 0 auto; justify-content: space-between; }
+.footer-brand { flex: 1.5; min-width: 280px; }
+.footer-logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+.footer-description { color: #666; font-size: 14px; margin-bottom: 25px; line-height: 1.6; }
+.footer-social { display: flex; gap: 15px; }
+.social-link { width: 38px; height: 38px; background: rgba(0,0,0,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; text-decoration: none; transition: 0.3s; font-size: 18px; }
+.social-link:hover { transform: translateY(-5px); color: white; }
+.social-link img { width: 24px; height: 24px; object-fit: contain; }
+
+.social-link.whatsapp { color: #25D366; background: rgba(37, 211, 102, 0.1); }
+.social-link.phone { color: #007bff; background: rgba(0, 123, 255, 0.1); }
+.social-link.instagram { color: #E1306C; background: rgba(225, 48, 108, 0.1); }
+.social-link.facebook { color: #1877F2; background: rgba(24, 119, 242, 0.1); }
+.social-link.linkedin { color: #0A66C2; background: rgba(10, 102, 194, 0.1); }
+
+.social-link.whatsapp:hover { background: #25D366; color: white; }
+.social-link.phone:hover { background: #007bff; color: white; }
+.social-link.instagram:hover { background: #E1306C; color: white; }
+.social-link.facebook:hover { background: #1877F2; color: white; }
+.social-link.linkedin:hover { background: #0A66C2; color: white; }
+
+.footer-column { flex: 1; min-width: 150px; }
+.footer-column h3 { font-size: 16px; margin-bottom: 20px; color: #333; border-bottom: 2px solid var(--cor-principal); display: inline-block; padding-bottom: 5px; }
+.footer-links { list-style: none; padding: 0; margin: 0; }
+.footer-links li { margin-bottom: 12px; }
+.footer-links a { color: #666; text-decoration: none; font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+.footer-links a:hover { color: var(--cor-principal); padding-left: 5px; }
+.footer-links i { color: var(--cor-principal); font-size: 14px; }
+.footer-bottom { border-top: 1px solid #eee; margin-top: 50px; padding-top: 20px; text-align: center; color: #999; font-size: 13px; }
+
+@media (max-width: 768px) {
+    .footer { padding: 40px 5% 20px; text-align: center; }
+    .footer-content { flex-direction: column; gap: 30px; align-items: center; }
+    .footer-logo, .footer-social { justify-content: center; }
+    .footer-column h3 { text-align: center; }
+    .footer-bottom { margin-top: 30px; }
+}
+</style>
+
+<!-- Supabase -->
+
+
+
 
 </head>
 <body class="light">
@@ -579,9 +534,8 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
   </a>
 
   <nav id="main-nav">
-    <a href="index.html">Voltar ao Início</a>
     <div class="dropdown">
-      <a href="#marcas">Marcas ▾</a>
+      <a href="#marcas" aria-haspopup="true">Marcas ▾</a>
       <div class="dropdown-content js-dropdown-marcas">
       </div>
     </div>
@@ -589,6 +543,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
     <a href="#servicos">Serviços</a>
     <a href="#produtos">Produtos</a>
     <a href="https://api.whatsapp.com/send?phone=5521980220417&text=Olá%20ALPE,%20visitei%20o%20site%20e%20gostaria%20de%20falar%20com%20um%20especialista.">Contato</a>
+    <a href="dashboard/index.html" style="color:var(--cor-principal); font-weight:bold;">Admin</a>
   </nav>
 
   <div class="header-actions">
@@ -613,8 +568,8 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
         <img class="carousel-slide" src="images/banner/banner-fujitsu-premium.png" alt="Banner 2" style="background:#ddd;">
         <img class="carousel-slide" src="images/banner/banner-Elgin.png" alt="Banner 3" style="background:#ccc;">
       </div>
-      <button class="carousel-arrow left" id="prevBtn">&#10094;</button>
-      <button class="carousel-arrow right" id="nextBtn">&#10095;</button>
+      <button class="carousel-arrow left" id="prevBtn" aria-label="Slide anterior">&#10094;</button>
+      <button class="carousel-arrow right" id="nextBtn" aria-label="Próximo slide">&#10095;</button>
       <div class="carousel-dots" id="carouselDots"></div>
     </div>
 
@@ -649,12 +604,42 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
       <div class="container">
         <h2>Soluções para Todos os Projetos</h2>
         <div class="sistemas-grid">
-          <div class="sistema-card" data-link="sistemas/split-hi-wall.html" onclick="navegarParaSistema(this)"><img src="images/produtos/split-lg/split-inverter-lg-hi-wall-dual-9000-btus-frio-220v.png" class="sistema-img"><h3>Split Hi-Wall</h3><p>O modelo mais popular para residências.</p></div>
-          <div class="sistema-card" data-link="sistemas/multi-split.html" onclick="navegarParaSistema(this)"><img src="images/produtos/multi-split/multi-split-fujitsu.webp" class="sistema-img"><h3>Multi-Split</h3><p>Climatize até 5 ambientes with uma unidade externa.</p></div>
-          <div class="sistema-card" data-link="sistemas/mini-vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/mini-vrf/vrv-daikin-fit.webp" class="sistema-img"><h3>Mini VRF</h3><p>Alta capacidade para residências de alto padrão.</p></div>
-          <div class="sistema-card" data-link="sistemas/vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/vrf/v8-series-vrf.webp" class="sistema-img"><h3>VRF</h3><p>A solução definitiva para grandes edifícios.</p></div>
-          <div class="sistema-card" data-link="sistemas/cassete.html" onclick="navegarParaSistema(this)"><img src="images/produtos/cassete/cassete-electrolux.jpg" class="sistema-img"><h3>Cassete</h3><p>Ideal para ambientes amplos e com forro rebaixado.</p></div>
-          <div class="sistema-card" data-link="sistemas/piso-teto.html" onclick="navegarParaSistema(this)"><img src="images/produtos/piso-teto/piso-teto-fujitsu.webp" class="sistema-img"><h3>Piso Teto</h3><p>Versatilidade e alta potência para comércios.</p></div>
+          <div class="sistema-card" data-link="sistemas/split-hi-wall.html" onclick="navegarParaSistema(this)">
+            <img src="images/produtos/split-lg/split-inverter-lg-hi-wall-dual-9000-btus-frio-220v.png" alt="Ar Condicionado Split Hi-Wall" class="sistema-img">
+            <h3>Split Hi-Wall</h3>
+            <p>O modelo mais popular para residências.</p>
+            <span class="cta-header">Ver Detalhes</span>
+          </div>
+          <div class="sistema-card" data-link="sistemas/multi-split.html" onclick="navegarParaSistema(this)">
+            <img src="images/produtos/multi-split/multi-split-fujitsu.webp" alt="Sistema Multi-Split" class="sistema-img">
+            <h3>Multi-Split</h3>
+            <p>Climatize até 5 ambientes com uma unidade externa.</p>
+            <span class="cta-header">Ver Detalhes</span>
+          </div>
+          <div class="sistema-card" data-link="sistemas/mini-vrf.html" onclick="navegarParaSistema(this)">
+            <img src="images/produtos/mini-vrf/vrv-daikin-fit.webp" alt="Mini VRF Residencial" class="sistema-img">
+            <h3>Mini VRF</h3>
+            <p>Alta capacidade para residências de alto padrão.</p>
+            <span class="cta-header">Ver Detalhes</span>
+          </div>
+          <div class="sistema-card" data-link="sistemas/vrf.html" onclick="navegarParaSistema(this)">
+            <img src="images/produtos/vrf/hisense-x3-vrf.png" alt="Sistema VRF Comercial" class="sistema-img">
+            <h3>VRF</h3>
+            <p>A solução definitiva para grandes edifícios.</p>
+            <span class="cta-header">Ver Detalhes</span>
+          </div>
+          <div class="sistema-card" data-link="sistemas/cassette.html" onclick="navegarParaSistema(this)">
+            <img src="images/produtos/cassete/hisense-cassete.webp" alt="Ar Condicionado Cassete" class="sistema-img">
+            <h3>Cassete</h3>
+            <p>Ideal para ambientes amplos e com forro rebaixado.</p>
+            <span class="cta-header">Ver Detalhes</span>
+          </div>
+          <div class="sistema-card" data-link="sistemas/piso-teto.html" onclick="navegarParaSistema(this)">
+            <img src="images/produtos/piso-teto/piso-teto-fujitsu.webp" alt="Ar Condicionado Piso Teto" class="sistema-img">
+            <h3>Piso Teto</h3>
+            <p>Versatilidade e alta potência para comércios.</p>
+            <span class="cta-header">Ver Detalhes</span>
+          </div>
         </div>
       </div>
     </section>
@@ -744,8 +729,9 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
         <h2 style="margin-bottom:20px;">OS MAIS VENDIDOS DA ALPE</h2>
         <div class="catalogo-grid" id="catalogo-produtos">
           
-          <div class="produto-card" data-id="1">
-            <img src="images/produtos/split-samsung/samsung-12000.webp" alt="Samsung">
+          <!-- Corrigido: href="javascript:void(0)" para evitar salto na página e adicionado onclick -->
+          <div class="produto-card" data-id="1" data-sku="SAM-WF12K">
+            <img src="images/produtos/split-samsung/samsung-12000.webp" alt="Ar Condicionado Samsung Inverter 12.000 BTU">
             <div class="produto-info">
               <h4>Samsung Inverter 12.000 BTU</h4>
               <div class="preco">R$ 2.999,00</div>
@@ -753,8 +739,8 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
             </div>
           </div>
 
-          <div class="produto-card" data-id="2">
-            <img src="images/produtos/split-lg/split-inverter-lg-hi-wall-dual-compact-9000-btus-frio-220v.png" alt="LG">
+          <div class="produto-card" data-id="2" data-sku="LG-DI9K">
+            <img src="images/produtos/split-lg/split-inverter-lg-hi-wall-dual-9000-btus-frio-220v.png" alt="Ar Condicionado LG Dual Inverter 9.000 BTU">
             <div class="produto-info">
               <h4>LG Dual Inverter 9.000 BTU</h4>
               <div class="preco">R$ 2.450,00</div>
@@ -762,8 +748,8 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
             </div>
           </div>
 
-          <div class="produto-card" data-id="3">
-            <img src="images/produtos/cassete/k7-4-vias-daikin-sky-air.webp" alt="Daikin">
+          <div class="produto-card" data-id="3" data-sku="DAI-K736K">
+            <img src="images/produtos/cassete/k7-4-vias-daikin-sky-air.webp" alt="Ar Condicionado Daikin Cassete 36.000 BTU">
             <div class="produto-info">
               <h4>Daikin Cassete 36.000 BTU</h4>
               <div class="preco">R$ 8.990,00</div>
@@ -771,8 +757,8 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
             </div>
           </div>
 
-          <div class="produto-card" data-id="4">
-            <img src="images/produtos/split-hisense/ar-condicionado-split-inverter-hi-wall-wi-fi-hisense-12000-btus-frio-220v.jpg" alt="Hisense">
+          <div class="produto-card" data-id="4" data-sku="HIS-INV12K">
+            <img src="images/produtos/split-hisense/ar-condicionado-split-inverter-hi-wall-wi-fi-hisense-12000-btus-frio-220v.jpg" alt="Ar Condicionado Hisense Inverter 12.000 BTU">
             <div class="produto-info">
               <h4>Hisense Inverter 12.000 BTU</h4>
               <div class="preco">R$ 2.050,48</div>
@@ -780,17 +766,21 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
             </div>
           </div>
 
-          <div class="produto-card" data-id="5"><img src="images/produtos/split-elgin/ar-condicionado-elgin-inverter-eco-ii-wi-fi-12000-btus-frio-220v-r-32.webp" alt="Elgin"><div class="produto-info"><h4>Elgin Inverter 12.000 BTU</h4><div class="preco">R$ 2.155,60</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="5" data-sku="ELG-ECO12K"><img src="images/produtos/split-elgin/ar-condicionado-elgin-inverter-eco-ii-wi-fi-12000-btus-frio-220v-r-32.webp" alt="Ar Condicionado Elgin Inverter 12.000 BTU"><div class="produto-info"><h4>Elgin Inverter 12.000 BTU</h4><div class="preco">R$ 2.155,60</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="6"><img src="images/produtos/split-electrolux/electrolux-9000.png" alt="Electrolux"><div class="produto-info"><h4>Electrolux Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="6" data-sku="ELX-INV9K"><img src="images/produtos/split-electrolux/electrolux-9000.png" alt="Ar Condicionado Electrolux Inverter 9.000 BTU"><div class="produto-info"><h4>Electrolux Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="7"><img src="images/produtos/split-fujitsu/fujitsu-9000-premium.jpg" alt="Fujitsu"><div class="produto-info"><h4>Fujitsu Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="7" data-sku="FUJ-PREM9K"><img src="images/produtos/split-fujitsu/fujitsu-9000-premium.jpg" alt="Ar Condicionado Fujitsu Inverter 9.000 BTU"><div class="produto-info"><h4>Fujitsu Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="8"><img src="images/produtos/split-hitachi/hitachi-9000.webp" alt="Hitachi"><div class="produto-info"><h4>Hitachi Inverter 9.000 BTU</h4><div class="preco">R$ 2.496,79</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="8" data-sku="HIT-AH9K"><img src="images/produtos/split-hitachi/hitachi-9000.webp" alt="Ar Condicionado Hitachi Inverter 9.000 BTU"><div class="produto-info"><h4>Hitachi Inverter 9.000 BTU</h4><div class="preco">R$ 2.496,79</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="9"><img src="images/produtos/split-philco/philco-split-12000.webp" alt="Philco"><div class="produto-info"><h4>Philco Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="9" data-sku="PHL-ECO12K"><img src="images/produtos/split-philco/philco-split-12000.webp" alt="Ar Condicionado Philco Inverter 12.000 BTU"><div class="produto-info"><h4>Philco Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+
+          <div class="produto-card" data-id="10" data-sku="GRE-GTOP9K"><img src="images/produtos/split-gree/split-inverter-gree-g-top-auto-9000-btuh-frio-r-32-220v-9000-frio-63.webp" alt="Ar Condicionado Gree Inverter 9.000 BTU"><div class="produto-info"><h4>Gree Inverter 9.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="10"><img src="images/produtos/split-gree/split-inverter-gree-g-top-auto-9000-btuh-frio-r-32-220v-9000-frio-63.webp" alt="Gree"><div class="produto-info"><h4>Gree Inverter 9.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="11" data-sku="TCL-ELITE12K"><img src="images/produtos/split-tcl/tcl-freshin3-0-1.webp" alt="Ar Condicionado TCL Inverter 12.000 BTU"><div class="produto-info"><h4>TCL Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+
+          <div class="produto-card" data-id="12" data-sku="MID-XTREME9K"><img src="images/produtos/split-midea/midea-9000.webp" alt="Ar Condicionado Midea Inverter 9.000 BTU"><div class="produto-info"><h4>Midea Inverter 9.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
         </div>
       </div>
     </section>
@@ -829,7 +819,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
           <div class="banner-inner-contact">
             <div class="banner-copy">
               <div class="tag" style="color: #fff;">Suporte e Vendas Especializadas</div>
-              <h2>Fale Conosco</h2>
+              <h2>Fale Conosco !</h2>
               <p class="lead" style="margin-top: 0; max-width: 85ch; color: #fff;">
                 Tem alguma dúvida ou quer um orçamento personalizado? Envie uma mensagem e nossa equipe retornará com atenção, clareza e agilidade para entender sua necessidade.
               </p>
@@ -884,7 +874,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
         <h2 style="text-align: center; margin-bottom: 25px; font-size: 28px; color: var(--cor-secundaria);">Seu Carrinho</h2>
         <div id="carrinho-lista" class="carrinho-lista-container" style="box-shadow: none; border: none; margin: 0;"></div>
         <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 30px;">
-          <button id="btn-finalizar" class="cta-header" style="width: 100%; padding: 18px; font-size: 18px; text-align: center; border: none; cursor: pointer;">Finalizar Pedido</button>
+          <button id="btn-finalizar" class="cta-header" style="width:100%;padding:18px;font-size:18px;text-align:center;border:none;cursor:pointer;background:#0066cc;color:white;border-radius:8px;font-weight:bold;">🛒 Finalizar Pedido</button>
           <a href="#" id="btn-continuar-comprando" style="text-align: center; color: #666; text-decoration: none; font-size: 14px; font-weight: 500;">
             <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Continuar Comprando
           </a>
@@ -968,13 +958,13 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 </footer>
 
 <!-- BOTÕES FLUTUANTES -->
-<a href="https://api.whatsapp.com/send?phone=5521980220417" class="whatsapp-square" target="_blank" rel="noopener noreferrer">
-  <img src="./images/icone/whatsapp-logo.png" alt="WhatsApp" style="width: 20px; height: 20px; object-fit: contain;">
+<a href="https://api.whatsapp.com/send?phone=5521980220417" class="whatsapp-square" target="_blank" rel="noopener noreferrer" aria-label="Fale Conosco pelo WhatsApp">
+  <img src="images/icone/whatsapp-logo.png" alt="WhatsApp" style="width: 20px; height: 20px; object-fit: contain;">
   <span>Fale Conosco</span>
 </a>
 
-<!-- SCRIPT PRINCIPAL UNIFICADO -->
-<script src="assets/js/main.js"></script>
+<!-- SCRIPT PRINCIPAL (Gerencia Carrinho, Menu e Marcas) -->
+
 
 <!-- SCRIPT DO CARROSSEL -->
 <script>
@@ -1021,24 +1011,6 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 })();
 </script>
 
-<script>
-  function carregarPrecosDinamicos() {
-    const precosSalvos = JSON.parse(safeStorage.get('alpe_precos_vitrine'));
-    if (!precosSalvos) return;
-    document.querySelectorAll('.produto-card .btn-add-cart').forEach(btn => {
-      const id = btn.getAttribute('data-id');
-      if (precosSalvos[id]) {
-        const precoFormatado = precosSalvos[id].toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        const precoElemento = btn.closest('.produto-info').querySelector('.preco');
-        if (precoElemento) {
-          precoElemento.textContent = precoFormatado;
-        }
-      }
-    });
-  }
-  document.addEventListener('DOMContentLoaded', carregarPrecosDinamicos);
-</script>
-
 <!-- WIDGET ASSISTENTE IA -->
 <button class="assistente-toggle" id="toggleAssistente">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -1064,13 +1036,16 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 </div>
 
 <!-- Script do Assistente IA Unificado -->
-<script src="assets/js/ai-assistant.js"></script>
+
 
 <script>
     // Smooth scroll para âncoras
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
+            // Evita conflito com o dropdown do menu Marcas
+            if (href === '#marcas') return; 
+            
             if (href !== '#' && document.querySelector(href)) {
                 e.preventDefault();
                 document.querySelector(href).scrollIntoView({
@@ -1122,5 +1097,325 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
     });
 </script>
 
+
+
+
+<!-- Supabase e Scripts - ORDEM CORRETA -->
+
+
+
+
+<!-- SUPABASE - ORDEM CORRETA -->
+
+
+
+
+<!-- SUPABASE - ORDEM CORRETA -->
+
+
+
+<!-- SUPABASE - ORDEM CORRETA -->
+
+
+
+<script>
+// ============================================
+// SUPABASE - VERSÃO EMBUTIDA
+// ============================================
+
+// 1. CARREGAR SUPABASE
+const SUPABASE_URL = 'https://imkkxhsxlqwtbdfljwsq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlta2t4aHN4bHF3dGJkZmxqd3NxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNTYxNjEsImV4cCI6MjA5NTkzMjE2MX0.7WHQvxf_uW90Gs2wzlmuduukoENII5syowTTFiTvtTs';
+
+// Aguardar o Supabase carregar
+function initSupabase() {
+    if (typeof supabase === 'undefined') {
+        console.log('⏳ Aguardando Supabase...');
+        setTimeout(initSupabase, 500);
+        return;
+    }
+    
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // 2. API
+    window.supabaseAPI = {
+        supabase: supabaseClient,
+        
+        async obterCarrinho() {
+            const sessionId = localStorage.getItem('session_id') || 'session_' + Date.now();
+            const { data, error } = await supabaseClient.from('carrinhos').select('*').eq('session_id', sessionId);
+            if (error) { console.error('Erro:', error); return []; }
+            return data;
+        },
+        
+        async adicionarAoCarrinho(produtoId, quantidade = 1) {
+            const sessionId = localStorage.getItem('session_id') || 'session_' + Date.now();
+            const { data, error } = await supabaseClient.from('carrinhos').insert({
+                session_id: sessionId,
+                produto_id: produtoId,
+                quantidade: quantidade
+            }).select();
+            if (error) { console.error('Erro:', error); return null; }
+            return data;
+        },
+        
+        async criarPedido(dadosCliente) {
+            const carrinho = await this.obterCarrinho();
+            if (carrinho.length === 0) { alert('Carrinho vazio!'); return null; }
+            
+            let totalProdutos = 0;
+            const itens = carrinho.map(item => {
+                const subtotal = item.produtos?.preco * item.quantidade || 0;
+                totalProdutos += subtotal;
+                return {
+                    sku: item.produtos?.sku || 'N/A',
+                    nome_produto: item.produtos?.nome || 'Produto',
+                    quantidade: item.quantidade,
+                    preco_unitario: item.produtos?.preco || 0,
+                    subtotal: subtotal
+                };
+            });
+            
+            const numeroPedido = 'ALPE-' + Date.now().toString().slice(-8) + '-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+            const sessionId = localStorage.getItem('session_id') || 'session_' + Date.now();
+            
+            const { data: pedido, error: pedidoError } = await supabaseClient.from('pedidos').insert({
+                numero_pedido: numeroPedido,
+                cliente_nome: dadosCliente.nome,
+                cliente_email: dadosCliente.email || '',
+                cliente_telefone: dadosCliente.telefone,
+                cliente_cpf: dadosCliente.cpf || '',
+                endereco_entrega: dadosCliente.endereco || {},
+                total_produtos: totalProdutos,
+                total_frete: dadosCliente.frete || 0,
+                total_desconto: dadosCliente.desconto || 0,
+                total_pedido: totalProdutos + (dadosCliente.frete || 0) - (dadosCliente.desconto || 0),
+                forma_pagamento: dadosCliente.pagamento || 'pendente',
+                parcelas: dadosCliente.parcelas || 1,
+                session_id: sessionId
+            }).select().single();
+            
+            if (pedidoError) { console.error('Erro:', pedidoError); return null; }
+            
+            const itensParaInserir = itens.map(item => ({ pedido_id: pedido.id, ...item }));
+            await supabaseClient.from('itens_pedido').insert(itensParaInserir);
+            await supabaseClient.from('carrinhos').delete().eq('session_id', sessionId);
+            
+            return pedido;
+        },
+        
+        async carregarProdutosEmDestaque(limite = 12) {
+            const { data, error } = await supabaseClient.from('produtos').select('*').eq('ativo', true).eq('destaque', true).limit(limite);
+            if (error) { console.error('Erro:', error); return []; }
+            return data;
+        },
+        
+        async carregarMarcas() {
+            const { data, error } = await supabaseClient.from('marcas').select('*').eq('ativo', true).order('nome');
+            if (error) { console.error('Erro:', error); return []; }
+            return data;
+        },
+        
+        async carregarConfiguracoes() {
+            const { data, error } = await supabaseClient.from('configuracoes').select('*');
+            if (error) { console.error('Erro:', error); return {}; }
+            const config = {};
+            data.forEach(item => { config[item.chave] = item.valor; });
+            return config;
+        }
+    };
+    
+    console.log('✅ SupabaseAPI carregado!');
+    iniciarSite();
+}
+
+// 3. FUNÇÕES DO SITE
+async function iniciarSite() {
+    console.log('🚀 Inicializando site...');
+    try {
+        await carregarProdutos();
+        await carregarMarcas();
+        await atualizarBadge();
+        configurarBotoes();
+        console.log('✅ Site inicializado!');
+    } catch (error) {
+        console.error('❌ Erro:', error);
+    }
+}
+
+async function carregarProdutos() {
+    try {
+        const produtos = await supabaseAPI.carregarProdutosEmDestaque(12);
+        const catalogo = document.getElementById('catalogo-produtos');
+        if (catalogo && produtos.length > 0) {
+            catalogo.innerHTML = '';
+            produtos.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'produto-card';
+                card.innerHTML = '<img src="' + (p.imagem_url || 'images/default.jpg') + '" alt="' + p.nome + '" loading="lazy" onerror="this.src=\'images/default.jpg\'"><div class="produto-info"><h4>' + p.nome + '</h4><p style="font-size:12px;color:#666;">' + (p.marca || '') + (p.btu ? ' - ' + p.btu + ' BTU' : '') + '</p><div class="preco">R$ ' + p.preco.toFixed(2).replace('.', ',') + '</div><button class="cta-card btn-add-cart" data-id="' + p.id + '">COMPRAR AGORA</button></div>';
+                catalogo.appendChild(card);
+            });
+            configurarBotoes();
+            console.log('✅ Produtos carregados:', produtos.length);
+        }
+    } catch (error) {
+        console.error('❌ Erro:', error);
+    }
+}
+
+async function carregarMarcas() {
+    try {
+        const marcas = await supabaseAPI.carregarMarcas();
+        const container = document.querySelector('.js-dropdown-marcas');
+        if (container && marcas.length > 0) {
+            container.innerHTML = '';
+            marcas.forEach(m => {
+                const link = document.createElement('a');
+                link.href = 'marcas.index/' + (m.slug || m.nome.toLowerCase()) + '.html';
+                link.textContent = m.nome;
+                container.appendChild(link);
+            });
+        }
+    } catch (error) {
+        console.error('❌ Erro:', error);
+    }
+}
+
+async function atualizarBadge() {
+    try {
+        const carrinho = await supabaseAPI.obterCarrinho();
+        const badge = document.getElementById('cart-count');
+        if (badge) {
+            const total = carrinho.reduce((sum, item) => sum + item.quantidade, 0);
+            badge.textContent = total;
+            badge.style.display = total > 0 ? 'flex' : 'none';
+        }
+    } catch (error) {
+        console.error('❌ Erro:', error);
+    }
+}
+
+function configurarBotoes() {
+    // Botões Comprar Agora
+    document.querySelectorAll('.btn-add-cart').forEach(btn => {
+        btn.onclick = async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const produtoId = this.dataset.id;
+            if (!produtoId) return;
+            try {
+                await supabaseAPI.adicionarAoCarrinho(produtoId, 1);
+                await atualizarBadge();
+                const original = this.textContent;
+                this.textContent = '✓ ADICIONADO!';
+                this.style.background = '#22c55e';
+                this.style.color = 'white';
+                setTimeout(() => {
+                    this.textContent = original;
+                    this.style.background = '';
+                    this.style.color = '';
+                }, 2000);
+            } catch (error) {
+                console.error('❌ Erro:', error);
+            }
+        };
+    });
+    
+    // Botão Finalizar Pedido
+    const btnFinalizar = document.getElementById('btn-finalizar');
+    if (btnFinalizar) {
+        btnFinalizar.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            finalizarPedido();
+        };
+    }
+}
+
+// 4. FUNÇÃO FINALIZAR PEDIDO
+window.finalizarPedido = async function() {
+    console.log('🛒 Finalizando...');
+    try {
+        const carrinho = await supabaseAPI.obterCarrinho();
+        if (!carrinho || carrinho.length === 0) {
+            alert('🛒 Carrinho vazio!');
+            return;
+        }
+        
+        const dadosCliente = {
+            nome: prompt('📝 Nome completo:') || '',
+            telefone: prompt('📱 Telefone:') || '',
+            email: prompt('📧 Email:') || '',
+            cpf: prompt('📄 CPF:') || '',
+            endereco: {
+                rua: prompt('🏠 Rua:') || '',
+                numero: prompt('🔢 Número:') || '',
+                complemento: prompt('📦 Complemento:') || '',
+                bairro: prompt('🏘️ Bairro:') || '',
+                cidade: prompt('🌆 Cidade:') || '',
+                estado: prompt('📌 Estado:') || '',
+                cep: prompt('📮 CEP:') || ''
+            },
+            pagamento: 'pendente',
+            parcelas: 1
+        };
+        
+        if (!dadosCliente.nome || !dadosCliente.telefone) {
+            alert('⚠️ Nome e telefone são obrigatórios!');
+            return;
+        }
+        
+        const pedido = await supabaseAPI.criarPedido(dadosCliente);
+        if (pedido) {
+            alert('✅ Pedido #' + pedido.numero_pedido + ' criado!');
+            const badge = document.getElementById('cart-count');
+            if (badge) badge.textContent = '0';
+            window.location.href = 'obrigado.html';
+        }
+    } catch (error) {
+        console.error('❌ Erro:', error);
+        alert('❌ Erro: ' + error.message);
+    }
+};
+
+// 5. INICIAR
+console.log('🔧 Iniciando sistema...');
+document.addEventListener('DOMContentLoaded', function() {
+    // Carregar Supabase primeiro
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    script.onload = function() {
+        console.log('✅ Supabase carregado!');
+        initSupabase();
+    };
+    script.onerror = function() {
+        console.error('❌ Erro ao carregar Supabase');
+    };
+    document.head.appendChild(script);
+});
+
+// Fallback se o DOM já estiver carregado
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    console.log('⚠️ DOM já carregado, carregando Supabase...');
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    script.onload = function() {
+        console.log('✅ Supabase carregado!');
+        initSupabase();
+    };
+    document.head.appendChild(script);
+}
+</script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
