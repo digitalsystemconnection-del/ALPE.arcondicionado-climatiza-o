@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -7,6 +7,9 @@
 
 <!-- Favicon -->
 <link rel="icon" href="images/logo-marcas/logo-transparente.png" type="image/png">
+
+<!-- Supabase Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 
@@ -649,12 +652,12 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
       <div class="container">
         <h2>Soluções para Todos os Projetos</h2>
         <div class="sistemas-grid">
-          <div class="sistema-card" data-link="sistemas/split-hi-wall.html" onclick="navegarParaSistema(this)"><img src="images/produtos/split-lg/split-inverter-lg-hi-wall-dual-9000-btus-frio-220v.png" class="sistema-img"><h3>Split Hi-Wall</h3><p>O modelo mais popular para residências.</p></div>
-          <div class="sistema-card" data-link="sistemas/multi-split.html" onclick="navegarParaSistema(this)"><img src="images/produtos/multi-split/multi-split-fujitsu.webp" class="sistema-img"><h3>Multi-Split</h3><p>Climatize até 5 ambientes with uma unidade externa.</p></div>
-          <div class="sistema-card" data-link="sistemas/mini-vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/mini-vrf/vrv-daikin-fit.webp" class="sistema-img"><h3>Mini VRF</h3><p>Alta capacidade para residências de alto padrão.</p></div>
-          <div class="sistema-card" data-link="sistemas/vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/vrf/v8-series-vrf.webp" class="sistema-img"><h3>VRF</h3><p>A solução definitiva para grandes edifícios.</p></div>
-          <div class="sistema-card" data-link="sistemas/cassete.html" onclick="navegarParaSistema(this)"><img src="images/produtos/cassete/cassete-electrolux.jpg" class="sistema-img"><h3>Cassete</h3><p>Ideal para ambientes amplos e com forro rebaixado.</p></div>
-          <div class="sistema-card" data-link="sistemas/piso-teto.html" onclick="navegarParaSistema(this)"><img src="images/produtos/piso-teto/piso-teto-fujitsu.webp" class="sistema-img"><h3>Piso Teto</h3><p>Versatilidade e alta potência para comércios.</p></div>
+          <div class="sistema-card" data-link="sistemas/split-hi-wall.html" onclick="navegarParaSistema(this)"><img src="images/produtos/split-lg/split-inverter-lg-hi-wall-dual-9000-btus-frio-220v.png" class="sistema-img"><h3>Split Hi-Wall</h3><p>O modelo mais popular para residências.</p><span class="cta-header">Ver Detalhes</span></div>
+          <div class="sistema-card" data-link="sistemas/multi-split.html" onclick="navegarParaSistema(this)"><img src="images/produtos/multi-split/multi-split-fujitsu.webp" class="sistema-img"><h3>Multi-Split</h3><p>Climatize até 5 ambientes com uma unidade externa.</p><span class="cta-header">Ver Detalhes</span></div>
+          <div class="sistema-card" data-link="sistemas/mini-vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/mini-vrf/vrv-daikin-fit.webp" class="sistema-img"><h3>Mini VRF</h3><p>Alta capacidade para residências de alto padrão.</p><span class="cta-header">Ver Detalhes</span></div>
+          <div class="sistema-card" data-link="sistemas/vrf.html" onclick="navegarParaSistema(this)"><img src="images/produtos/vrf/hisense-x3-vrf.png" class="sistema-img"><h3>VRF</h3><p>A solução definitiva para grandes edifícios.</p><span class="cta-header">Ver Detalhes</span></div>
+          <div class="sistema-card" data-link="sistemas/cassette.html" onclick="navegarParaSistema(this)"><img src="images/produtos/cassete/hisense-cassete.webp" class="sistema-img"><h3>Cassete</h3><p>Ideal para ambientes amplos e com forro rebaixado.</p><span class="cta-header">Ver Detalhes</span></div>
+          <div class="sistema-card" data-link="sistemas/piso-teto.html" onclick="navegarParaSistema(this)"><img src="images/produtos/piso-teto/piso-teto-fujitsu.webp" class="sistema-img"><h3>Piso Teto</h3><p>Versatilidade e alta potência para comércios.</p><span class="cta-header">Ver Detalhes</span></div>
         </div>
       </div>
     </section>
@@ -749,7 +752,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
             <div class="produto-info">
               <h4>Samsung Inverter 12.000 BTU</h4>
               <div class="preco">R$ 2.999,00</div>
-              <a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a>
+              <a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a>
             </div>
           </div>
 
@@ -758,7 +761,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
             <div class="produto-info">
               <h4>LG Dual Inverter 9.000 BTU</h4>
               <div class="preco">R$ 2.450,00</div>
-              <a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a>
+              <a href="#" class="cta-card btn-add-cart" onclick="adicionarAoCarrinho('2','LG Dual Inverter 9.000 BTU', 2450, 'images/produtos/split-lg/split-inverter-lg-hi-wall-dual-compact-9000-btus-frio-220v.png'); return false;">COMPRAR AGORA</a>
             </div>
           </div>
 
@@ -767,7 +770,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
             <div class="produto-info">
               <h4>Daikin Cassete 36.000 BTU</h4>
               <div class="preco">R$ 8.990,00</div>
-              <a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a>
+              <a href="#" class="cta-card btn-add-cart" onclick="adicionarAoCarrinho('3','Daikin Cassete 36.000 BTU', 8990, 'images/produtos/cassete/k7-4-vias-daikin-sky-air.webp'); return false;">COMPRAR AGORA</a>
             </div>
           </div>
 
@@ -776,21 +779,21 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
             <div class="produto-info">
               <h4>Hisense Inverter 12.000 BTU</h4>
               <div class="preco">R$ 2.050,48</div>
-              <a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a>
+              <a href="#" class="cta-card btn-add-cart" onclick="adicionarAoCarrinho('4','Hisense Inverter 12.000 BTU', 2050.48, 'images/produtos/split-hisense/ar-condicionado-split-inverter-hi-wall-wi-fi-hisense-12000-btus-frio-220v.jpg'); return false;">COMPRAR AGORA</a>
             </div>
           </div>
 
-          <div class="produto-card" data-id="5"><img src="images/produtos/split-elgin/ar-condicionado-elgin-inverter-eco-ii-wi-fi-12000-btus-frio-220v-r-32.webp" alt="Elgin"><div class="produto-info"><h4>Elgin Inverter 12.000 BTU</h4><div class="preco">R$ 2.155,60</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="5"><img src="images/produtos/split-elgin/ar-condicionado-elgin-inverter-eco-ii-wi-fi-12000-btus-frio-220v-r-32.webp" alt="Elgin"><div class="produto-info"><h4>Elgin Inverter 12.000 BTU</h4><div class="preco">R$ 2.155,60</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="6"><img src="images/produtos/split-electrolux/electrolux-9000.png" alt="Electrolux"><div class="produto-info"><h4>Electrolux Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="6"><img src="images/produtos/split-electrolux/electrolux-9000.png" alt="Electrolux"><div class="produto-info"><h4>Electrolux Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="7"><img src="images/produtos/split-fujitsu/fujitsu-9000-premium.jpg" alt="Fujitsu"><div class="produto-info"><h4>Fujitsu Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="7"><img src="images/produtos/split-fujitsu/fujitsu-9000-premium.jpg" alt="Fujitsu"><div class="produto-info"><h4>Fujitsu Inverter 9.000 BTU</h4><div class="preco">R$ 1.709,05</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="8"><img src="images/produtos/split-hitachi/hitachi-9000.webp" alt="Hitachi"><div class="produto-info"><h4>Hitachi Inverter 9.000 BTU</h4><div class="preco">R$ 2.496,79</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="8"><img src="images/produtos/split-hitachi/hitachi-9000.webp" alt="Hitachi"><div class="produto-info"><h4>Hitachi Inverter 9.000 BTU</h4><div class="preco">R$ 2.496,79</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="9"><img src="images/produtos/split-philco/philco-split-12000.webp" alt="Philco"><div class="produto-info"><h4>Philco Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="9"><img src="images/produtos/split-philco/philco-split-12000.webp" alt="Philco"><div class="produto-info"><h4>Philco Inverter 12.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
           
-          <div class="produto-card" data-id="10"><img src="images/produtos/split-gree/split-inverter-gree-g-top-auto-9000-btuh-frio-r-32-220v-9000-frio-63.webp" alt="Gree"><div class="produto-info"><h4>Gree Inverter 9.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="javascript:void(0)" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
+          <div class="produto-card" data-id="10"><img src="images/produtos/split-gree/split-inverter-gree-g-top-auto-9000-btuh-frio-r-32-220v-9000-frio-63.webp" alt="Gree"><div class="produto-info"><h4>Gree Inverter 9.000 BTU</h4><div class="preco">R$ 2.435,24</div><a href="#" class="cta-card btn-add-cart">COMPRAR AGORA</a></div></div>
         </div>
       </div>
     </section>
@@ -969,7 +972,7 @@ footer.footer { background: #f8f9fa !important; color: #333 !important; padding:
 
 <!-- BOTÕES FLUTUANTES -->
 <a href="https://api.whatsapp.com/send?phone=5521980220417" class="whatsapp-square" target="_blank" rel="noopener noreferrer">
-  <img src="./images/icone/whatsapp-logo-.png" alt="WhatsApp" style="width: 20px; height: 20px; object-fit: contain;">
+  <img src="images/icone/whatsapp-logo.png" alt="WhatsApp" style="width: 20px; height: 20px; object-fit: contain;">
   <span>Fale Conosco</span>
 </a>
 
