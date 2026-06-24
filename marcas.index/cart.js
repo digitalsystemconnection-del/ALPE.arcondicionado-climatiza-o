@@ -5,7 +5,36 @@ window.safeStorage = window.safeStorage || {
 
 let carrinho = JSON.parse(safeStorage.get('alpe_cart')) || [];
 
-function brl(v) { return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
+function brl(v) { 
+  if (v === undefined || v === null) return "R$ 0,00";
+  return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); 
+}
+
+// Lista de marcas para o dropdown
+const LISTA_MARCAS = [
+  { nome: "Daikin", url: "daikin.html" },
+  { nome: "Electrolux", url: "electrolux.html" },
+  { nome: "Elgin", url: "elgin.html" },
+  { nome: "Fujitsu", url: "fujitsu.html" },
+  { nome: "Gree", url: "gree.html" },
+  { nome: "Hisense", url: "hisense.html" },
+  { nome: "Hitachi", url: "hitachi.html" },
+  { nome: "LG", url: "lg.html" },
+  { nome: "Midea", url: "midea.html" },
+  { nome: "Philco", url: "philco.html" },
+  { nome: "Samsung", url: "samsung.html" },
+  { nome: "TCL", url: "tcl.html" }
+].sort((a, b) => a.nome.localeCompare(b.nome));
+
+function renderizarMenuMarcas() {
+  const containers = document.querySelectorAll(".js-dropdown-marcas");
+  if (containers.length === 0) return;
+  
+  const html = LISTA_MARCAS.map(m => `<a href="${m.url}">${m.nome}</a>`).join("");
+  containers.forEach(container => {
+    container.innerHTML = html;
+  });
+}
 
 function atualizarBadge() {
   document.querySelectorAll('.cart-badge').forEach(el => {
@@ -43,6 +72,11 @@ function adicionarAoCarrinho(id, nome, preco, imagem) {
       btn.style.removeProperty('color');
     }, 1500);
   }
+
+  // Redireciona para checkout após adicionar ao carrinho
+  setTimeout(() => {
+    window.location.href = 'checkout.html';
+  }, 600);
 }
 
 function removerDoCarrinho(index) {
@@ -83,6 +117,7 @@ function renderCarrinho() {
 
 document.addEventListener('DOMContentLoaded', () => {
   atualizarBadge();
+  renderizarMenuMarcas();
 
   document.querySelectorAll('.produto-card .btn-add-cart').forEach(btn => {
     if(!btn.getAttribute('onclick')) {
