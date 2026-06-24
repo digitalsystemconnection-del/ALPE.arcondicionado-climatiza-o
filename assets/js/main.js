@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ehSubpasta = ehPaginaDeMarca || path.includes('/sobre-nos/') || path.includes('/sistemas/') || path.includes('/dashboard/');
 
     // Define o prefixo correto para os links dentro do dropdown
-    const prefixo = ehSubpasta ? (ehPaginaDeMarca ? "" : "../marcas.index/") : "marcas.index/";
+    const prefixo = ehSubpasta ? (ehPaginaDeMarca ? "../marcas.index/" : "../") : "marcas.index/";
 
     const containers = document.querySelectorAll(".js-dropdown-marcas");
     if (containers.length === 0) return;
